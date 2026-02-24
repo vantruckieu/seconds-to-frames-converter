@@ -150,7 +150,7 @@ input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,
 .sub-result { display: block; font-size: 14px; font-weight: normal; color: #9ed8ff; margin-top: 8px; opacity: 0.9; line-height: 1.5; }
 .box-result { font-size: 14px; color: #cceeff; background: rgba(0, 102, 255, 0.1); border: 1px dashed #0066ff; padding: 12px; border-radius: 8px; margin-top: 15px; text-align: left; line-height: 1.6;}
 
-/* Tooltip & Warning Sửa lỗi UI bóp chữ */
+/* Tooltip & Warning */
 .tooltip {
     display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;
     background: rgba(0, 204, 255, 0.1); border: 1px solid #00ccff; border-radius: 50%;
@@ -160,7 +160,7 @@ input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,
 .tooltip:hover::after {
     content: attr(data-tip); position: absolute; bottom: 150%; left: 50%; transform: translateX(-50%);
     background: #02111f; padding: 10px 14px; font-size: 12px; font-weight: normal; border-radius: 8px;
-    width: 240px; /* Cố định width để không bị bóp vỡ chữ */
+    width: 240px;
     color: #cceeff; box-shadow: 0 4px 15px rgba(0,170,255,0.6);
     border: 1px solid rgba(0, 204, 255, 0.4); 
     z-index: 9999; 
@@ -697,9 +697,13 @@ function updateConvert(){
     let val = parseFloat(document.getElementById("inputValue").value);
     let tUnit = document.getElementById("timeUnit");
     
-    tUnit.parentNode.classList.toggle("hidden", mode !== "t2f");
-    let wrap = tUnit.previousElementSibling;
-    if(wrap && wrap.classList.contains("custom-select-trigger")) wrap.parentNode.style.display = mode === "t2f" ? "block" : "none";
+    // --- BẢN FIX LỖI TẠI ĐÂY ---
+    let isTime2Frame = (mode === "t2f");
+    tUnit.classList.toggle("hidden", !isTime2Frame);
+    if (tUnit.parentNode && tUnit.parentNode.classList.contains("custom-select-wrapper")) {
+        tUnit.parentNode.classList.toggle("hidden", !isTime2Frame);
+    }
+    // ----------------------------
 
     if(isNaN(val) || isNaN(fps) || fps <= 0 || val < 0) { document.getElementById("convertOutput").innerHTML = "—"; return; }
 
