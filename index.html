@@ -11,7 +11,6 @@
 <style>
 body {
     background: radial-gradient(circle at 20% 20%, #0f1c2e, #050b18 70%);
-    /* Sử dụng Google Sans làm ưu tiên số 1, Inter và Segoe UI làm dự phòng */
     font-family: 'Google Sans', 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: #e6f3ff;
     display: flex;
@@ -90,7 +89,7 @@ h1 {
 
 /* Form */
 
-.row { margin-bottom: 20px; }
+.row { margin-bottom: 20px; position: relative; }
 
 label {
     display: flex;
@@ -102,9 +101,9 @@ label {
     font-weight: 500;
 }
 
-input, select {
+input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 16px;
     font-size: 16px;
     background: #0a1422;
     border: 1px solid #1e3a5f;
@@ -115,10 +114,105 @@ input, select {
     font-family: inherit;
 }
 
-input:focus, select:focus {
+input:focus {
     outline: none;
     border-color: #00ccff;
     box-shadow: 0 0 12px rgba(0,200,255,0.5);
+}
+
+/* --- CUSTOM DROPDOWN SIÊU MƯỢT --- */
+
+.custom-select-wrapper {
+    position: relative;
+    user-select: none;
+    width: 100%;
+}
+
+.custom-select {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    background: #0a1422;
+    border: 1px solid #1e3a5f;
+    border-radius: 10px;
+    color: #e6f3ff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.custom-select:hover, .custom-select.open {
+    border-color: #00ccff;
+    box-shadow: 0 0 12px rgba(0,200,255,0.3);
+    background: #0c1a2e;
+}
+
+/* Icon mũi tên tự vẽ bằng CSS (mượt hơn dùng chữ ▼) */
+.custom-select::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #00ccff;
+    border-bottom: 2px solid #00ccff;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+.custom-select.open::after {
+    transform: translateY(3px) rotate(-135deg);
+}
+
+.custom-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: #0d1a2d;
+    border: 1px solid rgba(0, 204, 255, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+.custom-select-wrapper.open .custom-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) !important;
+}
+
+.custom-option {
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #9ed8ff;
+    border-radius: 8px;
+    margin-bottom: 2px;
+    font-size: 15px;
+}
+
+.custom-option:last-child {
+    margin-bottom: 0;
+}
+
+.custom-option:hover {
+    background: rgba(0, 204, 255, 0.1);
+    color: #ffffff;
+}
+
+.custom-option.selected {
+    background: rgba(0, 204, 255, 0.2);
+    color: #00ccff;
+    font-weight: 600;
 }
 
 /* Input group for value and time unit */
@@ -129,9 +223,8 @@ input:focus, select:focus {
 .input-group input {
     flex: 1;
 }
-.input-group select {
-    width: auto;
-    padding: 12px;
+.input-group .custom-select-wrapper {
+    width: 130px; /* Nới rộng một chút để chữ không bị chèn ép */
 }
 
 /* FPS Presets */
@@ -248,13 +341,13 @@ footer {
     gap: 10px;
 }
 
-footer select {
-    width: auto;
-    padding: 6px 10px;
+footer .custom-select-wrapper {
+    width: 110px;
+}
+footer .custom-select {
+    padding: 8px 12px;
     font-size: 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: inherit;
+    border-radius: 8px;
 }
 </style>
 </head>
@@ -279,10 +372,13 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 <label>
 <span id="lblCalcType">Loại tính</span> <span class="tooltip" id="tipCalcType" data-tip="Chuyển đổi giữa frame và thời gian theo FPS">?</span>
 </label>
-<select id="mode" onchange="handleModeChange()">
-<option id="optF2T" value="f2t">Frame → Time</option>
-<option id="optT2F" value="t2f">Time → Frame</option>
-</select>
+<div class="custom-select-wrapper" id="modeWrapper">
+    <div class="custom-select" id="modeDisplay" data-value="f2t">Frame → Time</div>
+    <div class="custom-options">
+        <div class="custom-option selected" data-value="f2t" id="optF2T">Frame → Time</div>
+        <div class="custom-option" data-value="t2f" id="optT2F">Time → Frame</div>
+    </div>
+</div>
 </div>
 
 <div class="row">
@@ -302,11 +398,14 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 <div class="input-group">
     <input type="number" id="inputValue" min="0" oninput="updateConvert()">
     
-    <select id="timeUnit" class="hidden" onchange="updateConvert()">
-        <option id="optSec" value="1">Giây</option>
-        <option id="optMin" value="60">Phút</option>
-        <option id="optHour" value="3600">Giờ</option>
-    </select>
+    <div class="custom-select-wrapper hidden" id="timeUnitWrapper">
+        <div class="custom-select" id="timeUnitDisplay" data-value="1">Giây</div>
+        <div class="custom-options">
+            <div class="custom-option selected" data-value="1" id="optSec">Giây</div>
+            <div class="custom-option" data-value="60" id="optMin">Phút</div>
+            <div class="custom-option" data-value="3600" id="optHour">Giờ</div>
+        </div>
+    </div>
 </div>
 </div>
 
@@ -342,10 +441,13 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 
 <footer>
 <span id="lblLang">Ngôn ngữ:</span>
-<select onchange="changeLang(this.value)">
-<option value="vi">🇻🇳 VI</option>
-<option value="en">🇬🇧 EN</option>
-</select>
+<div class="custom-select-wrapper" id="langWrapper">
+    <div class="custom-select" id="langDisplay" data-value="vi">🇻🇳 VI</div>
+    <div class="custom-options" style="top: auto; bottom: calc(100% + 8px); transform: translateY(10px);">
+        <div class="custom-option selected" data-value="vi">🇻🇳 VI</div>
+        <div class="custom-option" data-value="en">🇬🇧 EN</div>
+    </div>
+</div>
 </footer>
 
 <script>
@@ -401,12 +503,25 @@ function applyTranslation() {
     document.getElementById("tabRender").innerText = t.tabRender;
     document.getElementById("lblCalcType").innerText = t.lblCalcType;
     document.getElementById("tipCalcType").setAttribute("data-tip", t.tipCalcType);
+    
+    // Cập nhật text cho options
     document.getElementById("optF2T").innerText = t.optF2T;
     document.getElementById("optT2F").innerText = t.optT2F;
-    document.getElementById("lblInputValue").innerText = t.lblInputValue;
     document.getElementById("optSec").innerText = t.optSec;
     document.getElementById("optMin").innerText = t.optMin;
     document.getElementById("optHour").innerText = t.optHour;
+    
+    // Cập nhật text hiển thị trên bề mặt Dropdown
+    const modeVal = document.getElementById("modeDisplay").getAttribute("data-value");
+    if(modeVal === "f2t") document.getElementById("modeDisplay").innerText = t.optF2T;
+    if(modeVal === "t2f") document.getElementById("modeDisplay").innerText = t.optT2F;
+    
+    const timeVal = document.getElementById("timeUnitDisplay").getAttribute("data-value");
+    if(timeVal === "1") document.getElementById("timeUnitDisplay").innerText = t.optSec;
+    if(timeVal === "60") document.getElementById("timeUnitDisplay").innerText = t.optMin;
+    if(timeVal === "3600") document.getElementById("timeUnitDisplay").innerText = t.optHour;
+
+    document.getElementById("lblInputValue").innerText = t.lblInputValue;
     document.getElementById("lblTotalFrames").innerText = t.lblTotalFrames;
     document.getElementById("tipTotalFrames").setAttribute("data-tip", t.tipTotalFrames);
     document.getElementById("lblRenderTime").innerText = t.lblRenderTime;
@@ -430,21 +545,70 @@ function switchTab(tab){
     }
 }
 
-// Xử lý khi đổi mode để hiện/ẩn bộ chọn Đơn vị thời gian
+// Logic cho Custom Dropdown
+document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+    const select = wrapper.querySelector('.custom-select');
+    const options = wrapper.querySelectorAll('.custom-option');
+
+    select.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        document.querySelectorAll('.custom-select-wrapper').forEach(w => {
+            if(w !== wrapper) {
+                w.classList.remove('open');
+                w.querySelector('.custom-select').classList.remove('open');
+            }
+        });
+
+        wrapper.classList.toggle('open');
+        select.classList.toggle('open');
+    });
+
+    options.forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            options.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+
+            select.innerText = this.innerText;
+            select.setAttribute('data-value', this.getAttribute('data-value'));
+
+            wrapper.classList.remove('open');
+            select.classList.remove('open');
+
+            if(wrapper.id === "modeWrapper") {
+                handleModeChange();
+            } else if (wrapper.id === "langWrapper") {
+                changeLang(this.getAttribute('data-value'));
+            } else {
+                updateConvert();
+            }
+        });
+    });
+});
+
+document.addEventListener('click', function() {
+    document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+        wrapper.classList.remove('open');
+        wrapper.querySelector('.custom-select').classList.remove('open');
+    });
+});
+
 function handleModeChange() {
-    let mode = document.getElementById("mode").value;
-    let timeUnitSelect = document.getElementById("timeUnit");
+    let mode = document.getElementById("modeDisplay").getAttribute("data-value");
+    let timeUnitWrapper = document.getElementById("timeUnitWrapper");
     
     if (mode === "t2f") {
-        timeUnitSelect.classList.remove("hidden");
+        timeUnitWrapper.classList.remove("hidden");
     } else {
-        timeUnitSelect.classList.add("hidden");
+        timeUnitWrapper.classList.add("hidden");
     }
     updateConvert();
 }
 
 function updateConvert(){
-    let mode=document.getElementById("mode").value;
+    let mode=document.getElementById("modeDisplay").getAttribute("data-value");
     let fps=parseFloat(document.getElementById("fps").value);
     let val=parseFloat(document.getElementById("inputValue").value);
 
@@ -454,13 +618,11 @@ function updateConvert(){
     }
 
     if(mode==="f2t"){
-        // Frame to Time (mặc định ra giây)
         let sec=(val/fps).toFixed(3);
         document.getElementById("convertOutput").innerText=
         currentLang==="vi"? sec+" giây": sec+" sec";
     }else{
-        // Time to Frame (tính toán dựa trên đơn vị thời gian được chọn)
-        let timeMultiplier = parseFloat(document.getElementById("timeUnit").value); // Lấy số quy đổi giây
+        let timeMultiplier = parseFloat(document.getElementById("timeUnitDisplay").getAttribute("data-value"));
         let totalSeconds = val * timeMultiplier;
         let frames=Math.round(totalSeconds*fps);
         
@@ -504,12 +666,11 @@ function setFPS(value){
 
 function changeLang(lang){
     currentLang=lang;
-    applyTranslation(); // Cập nhật lại toàn bộ chữ hiển thị
-    updateConvert();    // Cập nhật lại kết quả tính toán hiện tại
+    applyTranslation();
+    updateConvert();
     updateRender();
 }
 
-// Gọi hàm dịch lần đầu lúc tải trang
 applyTranslation();
 
 </script>
