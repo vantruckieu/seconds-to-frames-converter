@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Studio Timing Converter</title>
+
+<style>
+body{
+    background:#0f1117;
+    font-family:Segoe UI, sans-serif;
+    color:#e6e6e6;
+    text-align:center;
+    padding:40px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:#1a1d25;
+    padding:30px;
+    border-radius:16px;
+    box-shadow:0 0 30px rgba(0,0,0,0.6);
+}
+
+h1{
+    color:#00ffd5;
+    margin-bottom:30px;
+}
+
+input, select{
+    padding:12px;
+    margin:10px;
+    font-size:16px;
+    background:#11131a;
+    color:white;
+    border:1px solid #333;
+    border-radius:8px;
+    width:200px;
+}
+
+button{
+    padding:12px 20px;
+    margin:8px;
+    font-size:15px;
+    background:#00ffd5;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#00c2a3;
+}
+
+.result{
+    margin-top:20px;
+    font-size:20px;
+    color:#00ffd5;
+}
+
+.table{
+    margin-top:30px;
+    text-align:left;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td{
+    padding:8px;
+    border-bottom:1px solid #333;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎬 Studio Timing Converter</h1>
+
+<div>
+<input type="number" id="seconds" placeholder="Seconds">
+<input type="number" id="frames" placeholder="Frames">
+<input type="text" id="timecode" placeholder="HH:MM:SS">
+</div>
+
+<div>
+<select id="fps">
+<option value="24">24 FPS</option>
+<option value="30">30 FPS</option>
+<option value="60">60 FPS</option>
+</select>
+
+<button onclick="set12fps()">Quick 12 FPS (On 2s)</button>
+</div>
+
+<div>
+<button onclick="secToFrame()">Seconds → Frames</button>
+<button onclick="frameToSec()">Frames → Seconds</button>
+<button onclick="timecodeToFrame()">Timecode → Frames</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<div class="table">
+<h3>Timing Sheet</h3>
+<table id="sheet">
+<tr>
+<th>Seconds</th>
+<th>Frames</th>
+<th>FPS</th>
+</tr>
+</table>
+<button onclick="exportCSV()">Export CSV</button>
+</div>
+
+</div>
+
+<script>
+
+function getFPS(){
+    return parseFloat(document.getElementById("fps").value);
+}
+
+function set12fps(){
+    document.getElementById("fps").value = 24;
+    alert("Anime On 2s: Animate mỗi pose 2 frame (tương đương 12 drawings/sec ở 24fps)");
+}
+
+function roundFrame(value){
+    return Math.round(value);
+}
+
+function secToFrame(){
+    let sec = parseFloat(document.getElementById("seconds").value);
+    let fps = getFPS();
+
+    if(isNaN(sec)) return;
+
+    let frames = roundFrame(sec * fps);
+
+    document.getElementById("result").innerText =
+        sec + " sec = " + frames + " frames";
+
+    addToSheet(sec, frames, fps);
+}
+
+function frameToSec(){
+    let frames = parseFloat(document.getElementById("frames").value);
+    let fps = getFPS();
+
+    if(isNaN(frames)) return;
+
+    let sec = (frames / fps).toFixed(3);
+
+    document.getElementById("result").innerText =
+        frames + " frames = " + sec + " sec";
+
+    addToSheet(sec, frames, fps);
+}
+
+function timecodeToFrame(){
+    let tc = document.getElementById("timecode").value;
+    let fps = getFPS();
+
+    let parts = tc.split(":");
+    if(parts.length !== 3) return;
+
+    let h = parseInt(parts[0]);
+    let m = parseInt(parts[1]);
+    let s = parseInt(parts[2]);
+
+    let totalSec = h*3600 + m*60 + s;
+    let frames = roundFrame(totalSec * fps);
+
+    document.getElementById("result").innerText =
+        tc + " = " + frames + " frames";
+
+    addToSheet(totalSec, frames, fps);
+}
+
+function addToSheet(sec, frames, fps){
+    let table = document.getElementById("sheet");
+    let row = table.insertRow(-1);
+    row.insertCell(0).innerText = sec;
+    row.insertCell(1).innerText = frames;
+    row.insertCell(2).innerText = fps;
+}
+
+function exportCSV(){
+    let rows = document.querySelectorAll("table tr");
+    let csv = [];
+
+    for(let i=0;i<rows.length;i++){
+        let cols = rows[i].querySelectorAll("td, th");
+        let row = [];
+        for(let j=0;j<cols.length;j++){
+            row.push(cols[j].innerText);
+        }
+        csv.push(row.join(","));
+    }
+
+    let csvFile = new Blob([csv.join("\n")], {type:"text/csv"});
+    let downloadLink = document.createElement("a");
+    downloadLink.download = "timing_sheet.csv";
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.click();
+}
+
+</script>
+
+</body>
+</html>
