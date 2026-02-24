@@ -114,21 +114,18 @@ input:focus {
     box-shadow: 0 0 12px rgba(0,200,255,0.5);
 }
 
-/* ----------------------------------------------------
-   GIAO DIỆN CUSTOM DROPDOWN (Thay thế cho Select cũ)
-   ---------------------------------------------------- */
+/* GIAO DIỆN CUSTOM DROPDOWN */
 .custom-select-wrapper {
     position: relative;
     width: 100%;
 }
 
-/* Tự động ẩn custom dropdown nếu select gốc bị gắn class hidden */
 .custom-select-wrapper:has(select.hidden) {
     display: none !important;
 }
 
 .input-group .custom-select-wrapper {
-    flex: 0 0 110px; /* Chiều rộng cố định cho ô chọn đơn vị */
+    flex: 0 0 110px;
 }
 
 .custom-select-trigger {
@@ -215,7 +212,6 @@ input:focus {
     font-weight: bold;
 }
 
-/* Input group kết hợp input và select đơn vị thời gian */
 .input-group {
     display: flex;
     gap: 10px;
@@ -225,7 +221,6 @@ input:focus {
     flex: 1;
 }
 
-/* FPS Presets */
 .fps-presets {
     display: flex;
     gap: 8px;
@@ -258,6 +253,17 @@ input:focus {
     color: #00ccff;
     text-align: center;
     text-shadow: 0 0 15px rgba(0,200,255,0.6);
+}
+
+/* Hiển thị phụ (Giờ/Phút) */
+.sub-result {
+    display: block;
+    font-size: 16px;
+    font-weight: normal;
+    color: #9ed8ff;
+    margin-top: 8px;
+    opacity: 0.8;
+    text-shadow: none;
 }
 
 /* Tooltip */
@@ -306,7 +312,6 @@ input:focus {
     line-height: 1.4;
 }
 
-/* Warning */
 .warning {
     margin-top: 15px;
     font-size: 13px;
@@ -315,12 +320,10 @@ input:focus {
     line-height: 1.4;
 }
 
-/* Hidden */
 .hidden {
     display: none !important;
 }
 
-/* Footer */
 footer {
     margin-top: 40px;
     font-size: 14px;
@@ -506,7 +509,6 @@ function updateConvert(){
     let val = parseFloat(document.getElementById("inputValue").value);
     let timeUnit = document.getElementById("timeUnit");
 
-    // Ẩn hiện ô chọn đơn vị thời gian dựa trên chế độ
     if (mode === "t2f") {
         timeUnit.classList.remove("hidden");
     } else {
@@ -514,21 +516,35 @@ function updateConvert(){
     }
 
     if(isNaN(val) || isNaN(fps) || fps <= 0 || val < 0){
-        document.getElementById("convertOutput").innerText = "—";
+        document.getElementById("convertOutput").innerHTML = "—";
         return;
     }
 
     if(mode === "f2t"){
-        let sec = (val / fps).toFixed(3);
-        document.getElementById("convertOutput").innerText =
-            currentLang === "vi" ? sec + " giây" : sec + " sec";
+        // Tính tổng thời gian ra giây
+        let totalSec = val / fps;
+        let secStr = totalSec.toFixed(3);
+        let mainStr = currentLang === "vi" ? secStr + " giây" : secStr + " sec";
+        
+        // Tính thêm Giờ/Phút/Giây chi tiết
+        let hours = Math.floor(totalSec / 3600);
+        let minutes = Math.floor((totalSec % 3600) / 60);
+        let remainingSec = parseFloat((totalSec % 60).toFixed(3)); // Lọc bớt số 0 vô nghĩa ở đuôi
+        
+        let subStr = "";
+        // Nếu trên 1 phút mới hiển thị phần phụ
+        if (hours > 0 || minutes > 0) {
+            let hStr = hours > 0 ? hours + "h " : "";
+            subStr = `<span class="sub-result">≈ ${hStr}${minutes}m ${remainingSec}s</span>`;
+        }
+
+        document.getElementById("convertOutput").innerHTML = mainStr + subStr;
     } else {
-        // Tính toán dựa trên đơn vị thời gian được chọn (Giây, Phút, Giờ)
         let multiplier = parseFloat(timeUnit.value);
         let totalSeconds = val * multiplier;
         let frames = Math.round(totalSeconds * fps);
         
-        document.getElementById("convertOutput").innerText =
+        document.getElementById("convertOutput").innerHTML =
             currentLang === "vi" ? frames + " frame" : frames + " frames";
     }
 }
@@ -570,7 +586,6 @@ function changeLang(lang){
     currentLang = lang;
     let t = i18n[lang];
 
-    // Thay đổi toàn bộ text theo dictionary
     document.getElementById("mainTitle").innerText = t.mainTitle;
     document.getElementById("introText").innerText = t.introText;
     document.getElementById("tabConvert").innerText = t.tabConvert;
@@ -591,21 +606,15 @@ function changeLang(lang){
     document.getElementById("warningText").innerText = t.warningText;
     document.getElementById("lblLanguage").innerText = t.lblLanguage;
 
-    // Chạy lại hàm tính toán để cập nhật chữ hiển thị ở kết quả
     updateConvert();
     updateRender();
     
-    // BẮT BUỘC: Cập nhật lại text cho Custom Dropdown nếu người dùng chuyển ngôn ngữ
     if(typeof updateAllCustomSelects === "function") updateAllCustomSelects();
 }
 
-/* =========================================================
-   TẠO GIAO DIỆN CUSTOM DROPDOWN TỰ ĐỘNG KHÔNG CHẠM LOGIC CŨ
-   ========================================================= */
 function initCustomSelects() {
     const selects = document.querySelectorAll("select");
     selects.forEach(select => {
-        // Bọc select cũ
         const wrapper = document.createElement("div");
         wrapper.className = "custom-select-wrapper";
         select.parentNode.insertBefore(wrapper, select);
@@ -632,11 +641,9 @@ function initCustomSelects() {
                 if(index === select.selectedIndex) optDiv.classList.add("selected");
                 optDiv.innerText = opt.text;
                 
-                // Xử lý khi click vào option
                 optDiv.addEventListener("click", (e) => {
                     e.stopPropagation();
                     select.selectedIndex = index;
-                    // Kích hoạt sự kiện thay đổi của select gốc để các hàm như updateConvert() vẫn chạy bình thường
                     select.dispatchEvent(new Event("change"));
                     updateUI();
                     optionsList.classList.remove("show");
@@ -646,26 +653,24 @@ function initCustomSelects() {
             });
         }
 
-        // Mở dropdown
         trigger.addEventListener("click", (e) => {
             e.stopPropagation();
             const isShowing = optionsList.classList.contains("show");
             document.querySelectorAll(".custom-select-options").forEach(el => el.classList.remove("show"));
             document.querySelectorAll(".custom-select-trigger").forEach(el => el.classList.remove("active"));
             if (!isShowing) {
-                buildOptions(); // Cập nhật lại list mỗi khi mở
+                buildOptions();
                 optionsList.classList.add("show");
                 trigger.classList.add("active");
             }
         });
 
         updateUI();
-        select.style.display = "none"; // Ẩn select gốc đi
+        select.style.display = "none";
         
         select.updateCustomUI = updateUI;
     });
 
-    // Bấm ra ngoài thì đóng
     document.addEventListener("click", () => {
         document.querySelectorAll(".custom-select-options").forEach(el => el.classList.remove("show"));
         document.querySelectorAll(".custom-select-trigger").forEach(el => el.classList.remove("active"));
@@ -678,7 +683,6 @@ function updateAllCustomSelects() {
     });
 }
 
-// Khởi chạy khi tải xong trang
 window.addEventListener("DOMContentLoaded", initCustomSelects);
 </script>
 
