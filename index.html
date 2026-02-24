@@ -74,14 +74,27 @@ th, td{
     border-bottom:1px solid #333;
 }
 
+.lang-switch{
+    position:absolute;
+    top:20px;
+    right:20px;
+}
+
 </style>
 </head>
 
 <body>
 
+<div class="lang-switch">
+<select onchange="changeLanguage(this.value)">
+<option value="vi">🇻🇳 VI</option>
+<option value="en">🇬🇧 EN</option>
+</select>
+</div>
+
 <div class="container">
 
-<h1>🎬 Studio Timing Converter</h1>
+<h1 id="title">🎬 Studio Timing Converter</h1>
 
 <div>
 <input type="number" id="seconds" placeholder="Seconds">
@@ -96,32 +109,66 @@ th, td{
 <option value="60">60 FPS</option>
 </select>
 
-<button onclick="set12fps()">Quick 12 FPS (On 2s)</button>
+<button onclick="set12fps()" id="quick12">Quick 12 FPS (On 2s)</button>
 </div>
 
 <div>
-<button onclick="secToFrame()">Seconds → Frames</button>
-<button onclick="frameToSec()">Frames → Seconds</button>
-<button onclick="timecodeToFrame()">Timecode → Frames</button>
+<button onclick="secToFrame()" id="btn1">Seconds → Frames</button>
+<button onclick="frameToSec()" id="btn2">Frames → Seconds</button>
+<button onclick="timecodeToFrame()" id="btn3">Timecode → Frames</button>
 </div>
 
 <div class="result" id="result"></div>
 
 <div class="table">
-<h3>Timing Sheet</h3>
+<h3 id="sheetTitle">Timing Sheet</h3>
 <table id="sheet">
 <tr>
-<th>Seconds</th>
-<th>Frames</th>
-<th>FPS</th>
+<th id="th1">Seconds</th>
+<th id="th2">Frames</th>
+<th id="th3">FPS</th>
 </tr>
 </table>
-<button onclick="exportCSV()">Export CSV</button>
+<button onclick="exportCSV()" id="exportBtn">Export CSV</button>
 </div>
 
 </div>
 
 <script>
+
+let currentLang = "vi";
+
+const translations = {
+    vi:{
+        title:"🎬 Công Cụ Tính Timing Studio",
+        quick12:"Quick 12 FPS (Anime On 2s)",
+        btn1:"Giây → Frame",
+        btn2:"Frame → Giây",
+        btn3:"Timecode → Frame",
+        sheet:"Bảng Timing",
+        export:"Xuất CSV"
+    },
+    en:{
+        title:"🎬 Studio Timing Converter",
+        quick12:"Quick 12 FPS (On 2s)",
+        btn1:"Seconds → Frames",
+        btn2:"Frames → Seconds",
+        btn3:"Timecode → Frames",
+        sheet:"Timing Sheet",
+        export:"Export CSV"
+    }
+};
+
+function changeLanguage(lang){
+    currentLang = lang;
+    document.getElementById("title").innerText = translations[lang].title;
+    document.getElementById("quick12").innerText = translations[lang].quick12;
+    document.getElementById("btn1").innerText = translations[lang].btn1;
+    document.getElementById("btn2").innerText = translations[lang].btn2;
+    document.getElementById("btn3").innerText = translations[lang].btn3;
+    document.getElementById("sheetTitle").innerText = translations[lang].sheet;
+    document.getElementById("exportBtn").innerText = translations[lang].export;
+}
 
 function getFPS(){
     return parseFloat(document.getElementById("fps").value);
@@ -129,7 +176,10 @@ function getFPS(){
 
 function set12fps(){
     document.getElementById("fps").value = 24;
-    alert("Anime On 2s: Animate mỗi pose 2 frame (tương đương 12 drawings/sec ở 24fps)");
+    alert(currentLang==="vi" ?
+        "Anime On 2s: Mỗi pose giữ 2 frame (12 drawings/sec ở 24fps)" :
+        "Anime On 2s: Hold each pose for 2 frames (12 drawings/sec at 24fps)"
+    );
 }
 
 function roundFrame(value){
@@ -139,48 +189,39 @@ function roundFrame(value){
 function secToFrame(){
     let sec = parseFloat(document.getElementById("seconds").value);
     let fps = getFPS();
-
     if(isNaN(sec)) return;
-
     let frames = roundFrame(sec * fps);
-
     document.getElementById("result").innerText =
+        currentLang==="vi" ?
+        sec + " giây = " + frames + " frame" :
         sec + " sec = " + frames + " frames";
-
     addToSheet(sec, frames, fps);
 }
 
 function frameToSec(){
     let frames = parseFloat(document.getElementById("frames").value);
     let fps = getFPS();
-
     if(isNaN(frames)) return;
-
     let sec = (frames / fps).toFixed(3);
-
     document.getElementById("result").innerText =
+        currentLang==="vi" ?
+        frames + " frame = " + sec + " giây" :
         frames + " frames = " + sec + " sec";
-
     addToSheet(sec, frames, fps);
 }
 
 function timecodeToFrame(){
     let tc = document.getElementById("timecode").value;
     let fps = getFPS();
-
     let parts = tc.split(":");
     if(parts.length !== 3) return;
-
     let h = parseInt(parts[0]);
     let m = parseInt(parts[1]);
     let s = parseInt(parts[2]);
-
     let totalSec = h*3600 + m*60 + s;
     let frames = roundFrame(totalSec * fps);
-
     document.getElementById("result").innerText =
         tc + " = " + frames + " frames";
-
     addToSheet(totalSec, frames, fps);
 }
 
@@ -195,7 +236,6 @@ function addToSheet(sec, frames, fps){
 function exportCSV(){
     let rows = document.querySelectorAll("table tr");
     let csv = [];
-
     for(let i=0;i<rows.length;i++){
         let cols = rows[i].querySelectorAll("td, th");
         let row = [];
@@ -204,7 +244,6 @@ function exportCSV(){
         }
         csv.push(row.join(","));
     }
-
     let csvFile = new Blob([csv.join("\n")], {type:"text/csv"});
     let downloadLink = document.createElement("a");
     downloadLink.download = "timing_sheet.csv";
