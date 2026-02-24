@@ -931,15 +931,15 @@ function changeLang(lang) {
     for (let id in t) {
         let el = document.getElementById(id);
         if (el) {
-            if(el.tagName === "INPUT" && el.placeholder) el.placeholder = t[id];
-            else el.innerText = t[id];
+            if (el.classList.contains("tooltip")) {
+                el.dataset.tip = t[id];
+            } else if(el.tagName === "INPUT" && el.hasAttribute("placeholder")) {
+                el.placeholder = t[id];
+            } else {
+                el.innerText = t[id];
+            }
         }
     }
-
-    document.querySelectorAll(".tooltip").forEach(el => {
-        let tId = el.id;
-        if(t[tId]) el.dataset.tip = t[tId];
-    });
 
     updateConvert(); updateAnime(); updatePoseEst(); updateRender(); updateAllCustomSelects(); updateJerkHint();
 }
