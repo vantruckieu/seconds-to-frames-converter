@@ -54,7 +54,7 @@ h1{
 .tabs{
 display:flex;
 gap:12px;
-margin-bottom:20px;
+margin-bottom:25px;
 }
 
 .tabs button{
@@ -79,41 +79,6 @@ background:linear-gradient(90deg,#0066ff,#00ccff);
 color:white;
 border-color:#00ccff;
 box-shadow:0 0 20px rgba(0,200,255,0.6);
-}
-
-/* Language Bar */
-
-.language-bar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-    padding:12px 16px;
-    border-radius:12px;
-    background:rgba(0, 60, 120, 0.25);
-    border:1px solid rgba(0,180,255,0.25);
-    box-shadow:0 0 20px rgba(0,150,255,0.15);
-}
-
-.language-bar label{
-    font-size:14px;
-    color:#9ed8ff;
-}
-
-.language-bar select{
-    width:120px;
-    padding:8px;
-    background:#0a1422;
-    border:1px solid #1e3a5f;
-    border-radius:8px;
-    color:#e6f3ff;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.language-bar select:hover{
-    border-color:#00ccff;
-    box-shadow:0 0 8px rgba(0,200,255,0.5);
 }
 
 /* Form */
@@ -218,6 +183,15 @@ line-height:1.4;
 .hidden{
 display:none;
 }
+
+/* Footer */
+
+footer{
+margin-top:40px;
+font-size:14px;
+color:#66ccff;
+opacity:0.8;
+}
 </style>
 </head>
 
@@ -235,15 +209,144 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 <button id="tabRender" onclick="switchTab('render')">Render Time</button>
 </div>
 
-<!-- LANGUAGE BAR -->
-<div class="language-bar">
-<label>Ngôn ngữ</label>
+<!-- CONVERT MODE -->
+<div id="convertMode">
+
+<div class="row">
+<label>
+<span class="tooltip" data-tip="Chuyển đổi giữa frame và thời gian theo FPS">Loại tính (?)</span>
+</label>
+<select id="mode" onchange="updateConvert()">
+<option value="f2t">Frame → Time</option>
+<option value="t2f">Time → Frame</option>
+</select>
+</div>
+
+<div class="row">
+<label>FPS</label>
+<input type="number" id="fps" step="0.001" value="24" oninput="updateConvert()">
+
+<div class="fps-presets">
+<button onclick="setFPS(12)">12</button>
+<button onclick="setFPS(24)">24</button>
+<button onclick="setFPS(30)">30</button>
+<button onclick="setFPS(60)">60</button>
+</div>
+</div>
+
+<div class="row">
+<label>Nhập giá trị</label>
+<input type="number" id="inputValue" oninput="updateConvert()">
+</div>
+
+<div class="result" id="convertOutput">—</div>
+
+</div>
+
+<!-- RENDER MODE -->
+<div id="renderMode" class="hidden">
+
+<div class="row">
+<label>
+<span class="tooltip" data-tip="Tổng số frame cần render">Tổng số frame (?)</span>
+</label>
+<input type="number" id="totalFrames" oninput="updateRender()">
+</div>
+
+<div class="row">
+<label>
+<span class="tooltip" data-tip="Thời gian render của 1 frame (tính bằng giây)">Thời gian render 1 frame (giây) (?)</span>
+</label>
+<input type="number" id="renderPerFrame" step="0.01" oninput="updateRender()">
+</div>
+
+<div class="result" id="renderOutput">—</div>
+
+<div class="warning">
+⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.
+</div>
+
+</div>
+
+</div>
+
+<footer>
+Ngôn ngữ:
 <select onchange="changeLang(this.value)">
 <option value="vi">🇻🇳 VI</option>
 <option value="en">🇬🇧 EN</option>
 </select>
-</div>
+</footer>
 
-<!-- CONVERT MODE -->
-<div id="convertMode">
-...
+<script>
+
+let currentLang="vi";
+
+function switchTab(tab){
+document.getElementById("convertMode").classList.add("hidden");
+document.getElementById("renderMode").classList.add("hidden");
+document.getElementById("tabConvert").classList.remove("active");
+document.getElementById("tabRender").classList.remove("active");
+
+if(tab==="convert"){
+document.getElementById("convertMode").classList.remove("hidden");
+document.getElementById("tabConvert").classList.add("active");
+}else{
+document.getElementById("renderMode").classList.remove("hidden");
+document.getElementById("tabRender").classList.add("active");
+}
+}
+
+function updateConvert(){
+let mode=document.getElementById("mode").value;
+let fps=parseFloat(document.getElementById("fps").value);
+let val=parseFloat(document.getElementById("inputValue").value);
+
+if(isNaN(val) || isNaN(fps) || fps<=0){
+document.getElementById("convertOutput").innerText="—";
+return;
+}
+
+if(mode==="f2t"){
+let sec=(val/fps).toFixed(3);
+document.getElementById("convertOutput").innerText=
+currentLang==="vi"? sec+" giây": sec+" sec";
+}else{
+let frames=Math.round(val*fps);
+document.getElementById("convertOutput").innerText=
+currentLang==="vi"? frames+" frame": frames+" frames";
+}
+}
+
+function updateRender(){
+let frames=parseFloat(document.getElementById("totalFrames").value);
+let perFrame=parseFloat(document.getElementById("renderPerFrame").value);
+
+if(isNaN(frames) || isNaN(perFrame)){
+document.getElementById("renderOutput").innerText="—";
+return;
+}
+
+let total=frames*perFrame;
+let hours=Math.floor(total/3600);
+let minutes=Math.floor((total%3600)/60);
+let seconds=Math.floor(total%60);
+
+document.getElementById("renderOutput").innerText=
+hours+"h "+minutes+"m "+seconds+"s";
+}
+
+function setFPS(value){
+document.getElementById("fps").value=value;
+updateConvert();
+}
+
+function changeLang(lang){
+currentLang=lang;
+updateConvert();
+}
+
+</script>
+
+</body>
+</html>
