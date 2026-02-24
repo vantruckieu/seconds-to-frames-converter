@@ -2,16 +2,15 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Timing & Render Tool</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title id="title">Timing & Render Tool</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
+
 body {
+    color-scheme: dark; 
     background: radial-gradient(circle at 20% 20%, #0f1c2e, #050b18 70%);
-    font-family: 'Google Sans', 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Google Sans', 'Be Vietnam Pro', 'Segoe UI', sans-serif;
     color: #e6f3ff;
     display: flex;
     flex-direction: column;
@@ -22,15 +21,12 @@ body {
     box-sizing: border-box;
 }
 
-/* Title + intro */
-
 h1 {
     margin: 0 0 10px 0;
     font-size: 28px;
     text-align: center;
     color: #00ccff;
     text-shadow: 0 0 20px rgba(0,200,255,0.6);
-    font-weight: 700;
 }
 
 .intro {
@@ -41,20 +37,14 @@ h1 {
     line-height: 1.5;
 }
 
-/* Container */
-
 .container {
     background: linear-gradient(145deg, #0e1624, #111c2f);
     padding: 40px;
     border-radius: 20px;
     width: 460px;
-    box-shadow:
-        0 0 40px rgba(0,140,255,0.25),
-        inset 0 0 60px rgba(0,80,160,0.15);
+    box-shadow: 0 0 40px rgba(0,140,255,0.25), inset 0 0 60px rgba(0,80,160,0.15);
     border: 1px solid rgba(0,180,255,0.2);
 }
-
-/* Tabs */
 
 .tabs {
     display: flex;
@@ -71,7 +61,7 @@ h1 {
     color: #7fbfff;
     cursor: pointer;
     transition: 0.3s;
-    font-weight: 600;
+    font-weight: 500;
     font-family: inherit;
 }
 
@@ -87,9 +77,7 @@ h1 {
     box-shadow: 0 0 20px rgba(0,200,255,0.6);
 }
 
-/* Form */
-
-.row { margin-bottom: 20px; position: relative; }
+.row { margin-bottom: 20px; }
 
 label {
     display: flex;
@@ -98,136 +86,55 @@ label {
     font-size: 14px;
     opacity: 0.85;
     color: #9ed8ff;
-    font-weight: 500;
 }
 
-input {
+input, select {
     width: 100%;
-    padding: 12px 16px;
+    padding: 12px;
     font-size: 16px;
+    font-family: inherit;
     background: #0a1422;
     border: 1px solid #1e3a5f;
     border-radius: 10px;
     color: #e6f3ff;
     transition: 0.3s;
     box-sizing: border-box;
-    font-family: inherit;
 }
 
-input:focus {
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ed8ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+select option {
+    background-color: #0a1422;
+    color: #e6f3ff;
+}
+
+input:focus, select:focus {
     outline: none;
     border-color: #00ccff;
     box-shadow: 0 0 12px rgba(0,200,255,0.5);
 }
 
-/* --- CUSTOM DROPDOWN SIÊU MƯỢT --- */
-
-.custom-select-wrapper {
-    position: relative;
-    user-select: none;
-    width: 100%;
-}
-
-.custom-select {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 16px;
-    background: #0a1422;
-    border: 1px solid #1e3a5f;
-    border-radius: 10px;
-    color: #e6f3ff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-}
-
-.custom-select:hover, .custom-select.open {
-    border-color: #00ccff;
-    box-shadow: 0 0 12px rgba(0,200,255,0.3);
-    background: #0c1a2e;
-}
-
-/* Icon mũi tên tự vẽ bằng CSS (mượt hơn dùng chữ ▼) */
-.custom-select::after {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-right: 2px solid #00ccff;
-    border-bottom: 2px solid #00ccff;
-    transform: translateY(-2px) rotate(45deg);
-    transition: transform 0.3s ease;
-}
-
-.custom-select.open::after {
-    transform: translateY(3px) rotate(-135deg);
-}
-
-.custom-options {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    background: #0d1a2d;
-    border: 1px solid rgba(0, 204, 255, 0.3);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 100;
-    padding: 6px;
-    box-sizing: border-box;
-}
-
-.custom-select-wrapper.open .custom-options {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) !important;
-}
-
-.custom-option {
-    padding: 10px 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: #9ed8ff;
-    border-radius: 8px;
-    margin-bottom: 2px;
-    font-size: 15px;
-}
-
-.custom-option:last-child {
-    margin-bottom: 0;
-}
-
-.custom-option:hover {
-    background: rgba(0, 204, 255, 0.1);
-    color: #ffffff;
-}
-
-.custom-option.selected {
-    background: rgba(0, 204, 255, 0.2);
-    color: #00ccff;
-    font-weight: 600;
-}
-
-/* Input group for value and time unit */
 .input-group {
     display: flex;
     gap: 10px;
 }
+
 .input-group input {
     flex: 1;
 }
-.input-group .custom-select-wrapper {
-    width: 130px; /* Nới rộng một chút để chữ không bị chèn ép */
-}
 
-/* FPS Presets */
+.input-group select {
+    flex: 0 0 110px;
+}
 
 .fps-presets {
     display: flex;
@@ -246,7 +153,6 @@ input:focus {
     font-size: 13px;
     transition: 0.2s;
     font-family: inherit;
-    font-weight: 500;
 }
 
 .fps-presets button:hover {
@@ -254,18 +160,14 @@ input:focus {
     box-shadow: 0 0 8px rgba(0,200,255,0.6);
 }
 
-/* Result */
-
 .result {
     margin-top: 25px;
     font-size: 26px;
-    font-weight: 700;
+    font-weight: bold;
     color: #00ccff;
     text-align: center;
     text-shadow: 0 0 15px rgba(0,200,255,0.6);
 }
-
-/* Tooltip */
 
 .tooltip {
     display: inline-flex;
@@ -312,8 +214,6 @@ input:focus {
     line-height: 1.4;
 }
 
-/* Warning */
-
 .warning {
     margin-top: 15px;
     font-size: 13px;
@@ -322,13 +222,9 @@ input:focus {
     line-height: 1.4;
 }
 
-/* Hidden */
-
 .hidden {
     display: none !important;
 }
-
-/* Footer */
 
 footer {
     margin-top: 40px;
@@ -341,20 +237,19 @@ footer {
     gap: 10px;
 }
 
-footer .custom-select-wrapper {
-    width: 110px;
-}
-footer .custom-select {
-    padding: 8px 12px;
+footer select {
+    width: auto;
+    padding: 6px 30px 6px 10px;
     font-size: 14px;
-    border-radius: 8px;
+    border-radius: 6px;
+    cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Timing & Render Tool</h1>
+<h1 id="mainTitle">Timing & Render Tool</h1>
 <div class="intro" id="introText">
 Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gian Render dựa trên thời gian của 1 frame.
 </div>
@@ -362,173 +257,134 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 <div class="container">
 
 <div class="tabs">
-<button id="tabConvert" class="active" onclick="switchTab('convert')">Time / Frame Convert</button>
-<button id="tabRender" onclick="switchTab('render')">Render Time</button>
+    <button id="tabConvert" class="active" onclick="switchTab('convert')">Time / Frame Convert</button>
+    <button id="tabRender" onclick="switchTab('render')">Render Time</button>
 </div>
 
 <div id="convertMode">
 
-<div class="row">
-<label>
-<span id="lblCalcType">Loại tính</span> <span class="tooltip" id="tipCalcType" data-tip="Chuyển đổi giữa frame và thời gian theo FPS">?</span>
-</label>
-<div class="custom-select-wrapper" id="modeWrapper">
-    <div class="custom-select" id="modeDisplay" data-value="f2t">Frame → Time</div>
-    <div class="custom-options">
-        <div class="custom-option selected" data-value="f2t" id="optF2T">Frame → Time</div>
-        <div class="custom-option" data-value="t2f" id="optT2F">Time → Frame</div>
+    <div class="row">
+        <label>
+            <span id="lblMode">Loại tính</span>
+            <span class="tooltip" id="tipMode" data-tip="Chuyển đổi giữa frame và thời gian theo FPS">?</span>
+        </label>
+        <select id="mode" onchange="updateConvert()">
+            <option id="optF2T" value="f2t">Frame → Time</option>
+            <option id="optT2F" value="t2f">Time → Frame</option>
+        </select>
     </div>
-</div>
-</div>
 
-<div class="row">
-<label>FPS</label>
-<input type="number" id="fps" step="0.001" value="24" min="1" oninput="updateConvert()">
+    <div class="row">
+        <label id="lblFPS">FPS</label>
+        <input type="number" id="fps" step="0.001" value="24" min="1" oninput="updateConvert()">
 
-<div class="fps-presets">
-<button onclick="setFPS(12)">12</button>
-<button onclick="setFPS(24)">24</button>
-<button onclick="setFPS(30)">30</button>
-<button onclick="setFPS(60)">60</button>
-</div>
-</div>
-
-<div class="row">
-<label id="lblInputValue">Số khung hình/Thời gian</label>
-<div class="input-group">
-    <input type="number" id="inputValue" min="0" oninput="updateConvert()">
-    
-    <div class="custom-select-wrapper hidden" id="timeUnitWrapper">
-        <div class="custom-select" id="timeUnitDisplay" data-value="1">Giây</div>
-        <div class="custom-options">
-            <div class="custom-option selected" data-value="1" id="optSec">Giây</div>
-            <div class="custom-option" data-value="60" id="optMin">Phút</div>
-            <div class="custom-option" data-value="3600" id="optHour">Giờ</div>
+        <div class="fps-presets">
+            <button onclick="setFPS(12)">12</button>
+            <button onclick="setFPS(24)">24</button>
+            <button onclick="setFPS(30)">30</button>
+            <button onclick="setFPS(60)">60</button>
         </div>
     </div>
-</div>
-</div>
 
-<div class="result" id="convertOutput">—</div>
+    <div class="row">
+        <label id="lblInput">Số khung hình/thời gian</label>
+        <div class="input-group">
+            <input type="number" id="inputValue" min="0" oninput="updateConvert()">
+            <select id="timeUnit" class="hidden" onchange="updateConvert()">
+                <option id="optSec" value="1">Giây</option>
+                <option id="optMin" value="60">Phút</option>
+                <option id="optHour" value="3600">Giờ</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="result" id="convertOutput">—</div>
 
 </div>
 
 <div id="renderMode" class="hidden">
 
-<div class="row">
-<label>
-<span id="lblTotalFrames">Tổng số frame</span> <span class="tooltip" id="tipTotalFrames" data-tip="Tổng số frame cần render trong phần mềm">?</span>
-</label>
-<input type="number" id="totalFrames" min="0" oninput="updateRender()">
-</div>
+    <div class="row">
+        <label>
+            <span id="lblTotalFrames">Tổng số frame</span>
+            <span class="tooltip" id="tipTotalFrames" data-tip="Tổng số frame cần render trong phần mềm">?</span>
+        </label>
+        <input type="number" id="totalFrames" min="0" oninput="updateRender()">
+    </div>
 
-<div class="row">
-<label>
-<span id="lblRenderTime">Thời gian render 1 frame (giây)</span> <span class="tooltip" id="tipRenderTime" data-tip="Thời gian xuất 1 khung hình (tính bằng giây)">?</span>
-</label>
-<input type="number" id="renderPerFrame" step="0.01" min="0" oninput="updateRender()">
-</div>
+    <div class="row">
+        <label>
+            <span id="lblRenderPerFrame">Thời gian render 1 frame (giây)</span>
+            <span class="tooltip" id="tipRenderPerFrame" data-tip="Thời gian xuất 1 khung hình (tính bằng giây)">?</span>
+        </label>
+        <input type="number" id="renderPerFrame" step="0.01" min="0" oninput="updateRender()">
+    </div>
 
-<div class="result" id="renderOutput">—</div>
+    <div class="result" id="renderOutput">—</div>
 
-<div class="warning" id="warningText">
-⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.
-</div>
+    <div class="warning" id="warningText">
+    ⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.
+    </div>
 
 </div>
 
 </div>
 
 <footer>
-<span id="lblLang">Ngôn ngữ:</span>
-<div class="custom-select-wrapper" id="langWrapper">
-    <div class="custom-select" id="langDisplay" data-value="vi">🇻🇳 VI</div>
-    <div class="custom-options" style="top: auto; bottom: calc(100% + 8px); transform: translateY(10px);">
-        <div class="custom-option selected" data-value="vi">🇻🇳 VI</div>
-        <div class="custom-option" data-value="en">🇬🇧 EN</div>
-    </div>
-</div>
+    <span id="lblLanguage">Ngôn ngữ:</span>
+    <select onchange="changeLang(this.value)">
+        <option value="vi">🇻🇳 VI</option>
+        <option value="en">🇬🇧 EN</option>
+    </select>
 </footer>
 
 <script>
+let currentLang = "vi";
 
-let currentLang="vi";
-
-// Từ điển đa ngôn ngữ
-const dict = {
+const i18n = {
     vi: {
+        mainTitle: "Timing & Render Tool",
         introText: "Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gian Render dựa trên thời gian của 1 frame.",
         tabConvert: "Time / Frame Convert",
         tabRender: "Render Time",
-        lblCalcType: "Loại tính",
-        tipCalcType: "Chuyển đổi giữa frame và thời gian theo FPS",
+        lblMode: "Loại tính",
+        tipMode: "Chuyển đổi giữa frame và thời gian theo FPS",
         optF2T: "Frame → Time",
         optT2F: "Time → Frame",
-        lblInputValue: "Số khung hình/Thời gian",
+        lblFPS: "FPS",
+        lblInput: "Số khung hình/thời gian",
         optSec: "Giây",
         optMin: "Phút",
         optHour: "Giờ",
         lblTotalFrames: "Tổng số frame",
         tipTotalFrames: "Tổng số frame cần render trong phần mềm",
-        lblRenderTime: "Thời gian render 1 frame (giây)",
-        tipRenderTime: "Thời gian xuất 1 khung hình (tính bằng giây)",
+        lblRenderPerFrame: "Thời gian render 1 frame (giây)",
+        tipRenderPerFrame: "Thời gian xuất 1 khung hình (tính bằng giây)",
         warningText: "⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.",
-        lblLang: "Ngôn ngữ:"
+        lblLanguage: "Ngôn ngữ:"
     },
     en: {
-        introText: "Tool to convert Frame ⇄ Time and estimate Render time based on a single frame's render time.",
+        mainTitle: "Timing & Render Tool",
+        introText: "Tool to convert between Frame ⇄ Time and estimate Render time based on a single frame.",
         tabConvert: "Time / Frame Convert",
         tabRender: "Render Time",
-        lblCalcType: "Calculation Type",
-        tipCalcType: "Convert between frames and time based on FPS",
+        lblMode: "Calculation Mode",
+        tipMode: "Convert between frames and time based on FPS",
         optF2T: "Frame → Time",
         optT2F: "Time → Frame",
-        lblInputValue: "Frames / Time Amount",
+        lblFPS: "FPS",
+        lblInput: "Frames / Time value",
         optSec: "Seconds",
         optMin: "Minutes",
         optHour: "Hours",
         lblTotalFrames: "Total Frames",
-        tipTotalFrames: "Total frames to render in your software",
-        lblRenderTime: "Render time per frame (seconds)",
-        tipRenderTime: "Time to render 1 single frame (in seconds)",
-        warningText: "⚠ For reference and estimation only. If subsequent frames have higher/lower detail density, render time may vary.",
-        lblLang: "Language:"
+        tipTotalFrames: "Total frames to be rendered in your software",
+        lblRenderPerFrame: "Render time per frame (sec)",
+        tipRenderPerFrame: "Time to render one single frame (in seconds)",
+        warningText: "⚠ For estimation purposes only. If subsequent frames have higher or lower details, actual render time may vary.",
+        lblLanguage: "Language:"
     }
 };
-
-function applyTranslation() {
-    const t = dict[currentLang];
-    document.getElementById("introText").innerText = t.introText;
-    document.getElementById("tabConvert").innerText = t.tabConvert;
-    document.getElementById("tabRender").innerText = t.tabRender;
-    document.getElementById("lblCalcType").innerText = t.lblCalcType;
-    document.getElementById("tipCalcType").setAttribute("data-tip", t.tipCalcType);
-    
-    // Cập nhật text cho options
-    document.getElementById("optF2T").innerText = t.optF2T;
-    document.getElementById("optT2F").innerText = t.optT2F;
-    document.getElementById("optSec").innerText = t.optSec;
-    document.getElementById("optMin").innerText = t.optMin;
-    document.getElementById("optHour").innerText = t.optHour;
-    
-    // Cập nhật text hiển thị trên bề mặt Dropdown
-    const modeVal = document.getElementById("modeDisplay").getAttribute("data-value");
-    if(modeVal === "f2t") document.getElementById("modeDisplay").innerText = t.optF2T;
-    if(modeVal === "t2f") document.getElementById("modeDisplay").innerText = t.optT2F;
-    
-    const timeVal = document.getElementById("timeUnitDisplay").getAttribute("data-value");
-    if(timeVal === "1") document.getElementById("timeUnitDisplay").innerText = t.optSec;
-    if(timeVal === "60") document.getElementById("timeUnitDisplay").innerText = t.optMin;
-    if(timeVal === "3600") document.getElementById("timeUnitDisplay").innerText = t.optHour;
-
-    document.getElementById("lblInputValue").innerText = t.lblInputValue;
-    document.getElementById("lblTotalFrames").innerText = t.lblTotalFrames;
-    document.getElementById("tipTotalFrames").setAttribute("data-tip", t.tipTotalFrames);
-    document.getElementById("lblRenderTime").innerText = t.lblRenderTime;
-    document.getElementById("tipRenderTime").setAttribute("data-tip", t.tipRenderTime);
-    document.getElementById("warningText").innerText = t.warningText;
-    document.getElementById("lblLang").innerText = t.lblLang;
-}
 
 function switchTab(tab){
     document.getElementById("convertMode").classList.add("hidden");
@@ -536,116 +392,61 @@ function switchTab(tab){
     document.getElementById("tabConvert").classList.remove("active");
     document.getElementById("tabRender").classList.remove("active");
 
-    if(tab==="convert"){
+    if(tab === "convert"){
         document.getElementById("convertMode").classList.remove("hidden");
         document.getElementById("tabConvert").classList.add("active");
-    }else{
+    } else {
         document.getElementById("renderMode").classList.remove("hidden");
         document.getElementById("tabRender").classList.add("active");
     }
 }
 
-// Logic cho Custom Dropdown
-document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
-    const select = wrapper.querySelector('.custom-select');
-    const options = wrapper.querySelectorAll('.custom-option');
-
-    select.addEventListener('click', function(e) {
-        e.stopPropagation();
-        
-        document.querySelectorAll('.custom-select-wrapper').forEach(w => {
-            if(w !== wrapper) {
-                w.classList.remove('open');
-                w.querySelector('.custom-select').classList.remove('open');
-            }
-        });
-
-        wrapper.classList.toggle('open');
-        select.classList.toggle('open');
-    });
-
-    options.forEach(option => {
-        option.addEventListener('click', function(e) {
-            e.stopPropagation();
-            
-            options.forEach(opt => opt.classList.remove('selected'));
-            this.classList.add('selected');
-
-            select.innerText = this.innerText;
-            select.setAttribute('data-value', this.getAttribute('data-value'));
-
-            wrapper.classList.remove('open');
-            select.classList.remove('open');
-
-            if(wrapper.id === "modeWrapper") {
-                handleModeChange();
-            } else if (wrapper.id === "langWrapper") {
-                changeLang(this.getAttribute('data-value'));
-            } else {
-                updateConvert();
-            }
-        });
-    });
-});
-
-document.addEventListener('click', function() {
-    document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
-        wrapper.classList.remove('open');
-        wrapper.querySelector('.custom-select').classList.remove('open');
-    });
-});
-
-function handleModeChange() {
-    let mode = document.getElementById("modeDisplay").getAttribute("data-value");
-    let timeUnitWrapper = document.getElementById("timeUnitWrapper");
-    
-    if (mode === "t2f") {
-        timeUnitWrapper.classList.remove("hidden");
-    } else {
-        timeUnitWrapper.classList.add("hidden");
-    }
-    updateConvert();
-}
-
 function updateConvert(){
-    let mode=document.getElementById("modeDisplay").getAttribute("data-value");
-    let fps=parseFloat(document.getElementById("fps").value);
-    let val=parseFloat(document.getElementById("inputValue").value);
+    let mode = document.getElementById("mode").value;
+    let fps = parseFloat(document.getElementById("fps").value);
+    let val = parseFloat(document.getElementById("inputValue").value);
+    let timeUnit = document.getElementById("timeUnit");
 
-    if(isNaN(val) || isNaN(fps) || fps<=0 || val < 0){
-        document.getElementById("convertOutput").innerText="—";
+    if (mode === "t2f") {
+        timeUnit.classList.remove("hidden");
+    } else {
+        timeUnit.classList.add("hidden");
+    }
+
+    if(isNaN(val) || isNaN(fps) || fps <= 0 || val < 0){
+        document.getElementById("convertOutput").innerText = "—";
         return;
     }
 
-    if(mode==="f2t"){
-        let sec=(val/fps).toFixed(3);
-        document.getElementById("convertOutput").innerText=
-        currentLang==="vi"? sec+" giây": sec+" sec";
-    }else{
-        let timeMultiplier = parseFloat(document.getElementById("timeUnitDisplay").getAttribute("data-value"));
-        let totalSeconds = val * timeMultiplier;
-        let frames=Math.round(totalSeconds*fps);
+    if(mode === "f2t"){
+        let sec = (val / fps).toFixed(3);
+        document.getElementById("convertOutput").innerText =
+            currentLang === "vi" ? sec + " giây" : sec + " sec";
+    } else {
+        let multiplier = parseFloat(timeUnit.value);
+        let totalSeconds = val * multiplier;
+        let frames = Math.round(totalSeconds * fps);
         
-        document.getElementById("convertOutput").innerText=
-        currentLang==="vi"? frames+" frame": frames+" frames";
+        document.getElementById("convertOutput").innerText =
+            currentLang === "vi" ? frames + " frame" : frames + " frames";
     }
 }
 
 function updateRender(){
-    let frames=parseFloat(document.getElementById("totalFrames").value);
-    let perFrame=parseFloat(document.getElementById("renderPerFrame").value);
+    let frames = parseFloat(document.getElementById("totalFrames").value);
+    let perFrame = parseFloat(document.getElementById("renderPerFrame").value);
 
     if(isNaN(frames) || isNaN(perFrame) || frames < 0 || perFrame < 0){
-        document.getElementById("renderOutput").innerText="—";
+        document.getElementById("renderOutput").innerText = "—";
         return;
     }
 
-    let total=frames*perFrame;
+    let total = frames * perFrame;
     
-    let days=Math.floor(total/86400);
-    let hours=Math.floor((total%86400)/3600);
-    let minutes=Math.floor((total%3600)/60);
-    let seconds=Math.floor(total%60);
+    let days = Math.floor(total / 86400);
+    let hours = Math.floor((total % 86400) / 3600);
+    let minutes = Math.floor((total % 3600) / 60);
+    let seconds = Math.floor(total % 60);
 
     let outputStr = "";
     
@@ -654,25 +455,43 @@ function updateRender(){
         outputStr += days + dayLabel;
     }
     
-    outputStr += hours+"h "+minutes+"m "+seconds+"s";
+    outputStr += hours + "h " + minutes + "m " + seconds + "s";
 
     document.getElementById("renderOutput").innerText = outputStr;
 }
 
 function setFPS(value){
-    document.getElementById("fps").value=value;
+    document.getElementById("fps").value = value;
     updateConvert();
 }
 
 function changeLang(lang){
-    currentLang=lang;
-    applyTranslation();
+    currentLang = lang;
+    let t = i18n[lang];
+
+    document.getElementById("mainTitle").innerText = t.mainTitle;
+    document.getElementById("introText").innerText = t.introText;
+    document.getElementById("tabConvert").innerText = t.tabConvert;
+    document.getElementById("tabRender").innerText = t.tabRender;
+    document.getElementById("lblMode").innerText = t.lblMode;
+    document.getElementById("tipMode").dataset.tip = t.tipMode;
+    document.getElementById("optF2T").innerText = t.optF2T;
+    document.getElementById("optT2F").innerText = t.optT2F;
+    document.getElementById("lblFPS").innerText = t.lblFPS;
+    document.getElementById("lblInput").innerText = t.lblInput;
+    document.getElementById("optSec").innerText = t.optSec;
+    document.getElementById("optMin").innerText = t.optMin;
+    document.getElementById("optHour").innerText = t.optHour;
+    document.getElementById("lblTotalFrames").innerText = t.lblTotalFrames;
+    document.getElementById("tipTotalFrames").dataset.tip = t.tipTotalFrames;
+    document.getElementById("lblRenderPerFrame").innerText = t.lblRenderPerFrame;
+    document.getElementById("tipRenderPerFrame").dataset.tip = t.tipRenderPerFrame;
+    document.getElementById("warningText").innerText = t.warningText;
+    document.getElementById("lblLanguage").innerText = t.lblLanguage;
+
     updateConvert();
     updateRender();
 }
-
-applyTranslation();
-
 </script>
 
 </body>
