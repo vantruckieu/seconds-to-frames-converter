@@ -86,7 +86,8 @@ box-shadow:0 0 20px rgba(0,200,255,0.6);
 .row{ margin-bottom:20px; }
 
 label{
-display:block;
+display:flex;
+align-items:center; /* Căn giữa text và icon */
 margin-bottom:6px;
 font-size:14px;
 opacity:0.85;
@@ -102,12 +103,26 @@ border:1px solid #1e3a5f;
 border-radius:10px;
 color:#e6f3ff;
 transition:0.3s;
+box-sizing:border-box;
 }
 
 input:focus, select:focus{
 outline:none;
 border-color:#00ccff;
 box-shadow:0 0 12px rgba(0,200,255,0.5);
+}
+
+/* Input group for value and time unit */
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+.input-group input {
+    flex: 1;
+}
+.input-group select {
+    width: auto;
+    padding: 12px;
 }
 
 /* FPS Presets */
@@ -149,23 +164,48 @@ text-shadow:0 0 15px rgba(0,200,255,0.6);
 /* Tooltip */
 
 .tooltip{
-border-bottom:1px dotted #66ccff;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:16px;
+height:16px;
+background:rgba(0, 204, 255, 0.1);
+border:1px solid #00ccff;
+border-radius:50%;
+color:#00ccff;
+font-size:11px;
+font-weight:bold;
 cursor:help;
 position:relative;
+margin-left:8px;
+transition:0.3s;
+}
+
+.tooltip:hover{
+background:#00ccff;
+color:#0a1422;
+box-shadow:0 0 10px rgba(0, 204, 255, 0.6);
 }
 
 .tooltip:hover::after{
 content:attr(data-tip);
 position:absolute;
-bottom:130%;
-left:0;
+bottom:150%;
+left:50%;
+transform:translateX(-50%); 
 background:#02111f;
 padding:10px 14px;
 font-size:12px;
+font-weight:normal;
 border-radius:8px;
-width:260px;
+width:max-content; 
+max-width:260px;
 color:#cceeff;
-box-shadow:0 0 15px rgba(0,170,255,0.5);
+box-shadow:0 4px 15px rgba(0,170,255,0.5);
+border:1px solid rgba(0, 204, 255, 0.3);
+z-index:10;
+text-align:center;
+line-height:1.4;
 }
 
 /* Warning */
@@ -181,7 +221,7 @@ line-height:1.4;
 /* Hidden */
 
 .hidden{
-display:none;
+display:none !important;
 }
 
 /* Footer */
@@ -210,7 +250,7 @@ footer select {
 <body>
 
 <h1>Timing & Render Tool</h1>
-<div class="intro">
+<div class="intro" id="introText">
 Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gian Render dựa trên thời gian của 1 frame.
 </div>
 
@@ -225,11 +265,11 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 
 <div class="row">
 <label>
-<span class="tooltip" data-tip="Chuyển đổi giữa frame và thời gian theo FPS">Loại tính (?)</span>
+<span id="lblCalcType">Loại tính</span> <span class="tooltip" id="tipCalcType" data-tip="Chuyển đổi giữa frame và thời gian theo FPS">?</span>
 </label>
-<select id="mode" onchange="updateConvert()">
-<option value="f2t">Frame → Time</option>
-<option value="t2f">Time → Frame</option>
+<select id="mode" onchange="handleModeChange()">
+<option id="optF2T" value="f2t">Frame → Time</option>
+<option id="optT2F" value="t2f">Time → Frame</option>
 </select>
 </div>
 
@@ -246,8 +286,16 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 </div>
 
 <div class="row">
-<label>Nhập giá trị</label>
-<input type="number" id="inputValue" min="0" oninput="updateConvert()">
+<label id="lblInputValue">Số khung hình/Thời gian</label>
+<div class="input-group">
+    <input type="number" id="inputValue" min="0" oninput="updateConvert()">
+    
+    <select id="timeUnit" class="hidden" onchange="updateConvert()">
+        <option id="optSec" value="1">Giây</option>
+        <option id="optMin" value="60">Phút</option>
+        <option id="optHour" value="3600">Giờ</option>
+    </select>
+</div>
 </div>
 
 <div class="result" id="convertOutput">—</div>
@@ -258,21 +306,21 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 
 <div class="row">
 <label>
-<span class="tooltip" data-tip="Tổng số frame cần render">Tổng số frame (?)</span>
+<span id="lblTotalFrames">Tổng số frame</span> <span class="tooltip" id="tipTotalFrames" data-tip="Tổng số frame cần render trong phần mềm">?</span>
 </label>
 <input type="number" id="totalFrames" min="0" oninput="updateRender()">
 </div>
 
 <div class="row">
 <label>
-<span class="tooltip" data-tip="Thời gian render của 1 frame (tính bằng giây)">Thời gian render 1 frame (giây) (?)</span>
+<span id="lblRenderTime">Thời gian render 1 frame (giây)</span> <span class="tooltip" id="tipRenderTime" data-tip="Thời gian xuất 1 khung hình (tính bằng giây)">?</span>
 </label>
 <input type="number" id="renderPerFrame" step="0.01" min="0" oninput="updateRender()">
 </div>
 
 <div class="result" id="renderOutput">—</div>
 
-<div class="warning">
+<div class="warning" id="warningText">
 ⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.
 </div>
 
@@ -281,7 +329,7 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 </div>
 
 <footer>
-Ngôn ngữ:
+<span id="lblLang">Ngôn ngữ:</span>
 <select onchange="changeLang(this.value)">
 <option value="vi">🇻🇳 VI</option>
 <option value="en">🇬🇧 EN</option>
@@ -291,6 +339,69 @@ Ngôn ngữ:
 <script>
 
 let currentLang="vi";
+
+// Từ điển đa ngôn ngữ
+const dict = {
+    vi: {
+        introText: "Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gian Render dựa trên thời gian của 1 frame.",
+        tabConvert: "Time / Frame Convert",
+        tabRender: "Render Time",
+        lblCalcType: "Loại tính",
+        tipCalcType: "Chuyển đổi giữa frame và thời gian theo FPS",
+        optF2T: "Frame → Time",
+        optT2F: "Time → Frame",
+        lblInputValue: "Số khung hình/Thời gian",
+        optSec: "Giây",
+        optMin: "Phút",
+        optHour: "Giờ",
+        lblTotalFrames: "Tổng số frame",
+        tipTotalFrames: "Tổng số frame cần render trong phần mềm",
+        lblRenderTime: "Thời gian render 1 frame (giây)",
+        tipRenderTime: "Thời gian xuất 1 khung hình (tính bằng giây)",
+        warningText: "⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.",
+        lblLang: "Ngôn ngữ:"
+    },
+    en: {
+        introText: "Tool to convert Frame ⇄ Time and estimate Render time based on a single frame's render time.",
+        tabConvert: "Time / Frame Convert",
+        tabRender: "Render Time",
+        lblCalcType: "Calculation Type",
+        tipCalcType: "Convert between frames and time based on FPS",
+        optF2T: "Frame → Time",
+        optT2F: "Time → Frame",
+        lblInputValue: "Frames / Time Amount",
+        optSec: "Seconds",
+        optMin: "Minutes",
+        optHour: "Hours",
+        lblTotalFrames: "Total Frames",
+        tipTotalFrames: "Total frames to render in your software",
+        lblRenderTime: "Render time per frame (seconds)",
+        tipRenderTime: "Time to render 1 single frame (in seconds)",
+        warningText: "⚠ For reference and estimation only. If subsequent frames have higher/lower detail density, render time may vary.",
+        lblLang: "Language:"
+    }
+};
+
+function applyTranslation() {
+    const t = dict[currentLang];
+    document.getElementById("introText").innerText = t.introText;
+    document.getElementById("tabConvert").innerText = t.tabConvert;
+    document.getElementById("tabRender").innerText = t.tabRender;
+    document.getElementById("lblCalcType").innerText = t.lblCalcType;
+    document.getElementById("tipCalcType").setAttribute("data-tip", t.tipCalcType);
+    document.getElementById("optF2T").innerText = t.optF2T;
+    document.getElementById("optT2F").innerText = t.optT2F;
+    document.getElementById("lblInputValue").innerText = t.lblInputValue;
+    document.getElementById("optSec").innerText = t.optSec;
+    document.getElementById("optMin").innerText = t.optMin;
+    document.getElementById("optHour").innerText = t.optHour;
+    document.getElementById("lblTotalFrames").innerText = t.lblTotalFrames;
+    document.getElementById("tipTotalFrames").setAttribute("data-tip", t.tipTotalFrames);
+    document.getElementById("lblRenderTime").innerText = t.lblRenderTime;
+    document.getElementById("tipRenderTime").setAttribute("data-tip", t.tipRenderTime);
+    document.getElementById("warningText").innerText = t.warningText;
+    document.getElementById("lblLang").innerText = t.lblLang;
+}
 
 function switchTab(tab){
     document.getElementById("convertMode").classList.add("hidden");
@@ -307,23 +418,40 @@ function switchTab(tab){
     }
 }
 
+// Xử lý khi đổi mode để hiện/ẩn bộ chọn Đơn vị thời gian
+function handleModeChange() {
+    let mode = document.getElementById("mode").value;
+    let timeUnitSelect = document.getElementById("timeUnit");
+    
+    if (mode === "t2f") {
+        timeUnitSelect.classList.remove("hidden");
+    } else {
+        timeUnitSelect.classList.add("hidden");
+    }
+    updateConvert();
+}
+
 function updateConvert(){
     let mode=document.getElementById("mode").value;
     let fps=parseFloat(document.getElementById("fps").value);
     let val=parseFloat(document.getElementById("inputValue").value);
 
-    // Bắt lỗi: Nếu chưa nhập, nhập chữ, nhập số âm, hoặc FPS <= 0 thì ẩn kết quả
     if(isNaN(val) || isNaN(fps) || fps<=0 || val < 0){
         document.getElementById("convertOutput").innerText="—";
         return;
     }
 
     if(mode==="f2t"){
+        // Frame to Time (mặc định ra giây)
         let sec=(val/fps).toFixed(3);
         document.getElementById("convertOutput").innerText=
         currentLang==="vi"? sec+" giây": sec+" sec";
     }else{
-        let frames=Math.round(val*fps);
+        // Time to Frame (tính toán dựa trên đơn vị thời gian được chọn)
+        let timeMultiplier = parseFloat(document.getElementById("timeUnit").value); // Lấy số quy đổi giây
+        let totalSeconds = val * timeMultiplier;
+        let frames=Math.round(totalSeconds*fps);
+        
         document.getElementById("convertOutput").innerText=
         currentLang==="vi"? frames+" frame": frames+" frames";
     }
@@ -333,7 +461,6 @@ function updateRender(){
     let frames=parseFloat(document.getElementById("totalFrames").value);
     let perFrame=parseFloat(document.getElementById("renderPerFrame").value);
 
-    // Bắt lỗi: Không cho nhập số âm
     if(isNaN(frames) || isNaN(perFrame) || frames < 0 || perFrame < 0){
         document.getElementById("renderOutput").innerText="—";
         return;
@@ -341,7 +468,6 @@ function updateRender(){
 
     let total=frames*perFrame;
     
-    // Thêm logic tính toán ngày (1 ngày = 86400 giây)
     let days=Math.floor(total/86400);
     let hours=Math.floor((total%86400)/3600);
     let minutes=Math.floor((total%3600)/60);
@@ -349,7 +475,6 @@ function updateRender(){
 
     let outputStr = "";
     
-    // Nếu có ngày thì mới hiển thị ngày
     if(days > 0) {
         let dayLabel = currentLang === "vi" ? " ngày " : "d ";
         outputStr += days + dayLabel;
@@ -367,9 +492,13 @@ function setFPS(value){
 
 function changeLang(lang){
     currentLang=lang;
-    updateConvert();
-    updateRender(); // Cập nhật luôn lại ngôn ngữ cho phần Render (chữ ngày/d)
+    applyTranslation(); // Cập nhật lại toàn bộ chữ hiển thị
+    updateConvert();    // Cập nhật lại kết quả tính toán hiện tại
+    updateRender();
 }
+
+// Gọi hàm dịch lần đầu lúc tải trang
+applyTranslation();
 
 </script>
 
