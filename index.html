@@ -198,11 +198,10 @@ input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,
     border-radius: 10px;
     border: 1px solid #1e3a5f;
     width: 100%;
-    overflow-x: auto; /* Enables horizontal slider */
+    overflow-x: auto;
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
-/* Custom Scrollbar for the Graph */
 .graph-wrapper::-webkit-scrollbar { height: 8px; }
 .graph-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
 .graph-wrapper::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 10px; }
@@ -362,8 +361,8 @@ footer .custom-select-trigger { padding: 6px 12px; font-size: 14px; border-radiu
                 <span class="tooltip" id="tipFrameRange" data-tip="?">?</span>
             </label>
             <div class="input-group">
-                <input type="number" id="startFrame" placeholder="Bắt đầu (vd: 1)" oninput="updateAnime()">
-                <input type="number" id="endFrame" placeholder="Kết thúc (vd: 100)" oninput="updateAnime()">
+                <input type="number" id="startFrame" data-i18n-ph="phStartFrame" placeholder="Bắt đầu (vd: 1)" oninput="updateAnime()">
+                <input type="number" id="endFrame" data-i18n-ph="phEndFrame" placeholder="Kết thúc (vd: 100)" oninput="updateAnime()">
             </div>
         </div>
         <div class="row">
@@ -631,15 +630,17 @@ const i18n = {
         dynSubPose: "Pose phụ", dynHold: "Giật/Khựng (Hold)", dynHoldMsg1: "Khuyên dùng giữ thêm", dynHoldMsg2: "tại điểm chạm/cao trào.",
         dynHintFrames: "Gợi ý hợp lý: ",
         
-        dynClampWarn1: "⚠️ Lưu ý: Thời gian cảnh quá ngắn so với nhịp đồ thị. Keyframe cuối bị ép thụt lùi vào frame ",
-        dynClampWarn2: " (phá vỡ chuẩn nhịp On ",
-        dynClampWarn3: "s).<br>➔ Gợi ý: Tăng thời lượng cảnh hoặc chuyển sang nhịp On 1s/2s dày hơn.",
+        dynClampWarn1: "⚠️ Đã điều chỉnh giới hạn: Số pose quá lớn so với độ dài cảnh. Đã tự động giới hạn lại còn ",
+        dynClampWarn2: " pose để đảm bảo đúng nhịp On ",
+        dynClampWarn3: "s.",
         
-        // Titles and Tooltips for Graph elements
-        lblVisualGraph: "Hình dáng đồ thị (Lý thuyết)",
-        tipVisualGraph: "Thể hiện quỹ đạo và gia tốc thuần túy (Easing curve) không chứa dữ liệu thật.",
+        lblVisualGraph: "Vận tốc Easing (Lý thuyết)",
+        tipVisualGraph: "Thể hiện gia tốc và sự thay đổi tốc độ (Vận tốc). Trục giữa là tốc độ đều.",
         lblDataGraph: "Biểu đồ Keyframe (Thực tế)",
-        tipDataGraph: "Vị trí chính xác của từng frame trên trục thời gian sau khi tính toán."
+        tipDataGraph: "Vị trí chính xác của từng frame trên trục thời gian sau khi tính toán.",
+
+        phStartFrame: "Bắt đầu (vd: 1)", phEndFrame: "Kết thúc (vd: 100)",
+        legendMainKey: "Key chính", legendSubKey: "Key phụ"
     },
     en: {
         introText: "Versatile tool for Animation Timing, Frame calculations, and Render estimation.",
@@ -711,14 +712,17 @@ const i18n = {
         dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact/climax.",
         dynHintFrames: "Suggested range: ",
         
-        dynClampWarn1: "⚠️ Note: Scene duration is too short. The last keyframe was forced back to frame ",
-        dynClampWarn2: " (breaking the On ",
-        dynClampWarn3: "s standard).<br>➔ Fix: Increase scene duration or switch to a denser rhythm.",
+        dynClampWarn1: "⚠️ Cap adjusted: Scene length too short. Poses automatically capped to ",
+        dynClampWarn2: " to preserve On ",
+        dynClampWarn3: "s standard.",
         
-        lblVisualGraph: "Curve Representation (Theoretical)",
-        tipVisualGraph: "Displays the pure easing curve trajectory and acceleration without actual data points.",
+        lblVisualGraph: "Easing Velocity (Theoretical)",
+        tipVisualGraph: "Displays acceleration and changes in speed. Middle line is constant speed.",
         lblDataGraph: "Keyframe Timeline (Actual)",
-        tipDataGraph: "Exact placement of each keyframe on the timeline after calculation."
+        tipDataGraph: "Exact placement of each keyframe on the timeline after calculation.",
+
+        phStartFrame: "Start (e.g., 1)", phEndFrame: "End (e.g., 100)",
+        legendMainKey: "Main Key", legendSubKey: "Sub Key"
     }
 };
 
@@ -765,16 +769,20 @@ function updateConvert(){
     }
 }
 
+// Fixed getPacingCurve to yield clearer oscillating velocity for 'wave'
 function getPacingCurve(x, type) {
-    if(type === 'ease_in') return Math.pow(x, 2);
+    if(type === 'ease_in') return x * x;
     if(type === 'ease_out') return Math.sqrt(x);
-    if(type === 'climax') return x < 0.5 ? 2*x*x : 1 - Math.pow(-2*x+2, 2)/2;
-    if(type === 'low_point') return x < 0.5 ? Math.sqrt(2*x)/2 : 1 - Math.sqrt(-2*x+2)/2;
-    if(type === 'wave') return x + 0.1 * Math.sin(x * Math.PI * 2);
+    if(type === 'climax') return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+    if(type === 'low_point') return x < 0.5 ? Math.sqrt(2 * x) / 2 : 1 - Math.sqrt(-2 * x + 2) / 2;
+    if(type === 'wave') {
+        let waves = 3; 
+        return x - 0.05 * Math.sin(x * Math.PI * 2 * waves);
+    }
     return x;
 }
 
-// Draw Pure Static Theoretical Curve
+// [FIXED] Draw Pure Velocity Curve (Derivative) with Origin at Middle
 function renderStaticCurve(canvasId, curveType) {
     let canvas = document.getElementById(canvasId);
     if(!canvas) return;
@@ -786,39 +794,49 @@ function renderStaticCurve(canvasId, curveType) {
     let padX = 25, padY = 15;
     let usableW = w - padX * 2;
     let usableH = h - padY * 2;
+    let midY = h / 2;
     
     ctx.clearRect(0, 0, w, h);
     
-    // Draw fill
-    ctx.beginPath();
-    ctx.moveTo(padX, h - padY);
+    // Calculate numerical speeds (derivative)
+    let speeds = [];
+    let dx = 0.01;
     for(let i=0; i<=100; i++) {
         let x = i/100;
-        let y = getPacingCurve(x, curveType);
-        ctx.lineTo(padX + x * usableW, h - padY - y * usableH);
+        let y1 = getPacingCurve(x, curveType);
+        let y2 = getPacingCurve(x + dx, curveType);
+        speeds.push((y2 - y1) / dx);
     }
-    ctx.lineTo(padX + usableW, h - padY);
-    ctx.closePath();
     
-    let grad = ctx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, "rgba(255, 204, 102, 0.4)");
-    grad.addColorStop(1, "rgba(255, 204, 102, 0.0)");
-    ctx.fillStyle = grad;
-    ctx.fill();
+    // Baseline (Average Speed = 1)
+    ctx.beginPath();
+    ctx.moveTo(padX, midY);
+    ctx.lineTo(w - padX, midY);
+    ctx.strokeStyle = "rgba(255, 204, 102, 0.4)";
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.setLineDash([]);
     
-    // Draw line
+    // Draw Speed Curve
     ctx.beginPath();
     for(let i=0; i<=100; i++) {
         let x = i/100;
-        let y = getPacingCurve(x, curveType);
-        if(i===0) ctx.moveTo(padX + x * usableW, h - padY - y * usableH);
-        else ctx.lineTo(padX + x * usableW, h - padY - y * usableH);
+        let speed = speeds[i];
+        
+        // Map: Speed 1 -> midY. Max variance scaled to usableH / 3
+        let yPos = midY - (speed - 1) * (usableH / 3); 
+        yPos = Math.max(padY, Math.min(h - padY, yPos)); // Clamp
+        
+        if(i===0) ctx.moveTo(padX + x * usableW, yPos);
+        else ctx.lineTo(padX + x * usableW, yPos);
     }
+    
     ctx.strokeStyle = "#ffcc66"; 
     ctx.lineWidth = 2.5;
     ctx.stroke();
-    
-    // Baseline
+
+    // Bottom Axis
     ctx.beginPath();
     ctx.moveTo(padX - 10, h - padY);
     ctx.lineTo(w - padX + 10, h - padY);
@@ -827,19 +845,20 @@ function renderStaticCurve(canvasId, curveType) {
     ctx.stroke();
 }
 
-// Draw Graphical Speed Timeline Curve
-function renderGraph(canvasId, keys, minF, maxF) {
+// [FIXED] Graphical Keyframe Timeline with Sub Poses Support
+function renderGraph(canvasId, mainKeys, subKeys, minF, maxF) {
     let canvas = document.getElementById(canvasId);
     if(!canvas) return;
     let wrapper = canvas.parentElement;
     
-    if(!keys || keys.length < 2) { 
+    let allKeys = mainKeys.concat(subKeys || []).sort((a,b)=>a-b);
+    if(!allKeys || allKeys.length < 2) { 
         if(wrapper) wrapper.classList.add("hidden"); 
         return; 
     }
     if(wrapper) wrapper.classList.remove("hidden");
     
-    let requiredWidth = Math.max(530, keys.length * 35);
+    let requiredWidth = Math.max(530, allKeys.length * 35);
     canvas.width = requiredWidth;
     
     let ctx = canvas.getContext("2d");
@@ -853,28 +872,11 @@ function renderGraph(canvasId, keys, minF, maxF) {
     let range = maxF - minF;
     if(range <= 0) range = 1;
 
+    // Line connect main frames
     ctx.beginPath();
-    let firstX = padX + ((keys[0] - minF) / range) * usableW;
-    ctx.moveTo(firstX, h - padY);
-    keys.forEach((key, index) => {
+    mainKeys.forEach((key, index) => {
         let x = padX + ((key - minF) / range) * usableW;
-        let y = h - padY - (index / (keys.length - 1)) * usableH;
-        ctx.lineTo(x, y);
-    });
-    let lastX = padX + ((keys[keys.length-1] - minF) / range) * usableW;
-    ctx.lineTo(lastX, h - padY);
-    ctx.closePath();
-    
-    let grad = ctx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, "rgba(0, 204, 255, 0.4)");
-    grad.addColorStop(1, "rgba(0, 204, 255, 0.0)");
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.beginPath();
-    keys.forEach((key, index) => {
-        let x = padX + ((key - minF) / range) * usableW;
-        let y = h - padY - (index / (keys.length - 1)) * usableH;
+        let y = h - padY - (index / (mainKeys.length - 1)) * usableH;
         if(index === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
     });
@@ -882,6 +884,7 @@ function renderGraph(canvasId, keys, minF, maxF) {
     ctx.lineWidth = 2.5;
     ctx.stroke();
 
+    // Baseline
     ctx.beginPath();
     ctx.moveTo(padX - 10, h - padY);
     ctx.lineTo(w - padX + 10, h - padY);
@@ -896,14 +899,29 @@ function renderGraph(canvasId, keys, minF, maxF) {
     let lastTextX = -50; 
     let stagger = false;
 
-    keys.forEach((key, index) => {
+    // Render Sub Keys
+    if (subKeys && subKeys.length > 0) {
+        subKeys.forEach((key) => {
+            let x = padX + ((key - minF) / range) * usableW;
+            ctx.beginPath();
+            ctx.arc(x, h - padY, 4, 0, Math.PI*2);
+            ctx.fillStyle = "#00ccff"; // Xanh lam cho key phụ
+            ctx.fill();
+            
+            ctx.fillStyle = "#9ed8ff";
+            ctx.fillText(key, x, h - padY - 8);
+        });
+    }
+
+    // Render Main Keys
+    mainKeys.forEach((key, index) => {
         let x = padX + ((key - minF) / range) * usableW;
-        let y = h - padY - (index / (keys.length - 1)) * usableH;
+        let y = h - padY - (index / (mainKeys.length - 1)) * usableH;
         
         ctx.beginPath();
         ctx.moveTo(x, y);
         ctx.lineTo(x, h - padY);
-        ctx.strokeStyle = "rgba(0, 204, 255, 0.2)";
+        ctx.strokeStyle = "rgba(0, 204, 255, 0.3)";
         ctx.lineWidth = 1;
         ctx.stroke();
 
@@ -914,7 +932,7 @@ function renderGraph(canvasId, keys, minF, maxF) {
 
         ctx.beginPath();
         ctx.arc(x, h - padY, 4, 0, Math.PI*2);
-        ctx.fillStyle = "#ffcc66"; 
+        ctx.fillStyle = "#ffcc66"; // Vàng cho key chính
         ctx.fill();
 
         let textY = h - 5;
@@ -926,9 +944,16 @@ function renderGraph(canvasId, keys, minF, maxF) {
         }
         lastTextX = x;
         
-        ctx.fillStyle = "#9ed8ff";
+        ctx.fillStyle = "#ffcc66";
         ctx.fillText(key, x, textY);
     });
+    
+    // Draw Legend
+    ctx.font = "12px 'Segoe UI', sans-serif";
+    ctx.fillStyle = "#ffcc66"; ctx.fillText("○", w - 120, 15);
+    ctx.fillStyle = "#9ed8ff"; ctx.textAlign = "left"; ctx.fillText(i18n[currentLang].legendMainKey, w - 110, 15);
+    ctx.fillStyle = "#00ccff"; ctx.fillText("○", w - 55, 15);
+    ctx.fillStyle = "#9ed8ff"; ctx.fillText(i18n[currentLang].legendSubKey, w - 45, 15);
 }
 
 function toggleAnimePoseInput() {
@@ -937,7 +962,6 @@ function toggleAnimePoseInput() {
 
 function updateAnime() {
     let style = parseInt(document.getElementById("animStyle").value);
-    let fps = parseFloat(document.getElementById("fpsAnime").value) || 24;
     let curve = document.getElementById("curveTypeAnime").value;
     let poses = parseInt(document.getElementById("poseCount").value) || 1;
     let logic = document.getElementById("calcLogic").value;
@@ -947,11 +971,15 @@ function updateAnime() {
 
     let totalF = ef - sf + 1;
     let out = `Tổng: <span style="color:white">${totalF}</span> frames<br>`;
-    
     let isClamped = false;
-    let clampedTo = 0;
+    let maxSlots = Math.floor((totalF - 1) / style) + 1; // Maximum strictly legal slots
+    
+    if (poses > maxSlots) {
+        poses = maxSlots;
+        isClamped = true;
+    }
+    
     let keys = [];
-
     if (document.getElementById("focusState").value === "dynamic") {
         if(poses === 1) keys.push(sf);
         else {
@@ -961,9 +989,9 @@ function updateAnime() {
                 let p = sf + y * (totalF - 1);
                 if(logic === "random" && i>0 && i<poses-1) p += (Math.random() * (totalF/poses)*0.3 * (Math.random()>0.5?1:-1));
                 
-                let rawSnap = sf + Math.round((p - sf)/style) * style;
-                let snap = Math.max(sf, Math.min(ef, rawSnap));
-                if (rawSnap > ef) { isClamped = true; clampedTo = snap; }
+                // [FIXED] Force to strictly adhere to style multiple
+                let snap = sf + Math.round((p - sf)/style) * style;
+                if(snap > ef) snap -= style; 
                 keys.push(snap);
             }
             keys = [...new Set(keys)].sort((a,b)=>a-b);
@@ -971,11 +999,11 @@ function updateAnime() {
         
         let t = i18n[currentLang];
         out += `<div class="box-result"><b>${t.dynKeysSugg}:</b><br>${keys.join(" ➔ ")}</div>`;
+        
         if (isClamped) {
-            out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+            out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${poses}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
         }
         
-        // Output Both Graphs
         out += `
         <div class="graph-title">
             <span>${t.lblVisualGraph}</span>
@@ -995,7 +1023,7 @@ function updateAnime() {
         
         document.getElementById("animeOutput").innerHTML = out;
         renderStaticCurve("animeStaticGraph", curve);
-        renderGraph("animeGraph", keys, sf, ef);
+        renderGraph("animeGraph", keys, [], sf, ef);
     } else {
         out += `<div class="box-result">1 Pose giữ toàn bộ ${totalF} frames.</div>`;
         document.getElementById("animeOutput").innerHTML = out;
@@ -1008,11 +1036,9 @@ function updateJerkHint() {
     if(jerkType === "frame") {
         let style = parseInt(document.getElementById("animStylePose").value) || 2;
         let fps = parseFloat(document.getElementById("fpsPose").value) || 24;
-        
         let min = style * 2;
         let max = Math.round((fps / 24) * 6) * style;
         if(max < min) max = min + style;
-        
         hintEl.innerText = `${i18n[currentLang].dynHintFrames}${min} - ${max} frames`;
         hintEl.classList.remove("hidden");
     } else {
@@ -1043,19 +1069,11 @@ function togglePoseSettings() {
         inputBlock.classList.remove("hidden");
         
         let jInput = document.getElementById("jerkValue");
-        if(jerkType === "sec") {
-            jInput.step = "0.1";
-            if(jInput.value > 2) jInput.value = 0.2; 
-        } else {
-            jInput.step = "1";
-            if(jInput.value < 1) jInput.value = 4; 
-        }
+        if(jerkType === "sec") { jInput.step = "0.1"; if(jInput.value > 2) jInput.value = 0.2; } 
+        else { jInput.step = "1"; if(jInput.value < 1) jInput.value = 4; }
         updateJerkHint();
     }
-    
-    if(document.getElementById("jerkToggle").updateCustomUI) {
-        document.getElementById("jerkToggle").updateCustomUI();
-    }
+    if(document.getElementById("jerkToggle").updateCustomUI) document.getElementById("jerkToggle").updateCustomUI();
 }
 
 function togglePoseActions() {
@@ -1066,13 +1084,11 @@ function togglePoseActions() {
     if(type === "char") {
         document.getElementById("focusActionObj").classList.add("hidden");
         if(objWrap) objWrap.parentNode.style.display = "none";
-        
         document.getElementById("focusActionChar").classList.remove("hidden");
         if(charWrap) charWrap.parentNode.style.display = "block";
     } else {
         document.getElementById("focusActionChar").classList.add("hidden");
         if(charWrap) charWrap.parentNode.style.display = "none";
-        
         document.getElementById("focusActionObj").classList.remove("hidden");
         if(objWrap) objWrap.parentNode.style.display = "block";
     }
@@ -1109,18 +1125,22 @@ function updatePoseEst() {
     let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
     if(mode === "random" && Math.random() > 0.5) mainPoseCount += Math.floor(Math.random()*3);
 
-    let keys = [];
+    // [FIXED] Force cap poses so we never produce odd gap clamps
     let isClamped = false;
-    let clampedTo = 0;
+    let maxSlots = Math.floor((totalFrames - 1) / style) + 1;
+    if (mainPoseCount > maxSlots) {
+        mainPoseCount = maxSlots;
+        isClamped = true;
+    }
 
+    let keys = [];
     for(let i=0; i<mainPoseCount; i++) {
         let x = i/(mainPoseCount-1);
         let y = getPacingCurve(x, curve);
         let p = 1 + y * (totalFrames - 1);
         
-        let rawSnap = 1 + Math.round((p - 1)/style) * style;
-        let snap = Math.max(1, Math.min(totalFrames, rawSnap));
-        if (rawSnap > totalFrames) { isClamped = true; clampedTo = snap; }
+        let snap = 1 + Math.round((p - 1)/style) * style;
+        if (snap > totalFrames) snap -= style; 
         keys.push(snap);
     }
     keys = [...new Set(keys)].sort((a,b)=>a-b);
@@ -1130,20 +1150,25 @@ function updatePoseEst() {
     out += `<div class="sub-result">${t.dynEstPoses}: ${keys.length} (KFs: ${keys.join(", ")})</div>`;
 
     let boxHtml = "";
+    let subKeysList = [];
     
+    // [FIXED] Sub keys array collection
     if(useSub) {
         boxHtml += `<b>${t.dynSubPose}:</b><br>`;
         for(let i=0; i<keys.length-1; i++) {
             let k1 = keys[i], k2 = keys[i+1];
             let subCount = subRule === "random" ? Math.floor(Math.random()*3)+1 : parseInt(subRule);
             let space = (k2 - k1) / (subCount+1);
-            if(space > style) {
+            if(space >= style) {
                 let subs = [];
                 for(let j=1; j<=subCount; j++) {
                     let s = k1 + Math.round((space*j)/style)*style;
-                    if(s > k1 && s < k2) subs.push(s);
+                    if(s > k1 && s < k2 && !subs.includes(s)) {
+                        subs.push(s);
+                        subKeysList.push(s);
+                    }
                 }
-                if(subs.length) boxHtml += `• Lót giữa [${k1}] và [${k2}]: Đặt tại ${subs.join(", ")}<br>`;
+                if(subs.length) boxHtml += `• Lót giữa [${k1}] và [${k2}]: ${subs.join(", ")}<br>`;
             }
         }
     }
@@ -1152,41 +1177,28 @@ function updatePoseEst() {
         boxHtml += `<hr style="border-color:#1e3a5f; margin:10px 0;"><b>${t.dynHold}:</b><br>`;
         let unitText = jerkType === "sec" ? t.dynSec : t.dynFrames;
         let actualJerkVal = jerkVal;
-        let isCapped = false;
+        let isCappedHold = false;
         
-        // BẢO VỆ LÔ-GIC: Không cho phép Hold vượt quá 40% tổng thời lượng cảnh
         if (jerkType === "sec") {
             let maxSec = totalSec * 0.4;
-            if (actualJerkVal > maxSec) {
-                actualJerkVal = maxSec;
-                isCapped = true;
-            }
+            if (actualJerkVal > maxSec) { actualJerkVal = maxSec; isCappedHold = true; }
         } else {
             let maxFrames = Math.floor(totalFrames * 0.4);
             if (maxFrames < 1) maxFrames = 1;
-            if (actualJerkVal > maxFrames) {
-                actualJerkVal = maxFrames;
-                isCapped = true;
-            }
+            if (actualJerkVal > maxFrames) { actualJerkVal = maxFrames; isCappedHold = true; }
         }
         
-        // Làm tròn hiển thị để không bị số thập phân quá dài
         actualJerkVal = jerkType === "sec" ? actualJerkVal.toFixed(2) : actualJerkVal;
-        
         boxHtml += `${t.dynHoldMsg1} <b>${actualJerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
-        
-        if (isCapped) {
-            boxHtml += `<br><span style="color:#ffcc66; font-size: 12px;">(Đã tự động giảm xuống tối đa 40% cảnh để tránh hỏng nhịp)</span>`;
-        }
+        if (isCappedHold) boxHtml += `<br><span style="color:#ffcc66; font-size: 12px;">(Đã giảm xuống tối đa 40% cảnh để giữ nhịp)</span>`;
     }
 
     if(boxHtml !== "") out += `<div class="box-result">${boxHtml}</div>`;
     
     if(isClamped) {
-        out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+        out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${mainPoseCount}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
     }
 
-    // Output Both Graphs
     out += `
     <div class="graph-title">
         <span>${t.lblVisualGraph}</span>
@@ -1206,7 +1218,7 @@ function updatePoseEst() {
     
     document.getElementById("poseOutput").innerHTML = out;
     renderStaticCurve("poseStaticGraph", curve);
-    renderGraph("poseGraph", keys, 1, totalFrames);
+    renderGraph("poseGraph", keys, subKeysList, 1, totalFrames);
 }
 
 function updateRender(){
@@ -1227,13 +1239,20 @@ function changeLang(lang) {
         if (el) {
             if (el.classList.contains("tooltip")) {
                 el.dataset.tip = t[id];
-            } else if(el.tagName === "INPUT" && el.hasAttribute("placeholder")) {
-                el.placeholder = t[id];
+            } else if(el.hasAttribute("data-i18n-ph")) {
+                let pKey = el.getAttribute("data-i18n-ph");
+                if(t[pKey]) el.placeholder = t[pKey];
             } else {
                 el.innerText = t[id];
             }
         }
     }
+    
+    // Check specific placeholders manually in case query failed
+    let sF = document.getElementById("startFrame");
+    if(sF) sF.placeholder = t.phStartFrame;
+    let eF = document.getElementById("endFrame");
+    if(eF) eF.placeholder = t.phEndFrame;
 
     updateConvert(); updateAnime(); updatePoseEst(); updateRender(); updateAllCustomSelects(); updateJerkHint();
 }
