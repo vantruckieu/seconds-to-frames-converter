@@ -2,253 +2,319 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Studio Timing Converter</title>
+<title>Timing & Render Tool</title>
 
 <style>
 body{
-    background:#0f1117;
-    font-family:Segoe UI, sans-serif;
-    color:#e6e6e6;
-    text-align:center;
-    padding:40px;
+    background: radial-gradient(circle at 20% 20%, #0f1c2e, #050b18 70%);
+    font-family: 'Segoe UI', sans-serif;
+    color:#e6f3ff;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
 }
 
 .container{
-    max-width:700px;
-    margin:auto;
-    background:#1a1d25;
-    padding:30px;
-    border-radius:16px;
-    box-shadow:0 0 30px rgba(0,0,0,0.6);
+    background: linear-gradient(145deg, #0e1624, #111c2f);
+    padding:40px;
+    border-radius:20px;
+    width:460px;
+    box-shadow:
+        0 0 40px rgba(0,140,255,0.25),
+        inset 0 0 60px rgba(0,80,160,0.15);
+    border:1px solid rgba(0,180,255,0.2);
+    backdrop-filter: blur(12px);
 }
 
-h1{
-    color:#00ffd5;
-    margin-bottom:30px;
+/* Tabs */
+
+.tabs{
+display:flex;
+gap:12px;
+margin-bottom:25px;
+}
+
+.tabs button{
+flex:1;
+padding:12px;
+background:#0c1626;
+border:1px solid #1b3555;
+border-radius:10px;
+color:#7fbfff;
+cursor:pointer;
+transition:0.3s;
+font-weight:500;
+}
+
+.tabs button:hover{
+background:#11233d;
+box-shadow:0 0 12px rgba(0,170,255,0.4);
+}
+
+.tabs button.active{
+background:linear-gradient(90deg,#0066ff,#00ccff);
+color:white;
+border-color:#00ccff;
+box-shadow:0 0 20px rgba(0,200,255,0.6);
+}
+
+/* Form */
+
+.row{ margin-bottom:20px; }
+
+label{
+display:block;
+margin-bottom:6px;
+font-size:14px;
+opacity:0.85;
+color:#9ed8ff;
 }
 
 input, select{
-    padding:12px;
-    margin:10px;
-    font-size:16px;
-    background:#11131a;
-    color:white;
-    border:1px solid #333;
-    border-radius:8px;
-    width:200px;
+width:100%;
+padding:12px;
+font-size:16px;
+background:#0a1422;
+border:1px solid #1e3a5f;
+border-radius:10px;
+color:#e6f3ff;
+transition:0.3s;
 }
 
-button{
-    padding:12px 20px;
-    margin:8px;
-    font-size:15px;
-    background:#00ffd5;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
+input:focus, select:focus{
+outline:none;
+border-color:#00ccff;
+box-shadow:0 0 12px rgba(0,200,255,0.5);
 }
 
-button:hover{
-    background:#00c2a3;
+/* Quick FPS buttons */
+
+.quick-fps{
+display:flex;
+gap:8px;
+margin-top:8px;
 }
+
+.quick-fps button{
+flex:1;
+padding:6px;
+background:#0e1c2f;
+border:1px solid #1f4068;
+border-radius:8px;
+color:#66ccff;
+cursor:pointer;
+font-size:13px;
+transition:0.2s;
+}
+
+.quick-fps button:hover{
+background:#133a66;
+box-shadow:0 0 8px rgba(0,200,255,0.6);
+}
+
+/* Result */
 
 .result{
-    margin-top:20px;
-    font-size:20px;
-    color:#00ffd5;
+margin-top:25px;
+font-size:26px;
+font-weight:bold;
+color:#00ccff;
+text-align:center;
+text-shadow:0 0 15px rgba(0,200,255,0.6);
 }
 
-.table{
-    margin-top:30px;
-    text-align:left;
+/* Tooltip */
+
+.tooltip{
+border-bottom:1px dotted #66ccff;
+cursor:help;
+position:relative;
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
+.tooltip:hover::after{
+content:attr(data-tip);
+position:absolute;
+bottom:130%;
+left:0;
+background:#02111f;
+padding:10px 14px;
+font-size:12px;
+border-radius:8px;
+width:260px;
+color:#cceeff;
+box-shadow:0 0 15px rgba(0,170,255,0.5);
 }
 
-th, td{
-    padding:8px;
-    border-bottom:1px solid #333;
+/* Hidden */
+
+.hidden{
+display:none;
 }
 
-.lang-switch{
-    position:absolute;
-    top:20px;
-    right:20px;
-}
+/* Footer */
 
+footer{
+position:absolute;
+bottom:20px;
+font-size:14px;
+color:#66ccff;
+opacity:0.7;
+}
 </style>
 </head>
 
 <body>
 
-<div class="lang-switch">
-<select onchange="changeLanguage(this.value)">
-<option value="vi">🇻🇳 VI</option>
-<option value="en">🇬🇧 EN</option>
-</select>
+<h1>Timing & Render Tool</h1>
+<div class="intro">
+Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gian Render dựa trên thời gian của 1 frame.
 </div>
 
 <div class="container">
 
-<h1 id="title">🎬 Studio Timing Converter</h1>
-
-<div>
-<input type="number" id="seconds" placeholder="Seconds">
-<input type="number" id="frames" placeholder="Frames">
-<input type="text" id="timecode" placeholder="HH:MM:SS">
+<div class="tabs">
+<button id="tabConvert" class="active" onclick="switchTab('convert')">Time / Frame Convert</button>
+<button id="tabRender" onclick="switchTab('render')">Render Time</button>
 </div>
 
-<div>
-<select id="fps">
-<option value="24">24 FPS</option>
-<option value="30">30 FPS</option>
-<option value="60">60 FPS</option>
+<!-- CONVERT MODE -->
+<div id="convertMode">
+
+<div class="row">
+<label>
+<span class="tooltip" data-tip="Chuyển đổi giữa frame và thời gian theo FPS">Loại tính (?)</span>
+</label>
+<select id="mode" onchange="updateConvert()">
+<option value="f2t">Frame → Time</option>
+<option value="t2f">Time → Frame</option>
 </select>
-
-<button onclick="set12fps()" id="quick12">Quick 12 FPS (On 2s)</button>
 </div>
 
-<div>
-<button onclick="secToFrame()" id="btn1">Seconds → Frames</button>
-<button onclick="frameToSec()" id="btn2">Frames → Seconds</button>
-<button onclick="timecodeToFrame()" id="btn3">Timecode → Frames</button>
+<div class="row">
+<label>FPS</label>
+<input type="number" id="fps" step="0.001" value="24" oninput="updateConvert()">
+
+<div class="fps-presets">
+<button onclick="setFPS(12)">12</button>
+<button onclick="setFPS(24)">24</button>
+<button onclick="setFPS(30)">30</button>
+<button onclick="setFPS(60)">60</button>
+</div>
 </div>
 
-<div class="result" id="result"></div>
+<div class="row">
+<label>Nhập giá trị</label>
+<input type="number" id="inputValue" oninput="updateConvert()">
+</div>
 
-<div class="table">
-<h3 id="sheetTitle">Timing Sheet</h3>
-<table id="sheet">
-<tr>
-<th id="th1">Seconds</th>
-<th id="th2">Frames</th>
-<th id="th3">FPS</th>
-</tr>
-</table>
-<button onclick="exportCSV()" id="exportBtn">Export CSV</button>
+<div class="result" id="convertOutput">—</div>
+
+</div>
+
+<!-- RENDER MODE -->
+<div id="renderMode" class="hidden">
+
+<div class="row">
+<label>
+<span class="tooltip" data-tip="Tổng số frame cần render">Tổng số frame (?)</span>
+</label>
+<input type="number" id="totalFrames" oninput="updateRender()">
+</div>
+
+<div class="row">
+<label>
+<span class="tooltip" data-tip="Thời gian render của 1 frame (tính bằng giây)">Thời gian render 1 frame (giây) (?)</span>
+</label>
+<input type="number" id="renderPerFrame" step="0.01" oninput="updateRender()">
+</div>
+
+<div class="result" id="renderOutput">—</div>
+
+<div class="warning">
+⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.
 </div>
 
 </div>
+
+</div>
+
+<footer>
+Ngôn ngữ:
+<select onchange="changeLang(this.value)">
+<option value="vi">🇻🇳 VI</option>
+<option value="en">🇬🇧 EN</option>
+</select>
+</footer>
 
 <script>
 
-let currentLang = "vi";
+let currentLang="vi";
 
-const translations = {
-    vi:{
-        title:"🎬 Công Cụ Tính Timing Studio",
-        quick12:"Quick 12 FPS (Anime On 2s)",
-        btn1:"Giây → Frame",
-        btn2:"Frame → Giây",
-        btn3:"Timecode → Frame",
-        sheet:"Bảng Timing",
-        export:"Xuất CSV"
-    },
-    en:{
-        title:"🎬 Studio Timing Converter",
-        quick12:"Quick 12 FPS (On 2s)",
-        btn1:"Seconds → Frames",
-        btn2:"Frames → Seconds",
-        btn3:"Timecode → Frames",
-        sheet:"Timing Sheet",
-        export:"Export CSV"
-    }
-};
+function switchTab(tab){
+document.getElementById("convertMode").classList.add("hidden");
+document.getElementById("renderMode").classList.add("hidden");
+document.getElementById("tabConvert").classList.remove("active");
+document.getElementById("tabRender").classList.remove("active");
 
-function changeLanguage(lang){
-    currentLang = lang;
-    document.getElementById("title").innerText = translations[lang].title;
-    document.getElementById("quick12").innerText = translations[lang].quick12;
-    document.getElementById("btn1").innerText = translations[lang].btn1;
-    document.getElementById("btn2").innerText = translations[lang].btn2;
-    document.getElementById("btn3").innerText = translations[lang].btn3;
-    document.getElementById("sheetTitle").innerText = translations[lang].sheet;
-    document.getElementById("exportBtn").innerText = translations[lang].export;
+if(tab==="convert"){
+document.getElementById("convertMode").classList.remove("hidden");
+document.getElementById("tabConvert").classList.add("active");
+}else{
+document.getElementById("renderMode").classList.remove("hidden");
+document.getElementById("tabRender").classList.add("active");
+}
 }
 
-function getFPS(){
-    return parseFloat(document.getElementById("fps").value);
+function updateConvert(){
+let mode=document.getElementById("mode").value;
+let fps=parseFloat(document.getElementById("fps").value);
+let val=parseFloat(document.getElementById("inputValue").value);
+
+if(isNaN(val) || isNaN(fps) || fps<=0){
+document.getElementById("convertOutput").innerText="—";
+return;
 }
 
-function set12fps(){
-    document.getElementById("fps").value = 24;
-    alert(currentLang==="vi" ?
-        "Anime On 2s: Mỗi pose giữ 2 frame (12 drawings/sec ở 24fps)" :
-        "Anime On 2s: Hold each pose for 2 frames (12 drawings/sec at 24fps)"
-    );
+if(mode==="f2t"){
+let sec=(val/fps).toFixed(3);
+document.getElementById("convertOutput").innerText=
+currentLang==="vi"? sec+" giây": sec+" sec";
+}else{
+let frames=Math.round(val*fps);
+document.getElementById("convertOutput").innerText=
+currentLang==="vi"? frames+" frame": frames+" frames";
+}
 }
 
-function roundFrame(value){
-    return Math.round(value);
+function updateRender(){
+let frames=parseFloat(document.getElementById("totalFrames").value);
+let perFrame=parseFloat(document.getElementById("renderPerFrame").value);
+
+if(isNaN(frames) || isNaN(perFrame)){
+document.getElementById("renderOutput").innerText="—";
+return;
 }
 
-function secToFrame(){
-    let sec = parseFloat(document.getElementById("seconds").value);
-    let fps = getFPS();
-    if(isNaN(sec)) return;
-    let frames = roundFrame(sec * fps);
-    document.getElementById("result").innerText =
-        currentLang==="vi" ?
-        sec + " giây = " + frames + " frame" :
-        sec + " sec = " + frames + " frames";
-    addToSheet(sec, frames, fps);
+let total=frames*perFrame;
+let hours=Math.floor(total/3600);
+let minutes=Math.floor((total%3600)/60);
+let seconds=Math.floor(total%60);
+
+document.getElementById("renderOutput").innerText=
+hours+"h "+minutes+"m "+seconds+"s";
 }
 
-function frameToSec(){
-    let frames = parseFloat(document.getElementById("frames").value);
-    let fps = getFPS();
-    if(isNaN(frames)) return;
-    let sec = (frames / fps).toFixed(3);
-    document.getElementById("result").innerText =
-        currentLang==="vi" ?
-        frames + " frame = " + sec + " giây" :
-        frames + " frames = " + sec + " sec";
-    addToSheet(sec, frames, fps);
+function setFPS(value){
+document.getElementById("fps").value=value;
+updateConvert();
 }
 
-function timecodeToFrame(){
-    let tc = document.getElementById("timecode").value;
-    let fps = getFPS();
-    let parts = tc.split(":");
-    if(parts.length !== 3) return;
-    let h = parseInt(parts[0]);
-    let m = parseInt(parts[1]);
-    let s = parseInt(parts[2]);
-    let totalSec = h*3600 + m*60 + s;
-    let frames = roundFrame(totalSec * fps);
-    document.getElementById("result").innerText =
-        tc + " = " + frames + " frames";
-    addToSheet(totalSec, frames, fps);
-}
-
-function addToSheet(sec, frames, fps){
-    let table = document.getElementById("sheet");
-    let row = table.insertRow(-1);
-    row.insertCell(0).innerText = sec;
-    row.insertCell(1).innerText = frames;
-    row.insertCell(2).innerText = fps;
-}
-
-function exportCSV(){
-    let rows = document.querySelectorAll("table tr");
-    let csv = [];
-    for(let i=0;i<rows.length;i++){
-        let cols = rows[i].querySelectorAll("td, th");
-        let row = [];
-        for(let j=0;j<cols.length;j++){
-            row.push(cols[j].innerText);
-        }
-        csv.push(row.join(","));
-    }
-    let csvFile = new Blob([csv.join("\n")], {type:"text/csv"});
-    let downloadLink = document.createElement("a");
-    downloadLink.download = "timing_sheet.csv";
-    downloadLink.href = window.URL.createObjectURL(csvFile);
-    downloadLink.click();
+function changeLang(lang){
+currentLang=lang;
+updateConvert();
 }
 
 </script>
