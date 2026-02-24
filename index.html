@@ -21,7 +21,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Title + intro */
 h1 {
     margin: 0 0 10px 0;
     font-size: 28px;
@@ -38,28 +37,24 @@ h1 {
     line-height: 1.5;
 }
 
-/* Container */
 .container {
     background: linear-gradient(145deg, #0e1624, #111c2f);
-    padding: 40px;
+    padding: 35px;
     border-radius: 20px;
-    width: 460px;
-    box-shadow:
-        0 0 40px rgba(0,140,255,0.25),
-        inset 0 0 60px rgba(0,80,160,0.15);
+    width: 600px; 
+    box-shadow: 0 0 40px rgba(0,140,255,0.25), inset 0 0 60px rgba(0,80,160,0.15);
     border: 1px solid rgba(0,180,255,0.2);
 }
 
-/* Tabs */
 .tabs {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     margin-bottom: 25px;
 }
 
 .tabs button {
     flex: 1;
-    padding: 12px;
+    padding: 10px 5px;
     background: #0c1626;
     border: 1px solid #1b3555;
     border-radius: 10px;
@@ -68,22 +63,24 @@ h1 {
     transition: 0.3s;
     font-weight: 500;
     font-family: inherit;
+    font-size: 13px;
 }
 
-.tabs button:hover {
-    background: #11233d;
-    box-shadow: 0 0 12px rgba(0,170,255,0.4);
+.tabs button:hover { background: #11233d; box-shadow: 0 0 12px rgba(0,170,255,0.4); }
+.tabs button.active { background: linear-gradient(90deg,#0066ff,#00ccff); color: white; border-color: #00ccff; box-shadow: 0 0 20px rgba(0,200,255,0.6); }
+
+.tab-desc {
+    font-size: 13px;
+    color: #9ed8ff;
+    background: rgba(0, 150, 255, 0.08);
+    border-left: 3px solid #00ccff;
+    padding: 10px 15px;
+    margin-bottom: 22px;
+    border-radius: 0 8px 8px 0;
+    line-height: 1.5;
 }
 
-.tabs button.active {
-    background: linear-gradient(90deg,#0066ff,#00ccff);
-    color: white;
-    border-color: #00ccff;
-    box-shadow: 0 0 20px rgba(0,200,255,0.6);
-}
-
-/* Form */
-.row { margin-bottom: 20px; }
+.row { margin-bottom: 18px; }
 
 label {
     display: flex;
@@ -94,11 +91,10 @@ label {
     color: #9ed8ff;
 }
 
-/* Cập nhật Input */
 input {
     width: 100%;
     padding: 12px;
-    font-size: 16px;
+    font-size: 15px;
     font-family: inherit;
     background: #0a1422;
     border: 1px solid #1e3a5f;
@@ -108,327 +104,404 @@ input {
     box-sizing: border-box;
 }
 
-input:focus {
-    outline: none;
-    border-color: #00ccff;
-    box-shadow: 0 0 12px rgba(0,200,255,0.5);
-}
+input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,200,255,0.5); }
 
-/* GIAO DIỆN CUSTOM DROPDOWN */
-.custom-select-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.custom-select-wrapper:has(select.hidden) {
-    display: none !important;
-}
-
-.input-group .custom-select-wrapper {
-    flex: 0 0 110px;
-}
+/* CUSTOM DROPDOWN */
+.custom-select-wrapper { position: relative; width: 100%; }
+.custom-select-wrapper:has(select.hidden) { display: none !important; }
+.input-group .custom-select-wrapper { flex: 1; }
 
 .custom-select-trigger {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    font-family: inherit;
-    background: #0a1422;
-    border: 1px solid #1e3a5f;
-    border-radius: 10px;
-    color: #e6f3ff;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.3s;
-    box-sizing: border-box;
-    user-select: none;
+    width: 100%; padding: 12px; font-size: 14px; font-family: inherit;
+    background: #0a1422; border: 1px solid #1e3a5f; border-radius: 10px;
+    color: #e6f3ff; cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center; transition: 0.3s; box-sizing: border-box; user-select: none;
 }
-
-.custom-select-trigger:hover, .custom-select-trigger.active {
-    outline: none;
-    border-color: #00ccff;
-    box-shadow: 0 0 12px rgba(0,200,255,0.5);
-}
-
+.custom-select-trigger:hover, .custom-select-trigger.active { border-color: #00ccff; box-shadow: 0 0 12px rgba(0,200,255,0.5); }
 .custom-select-trigger .arrow {
-    width: 16px;
-    height: 16px;
+    width: 16px; height: 16px;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ed8ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: transform 0.3s;
+    background-size: contain; background-repeat: no-repeat; background-position: center; transition: transform 0.3s;
 }
-
-.custom-select-trigger.active .arrow {
-    transform: rotate(180deg);
-}
+.custom-select-trigger.active .arrow { transform: rotate(180deg); }
 
 .custom-select-options {
-    position: absolute;
-    top: calc(100% + 5px);
-    left: 0;
-    right: 0;
-    background: #0a1422;
-    border: 1px solid #1e3a5f;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.6), 0 0 15px rgba(0,140,255,0.15);
-    z-index: 99;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.2s ease-out;
-    overflow: hidden;
+    position: absolute; top: calc(100% + 5px); left: 0; right: 0; background: #0a1422;
+    border: 1px solid #1e3a5f; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+    z-index: 99; opacity: 0; visibility: hidden; transform: translateY(-10px);
+    transition: all 0.2s ease-out; overflow-y: auto; max-height: 220px;
 }
+.custom-select-options.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.custom-select-option { padding: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; color: #e6f3ff; border-bottom: 1px solid rgba(30, 58, 95, 0.4); }
+.custom-select-option:last-child { border-bottom: none; }
+.custom-select-option:hover, .custom-select-option.selected { background: #11233d; color: #00ccff; }
 
-.custom-select-options.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.custom-select-option {
-    padding: 12px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: 0.2s;
-    color: #e6f3ff;
-    border-bottom: 1px solid rgba(30, 58, 95, 0.4);
-}
-
-.custom-select-option:last-child {
-    border-bottom: none;
-}
-
-.custom-select-option:hover {
-    background: #11233d;
-}
-
-.custom-select-option.selected {
-    background: #11233d;
-    color: #00ccff;
-    font-weight: bold;
-}
-
-.input-group {
-    display: flex;
-    gap: 10px;
-}
-
-.input-group input {
-    flex: 1;
-}
-
-.fps-presets {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-}
-
+.input-group { display: flex; gap: 10px; }
+.input-group input { flex: 1; }
+.fps-presets { display: flex; gap: 8px; margin-top: 8px; }
 .fps-presets button {
-    flex: 1;
-    padding: 6px;
-    background: #0e1c2f;
-    border: 1px solid #1f4068;
-    border-radius: 8px;
-    color: #66ccff;
-    cursor: pointer;
-    font-size: 13px;
-    transition: 0.2s;
-    font-family: inherit;
+    flex: 1; padding: 6px; background: #0e1c2f; border: 1px solid #1f4068;
+    border-radius: 8px; color: #66ccff; cursor: pointer; font-size: 13px; transition: 0.2s;
 }
+.fps-presets button:hover { background: #133a66; box-shadow: 0 0 8px rgba(0,200,255,0.6); }
 
-.fps-presets button:hover {
-    background: #133a66;
-    box-shadow: 0 0 8px rgba(0,200,255,0.6);
-}
+/* Results */
+.result { margin-top: 25px; font-size: 24px; font-weight: bold; color: #00ccff; text-align: center; text-shadow: 0 0 15px rgba(0,200,255,0.6); }
+.sub-result { display: block; font-size: 14px; font-weight: normal; color: #9ed8ff; margin-top: 8px; opacity: 0.9; line-height: 1.5; }
+.box-result { font-size: 14px; color: #cceeff; background: rgba(0, 102, 255, 0.1); border: 1px dashed #0066ff; padding: 12px; border-radius: 8px; margin-top: 15px; text-align: left; line-height: 1.6;}
 
-/* Result */
-.result {
-    margin-top: 25px;
-    font-size: 26px;
-    font-weight: bold;
-    color: #00ccff;
-    text-align: center;
-    text-shadow: 0 0 15px rgba(0,200,255,0.6);
-}
-
-/* Hiển thị phụ (Giờ/Phút) */
-.sub-result {
-    display: block;
-    font-size: 16px;
-    font-weight: normal;
-    color: #9ed8ff;
-    margin-top: 8px;
-    opacity: 0.8;
-    text-shadow: none;
-}
-
-/* Tooltip */
+/* Tooltip & Warning Sửa lỗi UI bóp chữ */
 .tooltip {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    background: rgba(0, 204, 255, 0.1);
-    border: 1px solid #00ccff;
-    border-radius: 50%;
-    color: #00ccff;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: help;
-    position: relative;
-    margin-left: 8px;
-    transition: 0.3s;
+    display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;
+    background: rgba(0, 204, 255, 0.1); border: 1px solid #00ccff; border-radius: 50%;
+    color: #00ccff; font-size: 11px; font-weight: bold; cursor: help; position: relative; margin-left: 8px; transition: 0.3s;
 }
-
-.tooltip:hover {
-    background: #00ccff;
-    color: #0a1422;
-    box-shadow: 0 0 10px rgba(0, 204, 255, 0.6);
-}
-
+.tooltip:hover { background: #00ccff; color: #0a1422; box-shadow: 0 0 10px rgba(0, 204, 255, 0.6); }
 .tooltip:hover::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: 150%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #02111f;
-    padding: 10px 14px;
-    font-size: 12px;
-    font-weight: normal;
-    border-radius: 8px;
-    width: max-content;
-    max-width: 260px;
-    color: #cceeff;
-    box-shadow: 0 4px 15px rgba(0,170,255,0.5);
-    border: 1px solid rgba(0, 204, 255, 0.3);
-    z-index: 10;
-    text-align: center;
-    line-height: 1.4;
+    content: attr(data-tip); position: absolute; bottom: 150%; left: 50%; transform: translateX(-50%);
+    background: #02111f; padding: 10px 14px; font-size: 12px; font-weight: normal; border-radius: 8px;
+    width: 240px; /* Cố định width để không bị bóp vỡ chữ */
+    color: #cceeff; box-shadow: 0 4px 15px rgba(0,170,255,0.6);
+    border: 1px solid rgba(0, 204, 255, 0.4); 
+    z-index: 9999; 
+    text-align: left; white-space: pre-wrap; line-height: 1.5; word-wrap: break-word;
 }
 
-.warning {
-    margin-top: 15px;
-    font-size: 13px;
-    color: #ffcc66;
-    opacity: 0.9;
-    line-height: 1.4;
-}
+.warning { margin-top: 15px; font-size: 13px; color: #ffcc66; background: rgba(255, 204, 102, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 204, 102, 0.3); line-height: 1.4;}
+.hidden { display: none !important; }
 
-.hidden {
-    display: none !important;
-}
+footer { margin-top: 40px; font-size: 14px; color: #66ccff; opacity: 0.8; display: flex; align-items: center; justify-content: center; gap: 10px; }
+footer .custom-select-wrapper { width: auto; min-width: 110px; }
+footer .custom-select-trigger { padding: 6px 12px; font-size: 14px; border-radius: 6px; }
 
-footer {
-    margin-top: 40px;
-    font-size: 14px;
-    color: #66ccff;
-    opacity: 0.8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-footer .custom-select-wrapper {
-    width: auto;
-    min-width: 110px;
-}
-
-footer .custom-select-trigger {
-    padding: 6px 12px;
-    font-size: 14px;
-    border-radius: 6px;
-}
+.note-text { font-size: 12px; color: #66ccff; margin-top: 4px; display: block; opacity: 0.8; }
 </style>
 </head>
 
 <body>
 
 <h1 id="mainTitle">Timing & Render Tool</h1>
-<div class="intro" id="introText">
-Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gian Render dựa trên thời gian của 1 frame.
-</div>
+<div class="intro" id="introText">Công cụ đa năng hỗ trợ Animation Timing, Tính toán Frame và Render.</div>
 
 <div class="container">
-
-<div class="tabs">
-    <button id="tabConvert" class="active" onclick="switchTab('convert')">Time / Frame Convert</button>
-    <button id="tabRender" onclick="switchTab('render')">Render Time</button>
-</div>
-
-<div id="convertMode">
-
-    <div class="row">
-        <label>
-            <span id="lblMode">Loại tính</span>
-            <span class="tooltip" id="tipMode" data-tip="Chuyển đổi giữa frame và thời gian theo FPS">?</span>
-        </label>
-        <select id="mode" onchange="updateConvert()">
-            <option id="optF2T" value="f2t">Frame → Time</option>
-            <option id="optT2F" value="t2f">Time → Frame</option>
-        </select>
+    <div class="tabs">
+        <button id="tabConvert" class="active" onclick="switchTab('convert')">Time / Frame</button>
+        <button id="tabAnime" onclick="switchTab('anime')">Anime, Toon Frame</button>
+        <button id="tabPose" onclick="switchTab('pose')">Dự tính Pose</button>
+        <button id="tabRender" onclick="switchTab('render')">Render Time</button>
     </div>
 
-    <div class="row">
-        <label id="lblFPS">FPS</label>
-        <input type="number" id="fps" step="0.001" value="24" min="1" oninput="updateConvert()">
-
-        <div class="fps-presets">
-            <button onclick="setFPS(12)">12</button>
-            <button onclick="setFPS(24)">24</button>
-            <button onclick="setFPS(30)">30</button>
-            <button onclick="setFPS(60)">60</button>
-        </div>
-    </div>
-
-    <div class="row">
-        <label id="lblInput">Số khung hình/thời gian</label>
-        <div class="input-group">
-            <input type="number" id="inputValue" min="0" oninput="updateConvert()">
-            <select id="timeUnit" class="hidden" onchange="updateConvert()">
-                <option id="optSec" value="1">Giây</option>
-                <option id="optMin" value="60">Phút</option>
-                <option id="optHour" value="3600">Giờ</option>
+    <div id="convertMode">
+        <div class="tab-desc" id="descConvert">Chuyển đổi qua lại giữa thời lượng (Giây/Phút/Giờ) và Số khung hình (Frames) theo tốc độ chuẩn.</div>
+        <div class="row">
+            <label>
+                <span id="lblMode">Loại tính</span>
+                <span class="tooltip" id="tipMode" data-tip="?">?</span>
+            </label>
+            <select id="mode" onchange="updateConvert()">
+                <option id="optF2T" value="f2t">Frame → Time</option>
+                <option id="optT2F" value="t2f">Time → Frame</option>
             </select>
         </div>
+        <div class="row">
+            <label>
+                <span id="lblFPS_conv">FPS</span>
+                <span class="tooltip" id="tipFPS_conv" data-tip="?">?</span>
+            </label>
+            <input type="number" id="fps" step="0.001" value="24" min="1" oninput="updateConvert()">
+            <div class="fps-presets">
+                <button onclick="setField('fps', 12); updateConvert()">12</button>
+                <button onclick="setField('fps', 24); updateConvert()">24</button>
+                <button onclick="setField('fps', 30); updateConvert()">30</button>
+                <button onclick="setField('fps', 60); updateConvert()">60</button>
+            </div>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblInput">Số khung hình/thời gian</span>
+                <span class="tooltip" id="tipInput" data-tip="?">?</span>
+            </label>
+            <div class="input-group">
+                <input type="number" id="inputValue" min="0" oninput="updateConvert()">
+                <select id="timeUnit" class="hidden" onchange="updateConvert()">
+                    <option id="optSec" value="1">Giây</option>
+                    <option id="optMin" value="60">Phút</option>
+                    <option id="optHour" value="3600">Giờ</option>
+                </select>
+            </div>
+        </div>
+        <div class="result" id="convertOutput">—</div>
     </div>
 
-    <div class="result" id="convertOutput">—</div>
-
-</div>
-
-<div id="renderMode" class="hidden">
-
-    <div class="row">
-        <label>
-            <span id="lblTotalFrames">Tổng số frame</span>
-            <span class="tooltip" id="tipTotalFrames" data-tip="Tổng số frame cần render trong phần mềm">?</span>
-        </label>
-        <input type="number" id="totalFrames" min="0" oninput="updateRender()">
+    <div id="animeMode" class="hidden">
+        <div class="tab-desc" id="descAnime">Phân bổ khoảng cách các Keyframe theo quy tắc Animation (On 1s, 2s, 3s) và nội suy nhịp độ cảnh.</div>
+        <div class="row">
+            <label>
+                <span id="lblAnimStyle">Kiểu diễn hoạt</span>
+                <span class="tooltip" id="tipAnimStyle" data-tip="?">?</span>
+            </label>
+            <select id="animStyle" onchange="updateAnime()">
+                <option id="optOn1s" value="1">On 1s (Mượt / Hành động)</option>
+                <option id="optOn2s" value="2" selected>On 2s (Chuẩn Anime)</option>
+                <option id="optOn3s" value="3">On 3s (Tĩnh / Chậm)</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblFPS_anime">FPS gốc</span>
+                <span class="tooltip" id="tipFPS_anime" data-tip="?">?</span>
+            </label>
+            <input type="number" id="fpsAnime" value="24" min="1" oninput="updateAnime()">
+            <div class="fps-presets">
+                <button onclick="setField('fpsAnime', 12); updateAnime()">12</button>
+                <button onclick="setField('fpsAnime', 24); updateAnime()">24</button>
+                <button onclick="setField('fpsAnime', 30); updateAnime()">30</button>
+                <button onclick="setField('fpsAnime', 60); updateAnime()">60</button>
+            </div>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblCorePacingAnime">Nhịp tâm điểm</span>
+                <span class="tooltip" id="tipCorePacingAnime" data-tip="?">?</span>
+            </label>
+            <select id="corePacingAnime" onchange="updateAnime()">
+                <option id="optCpSuperSlowA" value="superslow">Super Slow</option>
+                <option id="optCpSlowmoA" value="slowmo">Slow Motion</option>
+                <option id="optCpSlowA" value="slow">Chậm</option>
+                <option id="optCpNormalA" value="normal" selected>Bình thường</option>
+                <option id="optCpFastA" value="fast">Nhanh</option>
+                <option id="optCpSuperFastA" value="superfast">Cực nhanh</option>
+                <option id="optCpTimeSplashA" value="timesplash">Time Splash</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblCurveTypeAnime">Loại đồ thị (Phân bổ)</span>
+                <span class="tooltip" id="tipCurveTypeAnime" data-tip="?">?</span>
+            </label>
+            <select id="curveTypeAnime" onchange="updateAnime()">
+                <option id="optCvNoneA" value="linear">Không (Đều)</option>
+                <option id="optCvEaseOutA" value="ease_out">Đồ thị xuống (Chậm dần)</option>
+                <option id="optCvEaseInA" value="ease_in">Đồ thị lên (Nhanh dần)</option>
+                <option id="optCvClimaxA" value="climax">Điểm cao trào (Nhanh giữa)</option>
+                <option id="optCvLowPointA" value="low_point">Điểm trầm (Chậm giữa)</option>
+                <option id="optCvWaveA" value="wave">Sóng (Nhanh chậm xen kẽ)</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblFocus">Tâm điểm & Trạng thái</span>
+                <span class="tooltip" id="tipFocus" data-tip="?">?</span>
+            </label>
+            <div class="input-group">
+                <select id="focusTarget" onchange="updateAnime()">
+                    <option id="optFocScene" value="scene">Cảnh</option>
+                    <option id="optFocChar" value="char">Nhân vật/Vật thể</option>
+                </select>
+                <select id="focusState" onchange="toggleAnimePoseInput(); updateAnime()">
+                    <option id="optStateStatic" value="static">Tĩnh</option>
+                    <option id="optStateDynamic" value="dynamic" selected>Động</option>
+                </select>
+            </div>
+        </div>
+        <div class="row" id="poseRow">
+            <label>
+                <span id="lblPose">Số Pose (Keyframes chính)</span>
+                <span class="tooltip" id="tipPose" data-tip="?">?</span>
+            </label>
+            <input type="number" id="poseCount" value="5" min="1" oninput="updateAnime()">
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblFrameRange">Frame Bắt đầu - Kết thúc</span>
+                <span class="tooltip" id="tipFrameRange" data-tip="?">?</span>
+            </label>
+            <div class="input-group">
+                <input type="number" id="startFrame" placeholder="Bắt đầu (vd: 1)" oninput="updateAnime()">
+                <input type="number" id="endFrame" placeholder="Kết thúc (vd: 100)" oninput="updateAnime()">
+            </div>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblCalcLogic">Logic tính toán</span>
+                <span class="tooltip" id="tipCalcLogic" data-tip="?">?</span>
+            </label>
+            <select id="calcLogic" onchange="updateAnime()">
+                <option id="optLogicStrict" value="strict">Toán học nghiêm ngặt</option>
+                <option id="optLogicRandom" value="random">Xác suất ngẫu nhiên</option>
+            </select>
+        </div>
+        <div class="result" id="animeOutput">—</div>
+        <div class="warning" id="warnMathModelAnime">⚠ Chỉ dùng để tham khảo. Mô hình dựa trên nội suy toán học và đồ thị ngẫu nhiên.</div>
     </div>
 
-    <div class="row">
-        <label>
-            <span id="lblRenderPerFrame">Thời gian render 1 frame (giây)</span>
-            <span class="tooltip" id="tipRenderPerFrame" data-tip="Thời gian xuất 1 khung hình (tính bằng giây)">?</span>
-        </label>
-        <input type="number" id="renderPerFrame" step="0.01" min="0" oninput="updateRender()">
+    <div id="poseMode" class="hidden">
+        <div class="tab-desc" id="descPose">Tự động ước tính số lượng Pose chính và Pose phụ trợ (In-betweens) phụ thuộc vào hành động cụ thể và thời lượng.</div>
+        <div class="row">
+            <label>
+                <span id="lblPoseCalcMode">Cách tính toán</span>
+                <span class="tooltip" id="tipPoseCalcMode" data-tip="?">?</span>
+            </label>
+            <select id="poseCalcMode" onchange="togglePoseSettings(); updatePoseEst()">
+                <option id="optPcalcRandom" value="random">Xác suất ngẫu nhiên</option>
+                <option id="optPcalcSeconds" value="seconds">Theo số giây cảnh</option>
+            </select>
+        </div>
+        <div class="row hidden" id="rowPoseSeconds">
+            <label>
+                <span id="lblPoseSeconds">Nhập số giây cảnh</span>
+                <span class="tooltip" id="tipPoseSeconds" data-tip="?">?</span>
+            </label>
+            <input type="number" id="poseSeconds" value="3" min="0.1" step="0.1" oninput="updatePoseEst()">
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblFPS_pose">FPS gốc</span>
+                <span class="tooltip" id="tipFPS_pose" data-tip="?">?</span>
+            </label>
+            <input type="number" id="fpsPose" value="24" min="1" oninput="updatePoseEst(); updateJerkHint()">
+            <div class="fps-presets">
+                <button onclick="setField('fpsPose', 12); updatePoseEst(); updateJerkHint()">12</button>
+                <button onclick="setField('fpsPose', 24); updatePoseEst(); updateJerkHint()">24</button>
+                <button onclick="setField('fpsPose', 30); updatePoseEst(); updateJerkHint()">30</button>
+                <button onclick="setField('fpsPose', 60); updatePoseEst(); updateJerkHint()">60</button>
+            </div>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblAnimStylePose">Loại diễn hoạt</span>
+                <span class="tooltip" id="tipAnimStylePose" data-tip="?">?</span>
+            </label>
+            <select id="animStylePose" onchange="updatePoseEst(); updateJerkHint()">
+                <option id="optPO1" value="1">On 1s</option>
+                <option id="optPO2" value="2" selected>On 2s</option>
+                <option id="optPO3" value="3">On 3s</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblFocusTypePose">Loại tâm điểm</span>
+                <span class="tooltip" id="tipFocusTypePose" data-tip="?">?</span>
+            </label>
+            <select id="focusTypePose" onchange="togglePoseActions(); updatePoseEst()">
+                <option id="optFocCharP" value="char">Nhân vật</option>
+                <option id="optFocObjP" value="obj">Vật thể</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblFocusActionPose">Hành động cụ thể</span>
+                <span class="tooltip" id="tipFocusActionPose" data-tip="?">?</span>
+            </label>
+            <select id="focusActionChar" class="" onchange="updatePoseEst()">
+                <option value="talk" id="actTalk">Nói chuyện</option>
+                <option value="walk" id="actWalk">Đi bộ</option>
+                <option value="run" id="actRun">Chạy</option>
+                <option value="fight" id="actFight">Đánh nhau</option>
+                <option value="other" id="actOtherC">Hành động khác</option>
+            </select>
+            <select id="focusActionObj" class="hidden" onchange="updatePoseEst()">
+                <option value="fly" id="actFly">Bay</option>
+                <option value="fall" id="actFall">Rơi</option>
+                <option value="break" id="actBreak">Vỡ/Gãy</option>
+                <option value="bounce" id="actBounce">Nảy lên/xuống</option>
+                <option value="scale" id="actScale">Phóng to/Thu nhỏ</option>
+                <option value="other" id="actOtherO">Hành động khác</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblCorePacingPose">Nhịp tâm điểm</span>
+                <span class="tooltip" id="tipCorePacingPose" data-tip="?">?</span>
+            </label>
+            <select id="corePacingPose" onchange="updatePoseEst()">
+                <option id="optCpSuperSlowP" value="superslow">Super Slow</option>
+                <option id="optCpSlowmoP" value="slowmo">Slow Motion</option>
+                <option id="optCpSlowP" value="slow">Chậm</option>
+                <option id="optCpNormalP" value="normal" selected>Bình thường</option>
+                <option id="optCpFastP" value="fast">Nhanh</option>
+                <option id="optCpSuperFastP" value="superfast">Cực nhanh</option>
+                <option id="optCpTimeSplashP" value="timesplash">Time Splash</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblCurveTypePose">Loại đồ thị</span>
+                <span class="tooltip" id="tipCurveTypePose" data-tip="?">?</span>
+            </label>
+            <select id="curveTypePose" onchange="updatePoseEst()">
+                <option id="optCvNoneP" value="linear">Không</option>
+                <option id="optCvEaseOutP" value="ease_out">Đồ thị xuống</option>
+                <option id="optCvEaseInP" value="ease_in">Đồ thị lên</option>
+                <option id="optCvClimaxP" value="climax">Điểm cao trào</option>
+                <option id="optCvLowPointP" value="low_point">Điểm trầm</option>
+                <option id="optCvWaveP" value="wave">Sóng (Cao/thấp cạnh nhau)</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblSubPose">Thêm Pose phụ trợ (In-betweens)</span>
+                <span class="tooltip" id="tipSubPose" data-tip="?">?</span>
+            </label>
+            <select id="subPoseToggle" onchange="togglePoseSettings(); updatePoseEst()">
+                <option id="optNo" value="no">Không</option>
+                <option id="optYes" value="yes">Có</option>
+            </select>
+        </div>
+        <div class="row hidden" id="rowSubPoseLogic">
+            <label>
+                <span id="lblSubPoseLogic">Quy tắc Pose phụ trợ</span>
+                <span class="tooltip" id="tipSubPoseLogic" data-tip="?">?</span>
+            </label>
+            <select id="subPoseLogic" onchange="updatePoseEst()">
+                <option id="optSpRandom" value="random">Xác suất ngẫu nhiên</option>
+                <option value="1">1 Pose phụ</option>
+                <option value="2">2 Pose phụ</option>
+                <option value="3">3 Pose phụ</option>
+                <option value="4">4 Pose phụ</option>
+            </select>
+        </div>
+        
+        <div class="row" id="rowJerkiness">
+            <label>
+                <span id="lblJerkiness">Độ giật - khựng (Stutter/Hold)</span>
+                <span class="tooltip" id="tipJerkiness" data-tip="?">?</span>
+            </label>
+            <select id="jerkToggle" onchange="togglePoseSettings(); updatePoseEst()">
+                <option id="optJerkNo" value="no">Không</option>
+                <option id="optJerkSec" value="sec">Theo Giây</option>
+                <option id="optJerkFrame" value="frame">Theo Frame</option>
+            </select>
+            
+            <div id="jerkInputBlock" class="hidden" style="margin-top: 10px;">
+                <input type="number" id="jerkValue" value="2" min="0" step="0.1" oninput="updatePoseEst()">
+                <span id="jerkHint" class="note-text hidden"></span>
+            </div>
+        </div>
+        
+        <div class="result" id="poseOutput">—</div>
+        <div class="warning" id="warnMathModelPose">⚠ Chỉ để tham khảo, tính toán theo mô hình toán học và xác suất ngẫu nhiên.</div>
     </div>
 
-    <div class="result" id="renderOutput">—</div>
-
-    <div class="warning" id="warningText">
-    ⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.
+    <div id="renderMode" class="hidden">
+        <div class="tab-desc" id="descRender">Ước tính tổng thời gian xuất file (Render) của toàn bộ dự án dựa trên thời gian chạy 1 khung hình.</div>
+        <div class="row">
+            <label>
+                <span id="lblTotalFrames">Tổng số frame</span>
+                <span class="tooltip" id="tipTotalFrames" data-tip="?">?</span>
+            </label>
+            <input type="number" id="totalFrames" min="0" oninput="updateRender()">
+        </div>
+        <div class="row">
+            <label>
+                <span id="lblRenderPerFrame">Thời gian render 1 frame (giây)</span>
+                <span class="tooltip" id="tipRenderPerFrame" data-tip="?">?</span>
+            </label>
+            <input type="number" id="renderPerFrame" step="0.01" min="0" oninput="updateRender()">
+        </div>
+        <div class="result" id="renderOutput">—</div>
+        <div class="warning" id="warningTextRender">⚠ Chỉ dùng để tham khảo. Mật độ chi tiết cảnh thực tế sẽ làm đổi thời gian.</div>
     </div>
-
-</div>
-
 </div>
 
 <footer>
@@ -442,249 +515,482 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 <script>
 let currentLang = "vi";
 
-// Từ điển đa ngôn ngữ
 const i18n = {
     vi: {
-        mainTitle: "Timing & Render Tool",
-        introText: "Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gian Render dựa trên thời gian của 1 frame.",
-        tabConvert: "Time / Frame Convert",
-        tabRender: "Render Time",
-        lblMode: "Loại tính",
-        tipMode: "Chuyển đổi giữa frame và thời gian theo FPS",
-        optF2T: "Frame → Time",
-        optT2F: "Time → Frame",
-        lblFPS: "FPS",
-        lblInput: "Số khung hình/thời gian",
-        optSec: "Giây",
-        optMin: "Phút",
-        optHour: "Giờ",
-        lblTotalFrames: "Tổng số frame",
-        tipTotalFrames: "Tổng số frame cần render trong phần mềm",
-        lblRenderPerFrame: "Thời gian render 1 frame (giây)",
-        tipRenderPerFrame: "Thời gian xuất 1 khung hình (tính bằng giây)",
-        warningText: "⚠ Chỉ dùng để tham khảo ước tính thông qua 1 frame. Nếu các frame sau có mật độ chi tiết cao hoặc thấp hơn, thời gian render có thể giảm hoặc kéo dài.",
-        lblLanguage: "Ngôn ngữ:"
+        introText: "Công cụ đa năng hỗ trợ Animation Timing, Tính toán Frame và Render.",
+        tabConvert: "Time / Frame", tabAnime: "Anime, Toon Frame", tabPose: "Dự tính Pose", tabRender: "Render Time",
+        
+        // Tab Descriptions
+        descConvert: "Công cụ chuyển đổi qua lại giữa thời lượng (Giây/Phút/Giờ) và Số khung hình (Frames) theo tốc độ chuẩn.",
+        descAnime: "Phân bổ khoảng cách các Keyframe theo quy tắc Animation (On 1s, 2s, 3s) và nội suy nhịp độ cảnh.",
+        descPose: "Tự động ước tính số lượng Pose chính và Pose phụ trợ (In-betweens) phụ thuộc vào hành động cụ thể và thời lượng.",
+        descRender: "Ước tính tổng thời gian xuất file (Render) của toàn bộ dự án dựa trên thời gian chạy 1 khung hình.",
+
+        // Tooltips (All)
+        tipMode: "Chọn loại chuyển đổi:\n• Frame → Time: Đổi từ Khung hình sang Thời gian.\n• Time → Frame: Đổi từ Thời gian sang Khung hình.",
+        tipFPS_conv: "FPS (Frames Per Second) là số khung hình trên 1 giây.\n• Điện ảnh: 24 fps\n• Game/TV: 30 hoặc 60 fps.",
+        tipInput: "Nhập giá trị cần tính toán (tổng số frame hoặc số giây/phút).",
+        
+        tipAnimStyle: "Quy định số bản vẽ trên giây:\n• On 1s: 24 hình/giây (Mượt, Action).\n• On 2s: 12 hình/giây (Chuẩn Anime).\n• On 3s: 8 hình/giây (Chậm, Tĩnh).",
+        tipFPS_anime: "Khung hình tiêu chuẩn của toàn bộ Project (Thường là 24).",
+        tipCorePacingAnime: "Tốc độ diễn hoạt tổng thể của cảnh để hệ thống phân bổ Keyframe.",
+        tipCurveTypeAnime: "Đường cong gia tốc (Easing):\n• Xuống: Thưa dần về sau.\n• Lên: Dày dần về sau.\n• Cao trào: Dày đặc ở giữa.",
+        tipFocus: "Trạng thái của đối tượng đang Động (có di chuyển) hay Tĩnh (đứng im).",
+        tipPose: "Tổng số tư thế chính (Main Keyframes) cần vẽ trong khoảng thời gian này.",
+        tipFrameRange: "Giới hạn thời gian (từ khung hình A đến B) cho hành động.",
+        tipCalcLogic: "• Nghiêm ngặt: Chia đều tuyệt đối.\n• Ngẫu nhiên: Thêm sai lệch nhỏ để tự nhiên hơn.",
+        
+        tipPoseCalcMode: "• Ngẫu nhiên: Hệ thống tự tính độ dài cảnh.\n• Theo số giây: Bạn chủ động ấn định độ dài.",
+        tipPoseSeconds: "Thời lượng mong muốn của cảnh (tính bằng giây).",
+        tipFPS_pose: "Khung hình tiêu chuẩn của dự án.",
+        tipAnimStylePose: "Kiểu diễn hoạt (On 1s, 2s, 3s) quyết định tổng số lượng bản vẽ.",
+        tipFocusTypePose: "Loại đối tượng chính trong cảnh (Nhân vật hay Vật thể).",
+        tipFocusActionPose: "Hành động cụ thể để thuật toán cân đối tỷ lệ Pose cho phù hợp.",
+        tipCorePacingPose: "Tốc độ tổng thể của hành động.",
+        tipCurveTypePose: "Quy luật Easing (Nhanh/Chậm dần) giữa các Pose.",
+        tipSubPose: "Hệ thống sẽ tự động tính toán chèn thêm Pose lót (In-betweens) vào khoảng trống giữa 2 Pose chính.",
+        tipSubPoseLogic: "Quy tắc nhồi Pose lót: Chọn số lượng cố định hoặc để máy rải ngẫu nhiên.",
+        tipJerkiness: "Kỹ thuật Hold (Giữ khung hình) ở điểm va chạm hoặc cao trào để tạo cảm giác có lực (Impact).",
+        
+        tipTotalFrames: "Tổng số lượng Frame mà phần mềm thông báo sẽ xuất ra.",
+        tipRenderPerFrame: "Thời gian thực tế để máy tính render xong 1 khung hình (hãy render thử 1 frame để lấy thông số).",
+
+        lblMode: "Loại tính", optF2T: "Frame → Time", optT2F: "Time → Frame",
+        lblFPS_conv: "FPS", lblInput: "Số khung hình/thời gian", optSec: "Giây", optMin: "Phút", optHour: "Giờ",
+        
+        // Anime Tab
+        lblAnimStyle: "Kiểu diễn hoạt",
+        optOn1s: "On 1s (Mượt / Hành động)", optOn2s: "On 2s (Chuẩn Anime)", optOn3s: "On 3s (Tĩnh / Chậm)",
+        lblFPS_anime: "FPS gốc",
+        lblCorePacingAnime: "Nhịp tâm điểm", 
+        optCpSuperSlowA: "Super Slow", optCpSlowmoA: "Slow Motion", optCpSlowA: "Chậm", optCpNormalA: "Bình thường", optCpFastA: "Nhanh", optCpSuperFastA: "Cực nhanh", optCpTimeSplashA: "Time Splash",
+        lblCurveTypeAnime: "Loại đồ thị (Phân bổ)", 
+        optCvNoneA: "Không (Đều)", optCvEaseOutA: "Đồ thị xuống (Chậm dần)", optCvEaseInA: "Đồ thị lên (Nhanh dần)", optCvClimaxA: "Điểm cao trào (Nhanh giữa)", optCvLowPointA: "Điểm trầm (Chậm giữa)", optCvWaveA: "Sóng (Nhanh chậm xen kẽ)",
+        lblFocus: "Tâm điểm & Trạng thái", optFocScene: "Cảnh", optFocChar: "Nhân vật/Vật thể", optStateStatic: "Tĩnh", optStateDynamic: "Động",
+        lblPose: "Số Pose (Keyframes chính)", lblFrameRange: "Frame Bắt đầu - Kết thúc", 
+        lblCalcLogic: "Logic tính toán", optLogicStrict: "Toán học nghiêm ngặt", optLogicRandom: "Xác suất ngẫu nhiên",
+        warnMathModelAnime: "⚠ Chỉ dùng để tham khảo. Mô hình dựa trên nội suy toán học và đồ thị ngẫu nhiên.",
+        
+        // Pose Tab
+        lblPoseCalcMode: "Cách tính toán", optPcalcRandom: "Xác suất ngẫu nhiên", optPcalcSeconds: "Theo số giây cảnh",
+        lblPoseSeconds: "Nhập số giây cảnh", lblFPS_pose: "FPS gốc", lblAnimStylePose: "Loại diễn hoạt",
+        lblFocusTypePose: "Loại tâm điểm", optFocCharP: "Nhân vật", optFocObjP: "Vật thể",
+        lblFocusActionPose: "Hành động cụ thể",
+        actTalk: "Nói chuyện", actWalk: "Đi bộ", actRun: "Chạy", actFight: "Đánh nhau", actOtherC: "Hành động khác",
+        actFly: "Bay", actFall: "Rơi", actBreak: "Vỡ/Gãy", actBounce: "Nảy lên/xuống", actScale: "Phóng to/Thu nhỏ", actOtherO: "Hành động khác",
+        lblCorePacingPose: "Nhịp tâm điểm", optCpSuperSlowP: "Super Slow", optCpSlowmoP: "Slow Motion", optCpSlowP: "Chậm", optCpNormalP: "Bình thường", optCpFastP: "Nhanh", optCpSuperFastP: "Cực nhanh", optCpTimeSplashP: "Time Splash",
+        lblCurveTypePose: "Loại đồ thị", optCvNoneP: "Không", optCvEaseOutP: "Đồ thị xuống", optCvEaseInP: "Đồ thị lên", optCvClimaxP: "Điểm cao trào", optCvLowPointP: "Điểm trầm", optCvWaveP: "Sóng",
+        lblSubPose: "Thêm Pose phụ trợ (In-betweens)", optNo: "Không", optYes: "Có",
+        lblSubPoseLogic: "Quy tắc Pose phụ trợ", optSpRandom: "Xác suất ngẫu nhiên",
+        lblJerkiness: "Độ giật - khựng (Stutter/Hold)", optJerkNo: "Không", optJerkFrame: "Theo Frame", optJerkSec: "Theo Giây",
+        warnMathModelPose: "⚠ Chỉ để tham khảo, tính toán theo mô hình toán học và xác suất ngẫu nhiên.",
+        
+        // Render
+        lblTotalFrames: "Tổng số frame", lblRenderPerFrame: "Thời gian render 1 frame (giây)",
+        warningTextRender: "⚠ Chỉ dùng để tham khảo. Mật độ chi tiết cảnh thực tế sẽ làm đổi thời gian.", lblLanguage: "Ngôn ngữ:",
+        
+        // Dynamic Strings
+        dynFrames: "Khung hình", dynSec: "giây", dynKeysSugg: "Gợi ý Keyframe", dynEstPoses: "Pose chính ước tính",
+        dynSubPose: "Pose phụ", dynHold: "Giật/Khựng (Hold)", dynHoldMsg1: "Khuyên dùng giữ thêm", dynHoldMsg2: "tại điểm chạm/cao trào.",
+        dynHintFrames: "Gợi ý hợp lý: "
     },
     en: {
-        mainTitle: "Timing & Render Tool",
-        introText: "Tool to convert between Frame ⇄ Time and estimate Render time based on a single frame.",
-        tabConvert: "Time / Frame Convert",
-        tabRender: "Render Time",
-        lblMode: "Calculation Mode",
-        tipMode: "Convert between frames and time based on FPS",
-        optF2T: "Frame → Time",
-        optT2F: "Time → Frame",
-        lblFPS: "FPS",
-        lblInput: "Frames / Time value",
-        optSec: "Seconds",
-        optMin: "Minutes",
-        optHour: "Hours",
-        lblTotalFrames: "Total Frames",
-        tipTotalFrames: "Total frames to be rendered in your software",
-        lblRenderPerFrame: "Render time per frame (sec)",
-        tipRenderPerFrame: "Time to render one single frame (in seconds)",
-        warningText: "⚠ For estimation purposes only. If subsequent frames have higher or lower details, actual render time may vary.",
-        lblLanguage: "Language:"
+        introText: "Versatile tool for Animation Timing, Frame calculations, and Render estimation.",
+        tabConvert: "Time / Frame", tabAnime: "Anime, Toon Frame", tabPose: "Pose Estimator", tabRender: "Render Time",
+        
+        // Tab Descriptions
+        descConvert: "Tool to seamlessly convert between time duration (Sec/Min/Hour) and total Frames based on FPS.",
+        descAnime: "Distribute Keyframes using standard Animation rules (On 1s, 2s, 3s) and calculate scene pacing.",
+        descPose: "Automatically estimate main Poses and In-betweens depending on specific action types and duration.",
+        descRender: "Estimate the total Render time needed for your project based on a single frame's processing time.",
+
+        // Tooltips (All)
+        tipMode: "Select conversion type:\n• Frame → Time: Convert Frames to Time.\n• Time → Frame: Convert Time to Frames.",
+        tipFPS_conv: "FPS (Frames Per Second) determines the speed.\n• Cinema Standard: 24 fps\n• TV/Games: 30 or 60 fps.",
+        tipInput: "Enter the value to compute (number of frames or sec/min/hour).",
+        
+        tipAnimStyle: "Defines keys per second:\n• On 1s: 24 fps (Smooth, Action).\n• On 2s: 12 fps (Standard Anime).\n• On 3s: 8 fps (Static, Slow).",
+        tipFPS_anime: "Standard framerate of your entire Project (Usually 24).",
+        tipCorePacingAnime: "Overall scene speed used to interpolate keyframe distribution.",
+        tipCurveTypeAnime: "Acceleration curve (Easing):\n• Ease Out: Spaced out at the end.\n• Ease In: Dense at the end.\n• Climax: Dense in the middle.",
+        tipFocus: "Whether the subject is Dynamic (moving) or Static (holding still).",
+        tipPose: "Number of main poses (Keyframes) for the action within this timeframe.",
+        tipFrameRange: "Time boundary (from frame A to frame B) for calculations.",
+        tipCalcLogic: "• Strict: Absolute even spacing.\n• Random: Adds natural organic deviation.",
+        
+        tipPoseCalcMode: "• Random: Auto scene length.\n• By Seconds: User-defined fixed time.",
+        tipPoseSeconds: "Desired duration of the scene in seconds.",
+        tipFPS_pose: "Standard framerate of your entire Project.",
+        tipAnimStylePose: "Defines keyframe density which directly affects total drawings.",
+        tipFocusTypePose: "Main subject type (Character or Object).",
+        tipFocusActionPose: "Specific action for the algorithm to balance pose density.",
+        tipCorePacingPose: "Overall speed and intensity of the action.",
+        tipCurveTypePose: "Acceleration curve (Ease in, out...) shaping the pose spacing.",
+        tipSubPose: "Automatically generate In-between poses between Main Keyframes.",
+        tipSubPoseLogic: "In-between padding rule: fixed 1-4 poses or randomly distributed.",
+        tipJerkiness: "Hold frames at impact/climax to create a sense of weight and force.",
+        
+        tipTotalFrames: "Total frames your software requires to render the sequence.",
+        tipRenderPerFrame: "Actual time required to render a single test frame.",
+
+        lblMode: "Mode", optF2T: "Frame → Time", optT2F: "Time → Frame",
+        lblFPS_conv: "FPS", lblInput: "Input Value", optSec: "Seconds", optMin: "Minutes", optHour: "Hours",
+        
+        // Anime Tab
+        lblAnimStyle: "Anim Style", 
+        optOn1s: "On 1s (Smooth / Action)", optOn2s: "On 2s (Standard Anime)", optOn3s: "On 3s (Static / Slow)",
+        lblFPS_anime: "Base FPS",
+        lblCorePacingAnime: "Core Pacing", 
+        optCpSuperSlowA: "Super Slow", optCpSlowmoA: "Slow Motion", optCpSlowA: "Slow", optCpNormalA: "Normal", optCpFastA: "Fast", optCpSuperFastA: "Super Fast", optCpTimeSplashA: "Time Splash",
+        lblCurveTypeAnime: "Curve Type (Dist.)", 
+        optCvNoneA: "None (Linear)", optCvEaseOutA: "Ease Out", optCvEaseInA: "Ease In", optCvClimaxA: "Climax", optCvLowPointA: "Low Point", optCvWaveA: "Wave",
+        lblFocus: "Focus & State", optFocScene: "Scene", optFocChar: "Character/Object", optStateStatic: "Static", optStateDynamic: "Dynamic",
+        lblPose: "Pose Count (Main Keys)", lblFrameRange: "Start - End Frame", 
+        lblCalcLogic: "Logic", optLogicStrict: "Strict Math", optLogicRandom: "Random Probability",
+        warnMathModelAnime: "⚠ Reference only. Based on math interpolation & random probability curves.",
+        
+        // Pose Tab
+        lblPoseCalcMode: "Calc Mode", optPcalcRandom: "Random Probability", optPcalcSeconds: "By Scene Seconds",
+        lblPoseSeconds: "Enter Seconds", lblFPS_pose: "Base FPS", lblAnimStylePose: "Anim Style",
+        lblFocusTypePose: "Focus Type", optFocCharP: "Character", optFocObjP: "Object",
+        lblFocusActionPose: "Specific Action",
+        actTalk: "Talking", actWalk: "Walking", actRun: "Running", actFight: "Fighting", actOtherC: "Other Action",
+        actFly: "Flying", actFall: "Falling", actBreak: "Breaking", actBounce: "Bouncing", actScale: "Scaling", actOtherO: "Other Action",
+        lblCorePacingPose: "Core Pacing", optCpSuperSlowP: "Super Slow", optCpSlowmoP: "Slow Motion", optCpSlowP: "Slow", optCpNormalP: "Normal", optCpFastP: "Fast", optCpSuperFastP: "Super Fast", optCpTimeSplashP: "Time Splash",
+        lblCurveTypePose: "Curve Type", optCvNoneP: "None", optCvEaseOutP: "Ease Out", optCvEaseInP: "Ease In", optCvClimaxP: "Climax", optCvLowPointP: "Low Point", optCvWaveP: "Wave",
+        lblSubPose: "Add In-betweens", optNo: "No", optYes: "Yes",
+        lblSubPoseLogic: "In-between Logic", optSpRandom: "Random Prob.",
+        lblJerkiness: "Stutter / Hold", optJerkNo: "No", optJerkFrame: "By Frames", optJerkSec: "By Seconds",
+        warnMathModelPose: "⚠ Reference only, calculated via math models and random probabilities.",
+        
+        // Render
+        lblTotalFrames: "Total Frames", lblRenderPerFrame: "Time per frame (sec)",
+        warningTextRender: "⚠ Reference only. Real detail density affects time.", lblLanguage: "Language:",
+        
+        // Dynamic Strings
+        dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses",
+        dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact/climax.",
+        dynHintFrames: "Suggested range: "
     }
 };
 
 function switchTab(tab){
-    document.getElementById("convertMode").classList.add("hidden");
-    document.getElementById("renderMode").classList.add("hidden");
-    document.getElementById("tabConvert").classList.remove("active");
-    document.getElementById("tabRender").classList.remove("active");
+    ["convertMode", "animeMode", "poseMode", "renderMode"].forEach(id => document.getElementById(id).classList.add("hidden"));
+    ["tabConvert", "tabAnime", "tabPose", "tabRender"].forEach(id => document.getElementById(id).classList.remove("active"));
+    
+    document.getElementById(tab + "Mode" + (tab==="convert"?"":"")).classList.remove("hidden");
+    if(tab==="convert") document.getElementById("convertMode").classList.remove("hidden");
+    document.getElementById("tab" + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add("active");
 
-    if(tab === "convert"){
-        document.getElementById("convertMode").classList.remove("hidden");
-        document.getElementById("tabConvert").classList.add("active");
-    } else {
-        document.getElementById("renderMode").classList.remove("hidden");
-        document.getElementById("tabRender").classList.add("active");
-    }
+    if(tab === "convert") updateConvert();
+    if(tab === "anime") updateAnime();
+    if(tab === "pose") updatePoseEst();
+    if(tab === "render") updateRender();
+    updateAllCustomSelects();
 }
+
+function setField(id, val) { document.getElementById(id).value = val; }
 
 function updateConvert(){
     let mode = document.getElementById("mode").value;
     let fps = parseFloat(document.getElementById("fps").value);
     let val = parseFloat(document.getElementById("inputValue").value);
-    let timeUnit = document.getElementById("timeUnit");
+    let tUnit = document.getElementById("timeUnit");
+    
+    tUnit.parentNode.classList.toggle("hidden", mode !== "t2f");
+    let wrap = tUnit.previousElementSibling;
+    if(wrap && wrap.classList.contains("custom-select-trigger")) wrap.parentNode.style.display = mode === "t2f" ? "block" : "none";
 
-    if (mode === "t2f") {
-        timeUnit.classList.remove("hidden");
-    } else {
-        timeUnit.classList.add("hidden");
-    }
-
-    if(isNaN(val) || isNaN(fps) || fps <= 0 || val < 0){
-        document.getElementById("convertOutput").innerHTML = "—";
-        return;
-    }
+    if(isNaN(val) || isNaN(fps) || fps <= 0 || val < 0) { document.getElementById("convertOutput").innerHTML = "—"; return; }
 
     if(mode === "f2t"){
-        // Tính tổng thời gian ra giây
         let totalSec = val / fps;
-        let secStr = totalSec.toFixed(3);
-        let mainStr = currentLang === "vi" ? secStr + " giây" : secStr + " sec";
-        
-        // Tính thêm Giờ/Phút/Giây chi tiết
-        let hours = Math.floor(totalSec / 3600);
-        let minutes = Math.floor((totalSec % 3600) / 60);
-        let remainingSec = parseFloat((totalSec % 60).toFixed(3)); // Lọc bớt số 0 vô nghĩa ở đuôi
-        
-        let subStr = "";
-        // Nếu trên 1 phút mới hiển thị phần phụ
-        if (hours > 0 || minutes > 0) {
-            let hStr = hours > 0 ? hours + "h " : "";
-            subStr = `<span class="sub-result">≈ ${hStr}${minutes}m ${remainingSec}s</span>`;
-        }
-
+        let mainStr = totalSec.toFixed(3) + " " + i18n[currentLang].dynSec;
+        let h = Math.floor(totalSec / 3600), m = Math.floor((totalSec % 3600) / 60), s = parseFloat((totalSec % 60).toFixed(3));
+        let subStr = (h > 0 || m > 0) ? `<span class="sub-result">≈ ${h>0?h+"h ":""}${m}m ${s}s</span>` : "";
         document.getElementById("convertOutput").innerHTML = mainStr + subStr;
     } else {
-        let multiplier = parseFloat(timeUnit.value);
-        let totalSeconds = val * multiplier;
-        let frames = Math.round(totalSeconds * fps);
-        
-        document.getElementById("convertOutput").innerHTML =
-            currentLang === "vi" ? frames + " frame" : frames + " frames";
+        let frames = Math.round(val * parseFloat(tUnit.value) * fps);
+        document.getElementById("convertOutput").innerHTML = frames + " " + i18n[currentLang].dynFrames;
     }
+}
+
+function getPacingCurve(x, type) {
+    if(type === 'ease_in') return Math.pow(x, 2);
+    if(type === 'ease_out') return Math.sqrt(x);
+    if(type === 'climax') return x < 0.5 ? 2*x*x : 1 - Math.pow(-2*x+2, 2)/2;
+    if(type === 'low_point') return x < 0.5 ? Math.sqrt(2*x)/2 : 1 - Math.sqrt(-2*x+2)/2;
+    if(type === 'wave') return x + 0.1 * Math.sin(x * Math.PI * 2);
+    return x;
+}
+
+function toggleAnimePoseInput() {
+    document.getElementById("poseRow").classList.toggle("hidden", document.getElementById("focusState").value === "static");
+}
+
+function updateAnime() {
+    let style = parseInt(document.getElementById("animStyle").value);
+    let fps = parseFloat(document.getElementById("fpsAnime").value) || 24;
+    let curve = document.getElementById("curveTypeAnime").value;
+    let poses = parseInt(document.getElementById("poseCount").value) || 1;
+    let logic = document.getElementById("calcLogic").value;
+    let sf = parseInt(document.getElementById("startFrame").value) || 1;
+    let ef = parseInt(document.getElementById("endFrame").value) || 100;
+    if(sf > ef) { let t = sf; sf = ef; ef = t; }
+
+    let totalF = ef - sf + 1;
+    let out = `Tổng: <span style="color:white">${totalF}</span> frames<br>`;
+
+    if (document.getElementById("focusState").value === "dynamic") {
+        let keys = [];
+        if(poses === 1) keys.push(sf);
+        else {
+            for(let i=0; i<poses; i++) {
+                let x = i/(poses-1);
+                let y = getPacingCurve(x, curve);
+                let p = sf + y * (totalF - 1);
+                if(logic === "random" && i>0 && i<poses-1) p += (Math.random() * (totalF/poses)*0.3 * (Math.random()>0.5?1:-1));
+                let snap = sf + Math.round((p - sf)/style) * style;
+                snap = Math.max(sf, Math.min(ef, snap));
+                keys.push(snap);
+            }
+            keys = [...new Set(keys)].sort((a,b)=>a-b);
+        }
+        out += `<div class="box-result"><b>${i18n[currentLang].dynKeysSugg}:</b><br>${keys.join(" ➔ ")}</div>`;
+    } else {
+        out += `<div class="box-result">1 Pose giữ toàn bộ ${totalF} frames.</div>`;
+    }
+    document.getElementById("animeOutput").innerHTML = out;
+}
+
+function updateJerkHint() {
+    let jerkType = document.getElementById("jerkToggle").value;
+    let hintEl = document.getElementById("jerkHint");
+    if(jerkType === "frame") {
+        let style = parseInt(document.getElementById("animStylePose").value) || 2;
+        let fps = parseFloat(document.getElementById("fpsPose").value) || 24;
+        
+        let min = style * 2;
+        let max = Math.round((fps / 24) * 6) * style;
+        if(max < min) max = min + style;
+        
+        hintEl.innerText = `${i18n[currentLang].dynHintFrames}${min} - ${max} frames`;
+        hintEl.classList.remove("hidden");
+    } else {
+        hintEl.classList.add("hidden");
+    }
+}
+
+function togglePoseSettings() {
+    let mode = document.getElementById("poseCalcMode").value;
+    document.getElementById("rowPoseSeconds").classList.toggle("hidden", mode !== "seconds");
+    
+    let sub = document.getElementById("subPoseToggle").value;
+    document.getElementById("rowSubPoseLogic").classList.toggle("hidden", sub !== "yes");
+    
+    if(sub === "yes") {
+        document.getElementById("rowJerkiness").classList.add("hidden");
+        document.getElementById("jerkToggle").value = "no";
+    } else {
+        document.getElementById("rowJerkiness").classList.remove("hidden");
+    }
+
+    let jerkType = document.getElementById("jerkToggle").value;
+    let inputBlock = document.getElementById("jerkInputBlock");
+    
+    if(jerkType === "no") {
+        inputBlock.classList.add("hidden");
+    } else {
+        inputBlock.classList.remove("hidden");
+        
+        let jInput = document.getElementById("jerkValue");
+        if(jerkType === "sec") {
+            jInput.step = "0.1";
+            if(jInput.value > 2) jInput.value = 0.2; 
+        } else {
+            jInput.step = "1";
+            if(jInput.value < 1) jInput.value = 4; 
+        }
+        updateJerkHint();
+    }
+    
+    if(document.getElementById("jerkToggle").updateCustomUI) {
+        document.getElementById("jerkToggle").updateCustomUI();
+    }
+}
+
+function togglePoseActions() {
+    let type = document.getElementById("focusTypePose").value;
+    let charWrap = document.getElementById("focusActionChar").previousElementSibling;
+    let objWrap = document.getElementById("focusActionObj").previousElementSibling;
+    
+    if(type === "char") {
+        document.getElementById("focusActionObj").classList.add("hidden");
+        if(objWrap) objWrap.parentNode.style.display = "none";
+        
+        document.getElementById("focusActionChar").classList.remove("hidden");
+        if(charWrap) charWrap.parentNode.style.display = "block";
+    } else {
+        document.getElementById("focusActionChar").classList.add("hidden");
+        if(charWrap) charWrap.parentNode.style.display = "none";
+        
+        document.getElementById("focusActionObj").classList.remove("hidden");
+        if(objWrap) objWrap.parentNode.style.display = "block";
+    }
+}
+
+function updatePoseEst() {
+    let mode = document.getElementById("poseCalcMode").value;
+    let sec = parseFloat(document.getElementById("poseSeconds").value) || 1;
+    let fps = parseFloat(document.getElementById("fpsPose").value) || 24;
+    let style = parseInt(document.getElementById("animStylePose").value) || 2;
+    let pacing = document.getElementById("corePacingPose").value;
+    let curve = document.getElementById("curveTypePose").value;
+    let action = document.getElementById("focusTypePose").value === "char" ? document.getElementById("focusActionChar").value : document.getElementById("focusActionObj").value;
+    let useSub = document.getElementById("subPoseToggle").value === "yes";
+    let subRule = document.getElementById("subPoseLogic").value;
+    let jerkType = document.getElementById("jerkToggle").value;
+    let jerkVal = parseFloat(document.getElementById("jerkValue").value) || 0;
+
+    let totalSec = mode === "seconds" ? sec : (Math.random() * 3 + 1.5); 
+    let totalFrames = Math.round(totalSec * fps);
+
+    let baseDensity = 1.0;
+    if(pacing==="superslow") baseDensity = 0.2;
+    else if(pacing==="slowmo") baseDensity = 0.4;
+    else if(pacing==="slow") baseDensity = 0.6;
+    else if(pacing==="fast") baseDensity = 1.5;
+    else if(pacing==="superfast") baseDensity = 2.0;
+    else if(pacing==="timesplash") baseDensity = 1.2;
+
+    if(["fight","fly","break","run"].includes(action)) baseDensity *= 1.4;
+    if(["talk","scale"].includes(action)) baseDensity *= 0.6;
+    // "other" dùng ngầm định số dư chuẩn *= 1.0 không cần code thêm
+
+    let totalDrawings = totalFrames / style;
+    let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
+    if(mode === "random" && Math.random() > 0.5) mainPoseCount += Math.floor(Math.random()*3);
+
+    let keys = [];
+    for(let i=0; i<mainPoseCount; i++) {
+        let x = i/(mainPoseCount-1);
+        let y = getPacingCurve(x, curve);
+        let p = 1 + y * (totalFrames - 1);
+        let snap = 1 + Math.round((p - 1)/style) * style;
+        snap = Math.max(1, Math.min(totalFrames, snap));
+        keys.push(snap);
+    }
+    keys = [...new Set(keys)].sort((a,b)=>a-b);
+
+    let t = i18n[currentLang];
+    let out = `≈ ${totalSec.toFixed(2)} ${t.dynSec} | ${totalFrames} ${t.dynFrames}<br>`;
+    out += `<div class="sub-result">${t.dynEstPoses}: ${keys.length} (KFs: ${keys.join(", ")})</div>`;
+
+    let boxHtml = "";
+    
+    if(useSub) {
+        boxHtml += `<b>${t.dynSubPose}:</b><br>`;
+        for(let i=0; i<keys.length-1; i++) {
+            let k1 = keys[i], k2 = keys[i+1];
+            let subCount = subRule === "random" ? Math.floor(Math.random()*3)+1 : parseInt(subRule);
+            let space = (k2 - k1) / (subCount+1);
+            if(space > style) {
+                let subs = [];
+                for(let j=1; j<=subCount; j++) {
+                    let s = k1 + Math.round((space*j)/style)*style;
+                    if(s > k1 && s < k2) subs.push(s);
+                }
+                if(subs.length) boxHtml += `• Lót giữa [${k1}] và [${k2}]: Đặt tại ${subs.join(", ")}<br>`;
+            }
+        }
+    }
+    
+    if(jerkType !== "no" && !useSub && jerkVal > 0) {
+        boxHtml += `<hr style="border-color:#1e3a5f; margin:10px 0;"><b>${t.dynHold}:</b><br>`;
+        let unitText = jerkType === "sec" ? t.dynSec : t.dynFrames;
+        boxHtml += `${t.dynHoldMsg1} <b>${jerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
+    }
+
+    if(boxHtml !== "") out += `<div class="box-result">${boxHtml}</div>`;
+    
+    document.getElementById("poseOutput").innerHTML = out;
 }
 
 function updateRender(){
     let frames = parseFloat(document.getElementById("totalFrames").value);
-    let perFrame = parseFloat(document.getElementById("renderPerFrame").value);
-
-    if(isNaN(frames) || isNaN(perFrame) || frames < 0 || perFrame < 0){
-        document.getElementById("renderOutput").innerText = "—";
-        return;
-    }
-
-    let total = frames * perFrame;
-    
-    let days = Math.floor(total / 86400);
-    let hours = Math.floor((total % 86400) / 3600);
-    let minutes = Math.floor((total % 3600) / 60);
-    let seconds = Math.floor(total % 60);
-
-    let outputStr = "";
-    
-    if(days > 0) {
-        let dayLabel = currentLang === "vi" ? " ngày " : "d ";
-        outputStr += days + dayLabel;
-    }
-    
-    outputStr += hours + "h " + minutes + "m " + seconds + "s";
-
-    document.getElementById("renderOutput").innerText = outputStr;
+    let pFrame = parseFloat(document.getElementById("renderPerFrame").value);
+    if(isNaN(frames) || isNaN(pFrame) || frames < 0 || pFrame < 0) { document.getElementById("renderOutput").innerText = "—"; return; }
+    let tot = frames * pFrame;
+    let d = Math.floor(tot / 86400), h = Math.floor((tot % 86400) / 3600), m = Math.floor((tot % 3600) / 60), s = Math.floor(tot % 60);
+    let str = (d > 0 ? d + (currentLang==="vi"?" ngày ":"d ") : "") + `${h}h ${m}m ${s}s`;
+    document.getElementById("renderOutput").innerText = str;
 }
 
-function setFPS(value){
-    document.getElementById("fps").value = value;
-    updateConvert();
-}
-
-function changeLang(lang){
-    currentLang = lang;
-    let t = i18n[lang];
-
-    document.getElementById("mainTitle").innerText = t.mainTitle;
-    document.getElementById("introText").innerText = t.introText;
-    document.getElementById("tabConvert").innerText = t.tabConvert;
-    document.getElementById("tabRender").innerText = t.tabRender;
-    document.getElementById("lblMode").innerText = t.lblMode;
-    document.getElementById("tipMode").dataset.tip = t.tipMode;
-    document.getElementById("optF2T").innerText = t.optF2T;
-    document.getElementById("optT2F").innerText = t.optT2F;
-    document.getElementById("lblFPS").innerText = t.lblFPS;
-    document.getElementById("lblInput").innerText = t.lblInput;
-    document.getElementById("optSec").innerText = t.optSec;
-    document.getElementById("optMin").innerText = t.optMin;
-    document.getElementById("optHour").innerText = t.optHour;
-    document.getElementById("lblTotalFrames").innerText = t.lblTotalFrames;
-    document.getElementById("tipTotalFrames").dataset.tip = t.tipTotalFrames;
-    document.getElementById("lblRenderPerFrame").innerText = t.lblRenderPerFrame;
-    document.getElementById("tipRenderPerFrame").dataset.tip = t.tipRenderPerFrame;
-    document.getElementById("warningText").innerText = t.warningText;
-    document.getElementById("lblLanguage").innerText = t.lblLanguage;
-
-    updateConvert();
-    updateRender();
+function changeLang(lang) {
+    currentLang = lang; let t = i18n[lang];
     
-    if(typeof updateAllCustomSelects === "function") updateAllCustomSelects();
+    // Quét update Text theo ID
+    for (let id in t) {
+        let el = document.getElementById(id);
+        if (el) {
+            if(el.tagName === "INPUT" && el.placeholder) el.placeholder = t[id];
+            else el.innerText = t[id];
+        }
+    }
+
+    // Quét Update Tooltip an toàn
+    document.querySelectorAll(".tooltip").forEach(el => {
+        let tId = el.id;
+        if(t[tId]) el.dataset.tip = t[tId];
+    });
+
+    updateConvert(); updateAnime(); updatePoseEst(); updateRender(); updateAllCustomSelects(); updateJerkHint();
 }
 
 function initCustomSelects() {
-    const selects = document.querySelectorAll("select");
-    selects.forEach(select => {
-        const wrapper = document.createElement("div");
-        wrapper.className = "custom-select-wrapper";
-        select.parentNode.insertBefore(wrapper, select);
-        wrapper.appendChild(select);
+    document.querySelectorAll("select").forEach(sel => {
+        if(sel.nextElementSibling && sel.nextElementSibling.classList.contains("custom-select-options")) return;
+        const wrap = document.createElement("div"); wrap.className = "custom-select-wrapper";
+        sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(sel);
         
-        const trigger = document.createElement("div");
-        trigger.className = "custom-select-trigger";
+        const trig = document.createElement("div"); trig.className = "custom-select-trigger";
+        const opts = document.createElement("div"); opts.className = "custom-select-options";
+        wrap.appendChild(trig); wrap.appendChild(opts);
         
-        const optionsList = document.createElement("div");
-        optionsList.className = "custom-select-options";
-        
-        wrapper.appendChild(trigger);
-        wrapper.appendChild(optionsList);
-        
-        function updateUI() {
-            trigger.innerHTML = `<span>${select.options[select.selectedIndex].text}</span><div class="arrow"></div>`;
-        }
-        
-        function buildOptions() {
-            optionsList.innerHTML = "";
-            Array.from(select.options).forEach((opt, index) => {
-                const optDiv = document.createElement("div");
-                optDiv.className = "custom-select-option";
-                if(index === select.selectedIndex) optDiv.classList.add("selected");
-                optDiv.innerText = opt.text;
-                
-                optDiv.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    select.selectedIndex = index;
-                    select.dispatchEvent(new Event("change"));
-                    updateUI();
-                    optionsList.classList.remove("show");
-                    trigger.classList.remove("active");
+        function updateUI() { if(sel.selectedIndex >= 0) trig.innerHTML = `<span>${sel.options[sel.selectedIndex].text}</span><div class="arrow"></div>`; }
+        function buildOpts() {
+            opts.innerHTML = "";
+            Array.from(sel.options).forEach((o, i) => {
+                const od = document.createElement("div"); od.className = "custom-select-option";
+                if(i === sel.selectedIndex) od.classList.add("selected"); od.innerText = o.text;
+                od.addEventListener("click", (e) => {
+                    e.stopPropagation(); sel.selectedIndex = i; sel.dispatchEvent(new Event("change"));
+                    updateUI(); opts.classList.remove("show"); trig.classList.remove("active");
                 });
-                optionsList.appendChild(optDiv);
+                opts.appendChild(od);
             });
         }
-
-        trigger.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const isShowing = optionsList.classList.contains("show");
+        trig.addEventListener("click", (e) => {
+            e.stopPropagation(); const isS = opts.classList.contains("show");
             document.querySelectorAll(".custom-select-options").forEach(el => el.classList.remove("show"));
             document.querySelectorAll(".custom-select-trigger").forEach(el => el.classList.remove("active"));
-            if (!isShowing) {
-                buildOptions();
-                optionsList.classList.add("show");
-                trigger.classList.add("active");
-            }
+            if(!isS) { buildOpts(); opts.classList.add("show"); trig.classList.add("active"); }
         });
-
-        updateUI();
-        select.style.display = "none";
-        
-        select.updateCustomUI = updateUI;
+        updateUI(); sel.style.display = "none"; sel.updateCustomUI = updateUI;
     });
-
     document.addEventListener("click", () => {
         document.querySelectorAll(".custom-select-options").forEach(el => el.classList.remove("show"));
         document.querySelectorAll(".custom-select-trigger").forEach(el => el.classList.remove("active"));
     });
 }
+function updateAllCustomSelects() { document.querySelectorAll("select").forEach(s => { if(s.updateCustomUI) s.updateCustomUI(); }); }
 
-function updateAllCustomSelects() {
-    document.querySelectorAll("select").forEach(select => {
-        if(select.updateCustomUI) select.updateCustomUI();
-    });
-}
-
-window.addEventListener("DOMContentLoaded", initCustomSelects);
+window.addEventListener("DOMContentLoaded", () => { 
+    initCustomSelects(); 
+    changeLang('vi'); // Khởi tạo từ điển lần đầu cho các Tooltip
+    togglePoseActions();
+    togglePoseSettings();
+});
 </script>
-
 </body>
 </html>
