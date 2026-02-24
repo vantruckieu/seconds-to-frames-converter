@@ -170,6 +170,16 @@ input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,
 .warning { margin-top: 15px; font-size: 13px; color: #ffcc66; background: rgba(255, 204, 102, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 204, 102, 0.3); line-height: 1.4;}
 .hidden { display: none !important; }
 
+/* Canvas Graph Styling */
+.graph-canvas {
+    margin-top: 20px;
+    background: rgba(10, 20, 34, 0.6);
+    border-radius: 10px;
+    border: 1px solid #1e3a5f;
+    width: 100%;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
 footer { margin-top: 40px; font-size: 14px; color: #66ccff; opacity: 0.8; display: flex; align-items: center; justify-content: center; gap: 10px; }
 footer .custom-select-wrapper { width: auto; min-width: 110px; }
 footer .custom-select-trigger { padding: 6px 12px; font-size: 14px; border-radius: 6px; }
@@ -520,13 +530,11 @@ const i18n = {
         introText: "Công cụ đa năng hỗ trợ Animation Timing, Tính toán Frame và Render.",
         tabConvert: "Time / Frame", tabAnime: "Anime, Toon Frame", tabPose: "Dự tính Pose", tabRender: "Render Time",
         
-        // Tab Descriptions
         descConvert: "Công cụ chuyển đổi qua lại giữa thời lượng (Giây/Phút/Giờ) và Số khung hình (Frames) theo tốc độ chuẩn.",
         descAnime: "Phân bổ khoảng cách các Keyframe theo quy tắc Animation (On 1s, 2s, 3s) và nội suy nhịp độ cảnh.",
         descPose: "Tự động ước tính số lượng Pose chính và Pose phụ trợ (In-betweens) phụ thuộc vào hành động cụ thể và thời lượng.",
         descRender: "Ước tính tổng thời gian xuất file (Render) của toàn bộ dự án dựa trên thời gian chạy 1 khung hình.",
 
-        // Tooltips (All)
         tipMode: "Chọn loại chuyển đổi:\n• Frame → Time: Đổi từ Khung hình sang Thời gian.\n• Time → Frame: Đổi từ Thời gian sang Khung hình.",
         tipFPS_conv: "FPS (Frames Per Second) là số khung hình trên 1 giây.\n• Điện ảnh: 24 fps\n• Game/TV: 30 hoặc 60 fps.",
         tipInput: "Nhập giá trị cần tính toán (tổng số frame hoặc số giây/phút).",
@@ -558,11 +566,8 @@ const i18n = {
         lblMode: "Loại tính", optF2T: "Frame → Time", optT2F: "Time → Frame",
         lblFPS_conv: "FPS", lblInput: "Số khung hình/thời gian", optSec: "Giây", optMin: "Phút", optHour: "Giờ",
         
-        // Anime Tab
-        lblAnimStyle: "Kiểu diễn hoạt",
-        optOn1s: "On 1s (Mượt / Hành động)", optOn2s: "On 2s (Chuẩn Anime)", optOn3s: "On 3s (Tĩnh / Chậm)",
-        lblFPS_anime: "FPS gốc",
-        lblCorePacingAnime: "Nhịp tâm điểm", 
+        lblAnimStyle: "Kiểu diễn hoạt", optOn1s: "On 1s (Mượt / Hành động)", optOn2s: "On 2s (Chuẩn Anime)", optOn3s: "On 3s (Tĩnh / Chậm)",
+        lblFPS_anime: "FPS gốc", lblCorePacingAnime: "Nhịp tâm điểm", 
         optCpSuperSlowA: "Super Slow", optCpSlowmoA: "Slow Motion", optCpSlowA: "Chậm", optCpNormalA: "Bình thường", optCpFastA: "Nhanh", optCpSuperFastA: "Cực nhanh", optCpTimeSplashA: "Time Splash",
         lblCurveTypeAnime: "Loại đồ thị (Phân bổ)", 
         optCvNoneA: "Không (Đều)", optCvEaseOutA: "Đồ thị xuống (Chậm dần)", optCvEaseInA: "Đồ thị lên (Nhanh dần)", optCvClimaxA: "Điểm cao trào (Nhanh giữa)", optCvLowPointA: "Điểm trầm (Chậm giữa)", optCvWaveA: "Sóng (Nhanh chậm xen kẽ)",
@@ -571,7 +576,6 @@ const i18n = {
         lblCalcLogic: "Logic tính toán", optLogicStrict: "Toán học nghiêm ngặt", optLogicRandom: "Xác suất ngẫu nhiên",
         warnMathModelAnime: "⚠ Chỉ dùng để tham khảo. Mô hình dựa trên nội suy toán học và đồ thị ngẫu nhiên.",
         
-        // Pose Tab
         lblPoseCalcMode: "Cách tính toán", optPcalcRandom: "Xác suất ngẫu nhiên", optPcalcSeconds: "Theo số giây cảnh",
         lblPoseSeconds: "Nhập số giây cảnh", lblFPS_pose: "FPS gốc", lblAnimStylePose: "Loại diễn hoạt",
         lblFocusTypePose: "Loại tâm điểm", optFocCharP: "Nhân vật", optFocObjP: "Vật thể",
@@ -585,26 +589,27 @@ const i18n = {
         lblJerkiness: "Độ giật - khựng (Stutter/Hold)", optJerkNo: "Không", optJerkFrame: "Theo Frame", optJerkSec: "Theo Giây",
         warnMathModelPose: "⚠ Chỉ để tham khảo, tính toán theo mô hình toán học và xác suất ngẫu nhiên.",
         
-        // Render
         lblTotalFrames: "Tổng số frame", lblRenderPerFrame: "Thời gian render 1 frame (giây)",
         warningTextRender: "⚠ Chỉ dùng để tham khảo. Mật độ chi tiết cảnh thực tế sẽ làm đổi thời gian.", lblLanguage: "Ngôn ngữ:",
         
-        // Dynamic Strings
         dynFrames: "Khung hình", dynSec: "giây", dynKeysSugg: "Gợi ý Keyframe", dynEstPoses: "Pose chính ước tính",
         dynSubPose: "Pose phụ", dynHold: "Giật/Khựng (Hold)", dynHoldMsg1: "Khuyên dùng giữ thêm", dynHoldMsg2: "tại điểm chạm/cao trào.",
-        dynHintFrames: "Gợi ý hợp lý: "
+        dynHintFrames: "Gợi ý hợp lý: ",
+        
+        // Dynamic Warnings for Clamping
+        dynClampWarn1: "⚠️ Lưu ý: Thời gian cảnh quá ngắn so với nhịp đồ thị. Keyframe cuối bị ép thụt lùi vào frame ",
+        dynClampWarn2: " (phá vỡ chuẩn nhịp On ",
+        dynClampWarn3: "s).<br>➔ Gợi ý: Tăng thời lượng cảnh hoặc chuyển sang nhịp On 1s/2s dày hơn."
     },
     en: {
         introText: "Versatile tool for Animation Timing, Frame calculations, and Render estimation.",
         tabConvert: "Time / Frame", tabAnime: "Anime, Toon Frame", tabPose: "Pose Estimator", tabRender: "Render Time",
         
-        // Tab Descriptions
         descConvert: "Tool to seamlessly convert between time duration (Sec/Min/Hour) and total Frames based on FPS.",
         descAnime: "Distribute Keyframes using standard Animation rules (On 1s, 2s, 3s) and calculate scene pacing.",
         descPose: "Automatically estimate main Poses and In-betweens depending on specific action types and duration.",
         descRender: "Estimate the total Render time needed for your project based on a single frame's processing time.",
 
-        // Tooltips (All)
         tipMode: "Select conversion type:\n• Frame → Time: Convert Frames to Time.\n• Time → Frame: Convert Time to Frames.",
         tipFPS_conv: "FPS (Frames Per Second) determines the speed.\n• Cinema Standard: 24 fps\n• TV/Games: 30 or 60 fps.",
         tipInput: "Enter the value to compute (number of frames or sec/min/hour).",
@@ -636,11 +641,8 @@ const i18n = {
         lblMode: "Mode", optF2T: "Frame → Time", optT2F: "Time → Frame",
         lblFPS_conv: "FPS", lblInput: "Input Value", optSec: "Seconds", optMin: "Minutes", optHour: "Hours",
         
-        // Anime Tab
-        lblAnimStyle: "Anim Style", 
-        optOn1s: "On 1s (Smooth / Action)", optOn2s: "On 2s (Standard Anime)", optOn3s: "On 3s (Static / Slow)",
-        lblFPS_anime: "Base FPS",
-        lblCorePacingAnime: "Core Pacing", 
+        lblAnimStyle: "Anim Style", optOn1s: "On 1s (Smooth / Action)", optOn2s: "On 2s (Standard Anime)", optOn3s: "On 3s (Static / Slow)",
+        lblFPS_anime: "Base FPS", lblCorePacingAnime: "Core Pacing", 
         optCpSuperSlowA: "Super Slow", optCpSlowmoA: "Slow Motion", optCpSlowA: "Slow", optCpNormalA: "Normal", optCpFastA: "Fast", optCpSuperFastA: "Super Fast", optCpTimeSplashA: "Time Splash",
         lblCurveTypeAnime: "Curve Type (Dist.)", 
         optCvNoneA: "None (Linear)", optCvEaseOutA: "Ease Out", optCvEaseInA: "Ease In", optCvClimaxA: "Climax", optCvLowPointA: "Low Point", optCvWaveA: "Wave",
@@ -649,7 +651,6 @@ const i18n = {
         lblCalcLogic: "Logic", optLogicStrict: "Strict Math", optLogicRandom: "Random Probability",
         warnMathModelAnime: "⚠ Reference only. Based on math interpolation & random probability curves.",
         
-        // Pose Tab
         lblPoseCalcMode: "Calc Mode", optPcalcRandom: "Random Probability", optPcalcSeconds: "By Scene Seconds",
         lblPoseSeconds: "Enter Seconds", lblFPS_pose: "Base FPS", lblAnimStylePose: "Anim Style",
         lblFocusTypePose: "Focus Type", optFocCharP: "Character", optFocObjP: "Object",
@@ -663,14 +664,16 @@ const i18n = {
         lblJerkiness: "Stutter / Hold", optJerkNo: "No", optJerkFrame: "By Frames", optJerkSec: "By Seconds",
         warnMathModelPose: "⚠ Reference only, calculated via math models and random probabilities.",
         
-        // Render
         lblTotalFrames: "Total Frames", lblRenderPerFrame: "Time per frame (sec)",
         warningTextRender: "⚠ Reference only. Real detail density affects time.", lblLanguage: "Language:",
         
-        // Dynamic Strings
         dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses",
         dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact/climax.",
-        dynHintFrames: "Suggested range: "
+        dynHintFrames: "Suggested range: ",
+        
+        dynClampWarn1: "⚠️ Note: Scene duration is too short. The last keyframe was forced back to frame ",
+        dynClampWarn2: " (breaking the On ",
+        dynClampWarn3: "s standard).<br>➔ Fix: Increase scene duration or switch to a denser rhythm."
     }
 };
 
@@ -697,13 +700,11 @@ function updateConvert(){
     let val = parseFloat(document.getElementById("inputValue").value);
     let tUnit = document.getElementById("timeUnit");
     
-    // --- BẢN FIX LỖI TẠI ĐÂY ---
     let isTime2Frame = (mode === "t2f");
     tUnit.classList.toggle("hidden", !isTime2Frame);
     if (tUnit.parentNode && tUnit.parentNode.classList.contains("custom-select-wrapper")) {
         tUnit.parentNode.classList.toggle("hidden", !isTime2Frame);
     }
-    // ----------------------------
 
     if(isNaN(val) || isNaN(fps) || fps <= 0 || val < 0) { document.getElementById("convertOutput").innerHTML = "—"; return; }
 
@@ -728,6 +729,110 @@ function getPacingCurve(x, type) {
     return x;
 }
 
+// Draw Graphical Speed Timeline Curve
+function renderGraph(canvasId, keys, minF, maxF) {
+    let canvas = document.getElementById(canvasId);
+    if(!canvas) return;
+    if(!keys || keys.length < 2) { canvas.classList.add("hidden"); return; }
+    canvas.classList.remove("hidden");
+    
+    let ctx = canvas.getContext("2d");
+    let w = canvas.width, h = canvas.height;
+    let padX = 25, padY = 25;
+    let usableW = w - padX * 2;
+    let usableH = h - padY * 2;
+    
+    ctx.clearRect(0, 0, w, h);
+    
+    let range = maxF - minF;
+    if(range <= 0) range = 1;
+
+    // Draw Fill Under Curve
+    ctx.beginPath();
+    let firstX = padX + ((keys[0] - minF) / range) * usableW;
+    ctx.moveTo(firstX, h - padY);
+    keys.forEach((key, index) => {
+        let x = padX + ((key - minF) / range) * usableW;
+        let y = h - padY - (index / (keys.length - 1)) * usableH;
+        ctx.lineTo(x, y);
+    });
+    let lastX = padX + ((keys[keys.length-1] - minF) / range) * usableW;
+    ctx.lineTo(lastX, h - padY);
+    ctx.closePath();
+    
+    let grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, "rgba(0, 204, 255, 0.4)");
+    grad.addColorStop(1, "rgba(0, 204, 255, 0.0)");
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Draw Curve Line
+    ctx.beginPath();
+    keys.forEach((key, index) => {
+        let x = padX + ((key - minF) / range) * usableW;
+        let y = h - padY - (index / (keys.length - 1)) * usableH;
+        if(index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = "#00ccff";
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Baseline (Timeline)
+    ctx.beginPath();
+    ctx.moveTo(padX - 10, h - padY);
+    ctx.lineTo(w - padX + 10, h - padY);
+    ctx.strokeStyle = "#1e3a5f";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw points & Text
+    ctx.fillStyle = "#e6f3ff";
+    ctx.font = "11px 'Segoe UI', sans-serif";
+    ctx.textAlign = "center";
+    
+    let lastTextX = -50; 
+    let stagger = false;
+
+    keys.forEach((key, index) => {
+        let x = padX + ((key - minF) / range) * usableW;
+        let y = h - padY - (index / (keys.length - 1)) * usableH;
+        
+        // Drop line
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, h - padY);
+        ctx.strokeStyle = "rgba(0, 204, 255, 0.2)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Curve Dot
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI*2);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+
+        // Timeline Dot
+        ctx.beginPath();
+        ctx.arc(x, h - padY, 4, 0, Math.PI*2);
+        ctx.fillStyle = "#ffcc66"; 
+        ctx.fill();
+
+        // Text logic (staggering to prevent overlap on dense graphs)
+        let textY = h - 5;
+        if (x - lastTextX < 18) {
+            stagger = !stagger;
+            textY = stagger ? h - 5 : h - padY - 8;
+        } else {
+            stagger = false;
+        }
+        lastTextX = x;
+        
+        ctx.fillStyle = "#9ed8ff";
+        ctx.fillText(key, x, textY);
+    });
+}
+
 function toggleAnimePoseInput() {
     document.getElementById("poseRow").classList.toggle("hidden", document.getElementById("focusState").value === "static");
 }
@@ -744,9 +849,12 @@ function updateAnime() {
 
     let totalF = ef - sf + 1;
     let out = `Tổng: <span style="color:white">${totalF}</span> frames<br>`;
+    
+    let isClamped = false;
+    let clampedTo = 0;
+    let keys = [];
 
     if (document.getElementById("focusState").value === "dynamic") {
-        let keys = [];
         if(poses === 1) keys.push(sf);
         else {
             for(let i=0; i<poses; i++) {
@@ -754,17 +862,26 @@ function updateAnime() {
                 let y = getPacingCurve(x, curve);
                 let p = sf + y * (totalF - 1);
                 if(logic === "random" && i>0 && i<poses-1) p += (Math.random() * (totalF/poses)*0.3 * (Math.random()>0.5?1:-1));
-                let snap = sf + Math.round((p - sf)/style) * style;
-                snap = Math.max(sf, Math.min(ef, snap));
+                
+                let rawSnap = sf + Math.round((p - sf)/style) * style;
+                let snap = Math.max(sf, Math.min(ef, rawSnap));
+                if (rawSnap > ef) { isClamped = true; clampedTo = snap; }
                 keys.push(snap);
             }
             keys = [...new Set(keys)].sort((a,b)=>a-b);
         }
+        
         out += `<div class="box-result"><b>${i18n[currentLang].dynKeysSugg}:</b><br>${keys.join(" ➔ ")}</div>`;
+        if (isClamped) {
+            let t = i18n[currentLang];
+            out += `<div class="warning" style="text-align:left;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+        }
+        out += `<canvas id="animeGraph" width="530" height="120" class="graph-canvas hidden"></canvas>`;
     } else {
         out += `<div class="box-result">1 Pose giữ toàn bộ ${totalF} frames.</div>`;
     }
     document.getElementById("animeOutput").innerHTML = out;
+    if (document.getElementById("focusState").value === "dynamic") renderGraph("animeGraph", keys, sf, ef);
 }
 
 function updateJerkHint() {
@@ -875,12 +992,17 @@ function updatePoseEst() {
     if(mode === "random" && Math.random() > 0.5) mainPoseCount += Math.floor(Math.random()*3);
 
     let keys = [];
+    let isClamped = false;
+    let clampedTo = 0;
+
     for(let i=0; i<mainPoseCount; i++) {
         let x = i/(mainPoseCount-1);
         let y = getPacingCurve(x, curve);
         let p = 1 + y * (totalFrames - 1);
-        let snap = 1 + Math.round((p - 1)/style) * style;
-        snap = Math.max(1, Math.min(totalFrames, snap));
+        
+        let rawSnap = 1 + Math.round((p - 1)/style) * style;
+        let snap = Math.max(1, Math.min(totalFrames, rawSnap));
+        if (rawSnap > totalFrames) { isClamped = true; clampedTo = snap; }
         keys.push(snap);
     }
     keys = [...new Set(keys)].sort((a,b)=>a-b);
@@ -914,9 +1036,15 @@ function updatePoseEst() {
         boxHtml += `${t.dynHoldMsg1} <b>${jerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
     }
 
+    if(isClamped && !useSub) {
+        boxHtml += `<hr style="border-color:#1e3a5f; margin:10px 0;"><div style="color:#ffcc66; font-size:13px; line-height:1.4;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+    }
+
     if(boxHtml !== "") out += `<div class="box-result">${boxHtml}</div>`;
+    out += `<canvas id="poseGraph" width="530" height="120" class="graph-canvas hidden"></canvas>`;
     
     document.getElementById("poseOutput").innerHTML = out;
+    renderGraph("poseGraph", keys, 1, totalFrames);
 }
 
 function updateRender(){
