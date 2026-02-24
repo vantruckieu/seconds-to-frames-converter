@@ -8,8 +8,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
 
 body {
+    /* Ép trình duyệt sử dụng native UI darkmode cho scrollbar và dropdown (Fix lỗi menu chọn bị xấu) */
     color-scheme: dark; 
+    
     background: radial-gradient(circle at 20% 20%, #0f1c2e, #050b18 70%);
+    /* Sử dụng Google Sans làm ưu tiên số 1, fallback về Be Vietnam Pro */
     font-family: 'Google Sans', 'Be Vietnam Pro', 'Segoe UI', sans-serif;
     color: #e6f3ff;
     display: flex;
@@ -21,6 +24,7 @@ body {
     box-sizing: border-box;
 }
 
+/* Title + intro */
 h1 {
     margin: 0 0 10px 0;
     font-size: 28px;
@@ -37,15 +41,19 @@ h1 {
     line-height: 1.5;
 }
 
+/* Container */
 .container {
     background: linear-gradient(145deg, #0e1624, #111c2f);
     padding: 40px;
     border-radius: 20px;
     width: 460px;
-    box-shadow: 0 0 40px rgba(0,140,255,0.25), inset 0 0 60px rgba(0,80,160,0.15);
+    box-shadow:
+        0 0 40px rgba(0,140,255,0.25),
+        inset 0 0 60px rgba(0,80,160,0.15);
     border: 1px solid rgba(0,180,255,0.2);
 }
 
+/* Tabs */
 .tabs {
     display: flex;
     gap: 12px;
@@ -77,6 +85,7 @@ h1 {
     box-shadow: 0 0 20px rgba(0,200,255,0.6);
 }
 
+/* Form */
 .row { margin-bottom: 20px; }
 
 label {
@@ -88,6 +97,7 @@ label {
     color: #9ed8ff;
 }
 
+/* Fix CSS cho Select và Input mượt mà hơn */
 input, select {
     width: 100%;
     padding: 12px;
@@ -101,6 +111,7 @@ input, select {
     box-sizing: border-box;
 }
 
+/* Tùy chỉnh riêng cho thẻ select để giấu mũi tên mặc định và thay bằng mũi tên đẹp hơn */
 select {
     appearance: none;
     -webkit-appearance: none;
@@ -123,6 +134,7 @@ input:focus, select:focus {
     box-shadow: 0 0 12px rgba(0,200,255,0.5);
 }
 
+/* Input group kết hợp input và select đơn vị thời gian */
 .input-group {
     display: flex;
     gap: 10px;
@@ -133,9 +145,10 @@ input:focus, select:focus {
 }
 
 .input-group select {
-    flex: 0 0 110px;
+    flex: 0 0 110px; /* Chiều rộng cố định cho ô chọn đơn vị */
 }
 
+/* FPS Presets */
 .fps-presets {
     display: flex;
     gap: 8px;
@@ -160,6 +173,7 @@ input:focus, select:focus {
     box-shadow: 0 0 8px rgba(0,200,255,0.6);
 }
 
+/* Result */
 .result {
     margin-top: 25px;
     font-size: 26px;
@@ -169,6 +183,7 @@ input:focus, select:focus {
     text-shadow: 0 0 15px rgba(0,200,255,0.6);
 }
 
+/* Tooltip */
 .tooltip {
     display: inline-flex;
     align-items: center;
@@ -214,6 +229,7 @@ input:focus, select:focus {
     line-height: 1.4;
 }
 
+/* Warning */
 .warning {
     margin-top: 15px;
     font-size: 13px;
@@ -222,10 +238,12 @@ input:focus, select:focus {
     line-height: 1.4;
 }
 
+/* Hidden */
 .hidden {
     display: none !important;
 }
 
+/* Footer */
 footer {
     margin-top: 40px;
     font-size: 14px;
@@ -239,7 +257,7 @@ footer {
 
 footer select {
     width: auto;
-    padding: 6px 30px 6px 10px;
+    padding: 6px 30px 6px 10px; /* Chừa không gian cho icon mũi tên */
     font-size: 14px;
     border-radius: 6px;
     cursor: pointer;
@@ -341,6 +359,7 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 <script>
 let currentLang = "vi";
 
+// Từ điển đa ngôn ngữ
 const i18n = {
     vi: {
         mainTitle: "Timing & Render Tool",
@@ -407,6 +426,7 @@ function updateConvert(){
     let val = parseFloat(document.getElementById("inputValue").value);
     let timeUnit = document.getElementById("timeUnit");
 
+    // Ẩn hiện ô chọn đơn vị thời gian dựa trên chế độ
     if (mode === "t2f") {
         timeUnit.classList.remove("hidden");
     } else {
@@ -423,6 +443,7 @@ function updateConvert(){
         document.getElementById("convertOutput").innerText =
             currentLang === "vi" ? sec + " giây" : sec + " sec";
     } else {
+        // Tính toán dựa trên đơn vị thời gian được chọn (Giây, Phút, Giờ)
         let multiplier = parseFloat(timeUnit.value);
         let totalSeconds = val * multiplier;
         let frames = Math.round(totalSeconds * fps);
@@ -469,6 +490,7 @@ function changeLang(lang){
     currentLang = lang;
     let t = i18n[lang];
 
+    // Thay đổi toàn bộ text theo dictionary
     document.getElementById("mainTitle").innerText = t.mainTitle;
     document.getElementById("introText").innerText = t.introText;
     document.getElementById("tabConvert").innerText = t.tabConvert;
@@ -489,6 +511,7 @@ function changeLang(lang){
     document.getElementById("warningText").innerText = t.warningText;
     document.getElementById("lblLanguage").innerText = t.lblLanguage;
 
+    // Chạy lại hàm tính toán để cập nhật chữ hiển thị ở kết quả
     updateConvert();
     updateRender();
 }
