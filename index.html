@@ -8,11 +8,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
 
 body {
-    /* Ép trình duyệt sử dụng native UI darkmode cho scrollbar và dropdown (Fix lỗi menu chọn bị xấu) */
     color-scheme: dark; 
-    
     background: radial-gradient(circle at 20% 20%, #0f1c2e, #050b18 70%);
-    /* Sử dụng Google Sans làm ưu tiên số 1, fallback về Be Vietnam Pro */
     font-family: 'Google Sans', 'Be Vietnam Pro', 'Segoe UI', sans-serif;
     color: #e6f3ff;
     display: flex;
@@ -97,8 +94,8 @@ label {
     color: #9ed8ff;
 }
 
-/* Fix CSS cho Select và Input mượt mà hơn */
-input, select {
+/* Cập nhật Input */
+input {
     width: 100%;
     padding: 12px;
     font-size: 16px;
@@ -111,27 +108,111 @@ input, select {
     box-sizing: border-box;
 }
 
-/* Tùy chỉnh riêng cho thẻ select để giấu mũi tên mặc định và thay bằng mũi tên đẹp hơn */
-select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ed8ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-    padding-right: 36px;
-    cursor: pointer;
-}
-
-select option {
-    background-color: #0a1422;
-    color: #e6f3ff;
-}
-
-input:focus, select:focus {
+input:focus {
     outline: none;
     border-color: #00ccff;
     box-shadow: 0 0 12px rgba(0,200,255,0.5);
+}
+
+/* ----------------------------------------------------
+   GIAO DIỆN CUSTOM DROPDOWN (Thay thế cho Select cũ)
+   ---------------------------------------------------- */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Tự động ẩn custom dropdown nếu select gốc bị gắn class hidden */
+.custom-select-wrapper:has(select.hidden) {
+    display: none !important;
+}
+
+.input-group .custom-select-wrapper {
+    flex: 0 0 110px; /* Chiều rộng cố định cho ô chọn đơn vị */
+}
+
+.custom-select-trigger {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    background: #0a1422;
+    border: 1px solid #1e3a5f;
+    border-radius: 10px;
+    color: #e6f3ff;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.custom-select-trigger:hover, .custom-select-trigger.active {
+    outline: none;
+    border-color: #00ccff;
+    box-shadow: 0 0 12px rgba(0,200,255,0.5);
+}
+
+.custom-select-trigger .arrow {
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ed8ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.3s;
+}
+
+.custom-select-trigger.active .arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    background: #0a1422;
+    border: 1px solid #1e3a5f;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.6), 0 0 15px rgba(0,140,255,0.15);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease-out;
+    overflow: hidden;
+}
+
+.custom-select-options.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.custom-select-option {
+    padding: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #e6f3ff;
+    border-bottom: 1px solid rgba(30, 58, 95, 0.4);
+}
+
+.custom-select-option:last-child {
+    border-bottom: none;
+}
+
+.custom-select-option:hover {
+    background: #11233d;
+}
+
+.custom-select-option.selected {
+    background: #11233d;
+    color: #00ccff;
+    font-weight: bold;
 }
 
 /* Input group kết hợp input và select đơn vị thời gian */
@@ -142,10 +223,6 @@ input:focus, select:focus {
 
 .input-group input {
     flex: 1;
-}
-
-.input-group select {
-    flex: 0 0 110px; /* Chiều rộng cố định cho ô chọn đơn vị */
 }
 
 /* FPS Presets */
@@ -255,12 +332,15 @@ footer {
     gap: 10px;
 }
 
-footer select {
+footer .custom-select-wrapper {
     width: auto;
-    padding: 6px 30px 6px 10px; /* Chừa không gian cho icon mũi tên */
+    min-width: 110px;
+}
+
+footer .custom-select-trigger {
+    padding: 6px 12px;
     font-size: 14px;
     border-radius: 6px;
-    cursor: pointer;
 }
 </style>
 </head>
@@ -514,7 +594,92 @@ function changeLang(lang){
     // Chạy lại hàm tính toán để cập nhật chữ hiển thị ở kết quả
     updateConvert();
     updateRender();
+    
+    // BẮT BUỘC: Cập nhật lại text cho Custom Dropdown nếu người dùng chuyển ngôn ngữ
+    if(typeof updateAllCustomSelects === "function") updateAllCustomSelects();
 }
+
+/* =========================================================
+   TẠO GIAO DIỆN CUSTOM DROPDOWN TỰ ĐỘNG KHÔNG CHẠM LOGIC CŨ
+   ========================================================= */
+function initCustomSelects() {
+    const selects = document.querySelectorAll("select");
+    selects.forEach(select => {
+        // Bọc select cũ
+        const wrapper = document.createElement("div");
+        wrapper.className = "custom-select-wrapper";
+        select.parentNode.insertBefore(wrapper, select);
+        wrapper.appendChild(select);
+        
+        const trigger = document.createElement("div");
+        trigger.className = "custom-select-trigger";
+        
+        const optionsList = document.createElement("div");
+        optionsList.className = "custom-select-options";
+        
+        wrapper.appendChild(trigger);
+        wrapper.appendChild(optionsList);
+        
+        function updateUI() {
+            trigger.innerHTML = `<span>${select.options[select.selectedIndex].text}</span><div class="arrow"></div>`;
+        }
+        
+        function buildOptions() {
+            optionsList.innerHTML = "";
+            Array.from(select.options).forEach((opt, index) => {
+                const optDiv = document.createElement("div");
+                optDiv.className = "custom-select-option";
+                if(index === select.selectedIndex) optDiv.classList.add("selected");
+                optDiv.innerText = opt.text;
+                
+                // Xử lý khi click vào option
+                optDiv.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    select.selectedIndex = index;
+                    // Kích hoạt sự kiện thay đổi của select gốc để các hàm như updateConvert() vẫn chạy bình thường
+                    select.dispatchEvent(new Event("change"));
+                    updateUI();
+                    optionsList.classList.remove("show");
+                    trigger.classList.remove("active");
+                });
+                optionsList.appendChild(optDiv);
+            });
+        }
+
+        // Mở dropdown
+        trigger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isShowing = optionsList.classList.contains("show");
+            document.querySelectorAll(".custom-select-options").forEach(el => el.classList.remove("show"));
+            document.querySelectorAll(".custom-select-trigger").forEach(el => el.classList.remove("active"));
+            if (!isShowing) {
+                buildOptions(); // Cập nhật lại list mỗi khi mở
+                optionsList.classList.add("show");
+                trigger.classList.add("active");
+            }
+        });
+
+        updateUI();
+        select.style.display = "none"; // Ẩn select gốc đi
+        
+        select.updateCustomUI = updateUI;
+    });
+
+    // Bấm ra ngoài thì đóng
+    document.addEventListener("click", () => {
+        document.querySelectorAll(".custom-select-options").forEach(el => el.classList.remove("show"));
+        document.querySelectorAll(".custom-select-trigger").forEach(el => el.classList.remove("active"));
+    });
+}
+
+function updateAllCustomSelects() {
+    document.querySelectorAll("select").forEach(select => {
+        if(select.updateCustomUI) select.updateCustomUI();
+    });
+}
+
+// Khởi chạy khi tải xong trang
+window.addEventListener("DOMContentLoaded", initCustomSelects);
 </script>
 
 </body>
