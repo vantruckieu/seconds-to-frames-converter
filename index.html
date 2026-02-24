@@ -160,7 +160,7 @@ input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,
 .tooltip:hover::after {
     content: attr(data-tip); position: absolute; bottom: 150%; left: 50%; transform: translateX(-50%);
     background: #02111f; padding: 10px 14px; font-size: 12px; font-weight: normal; border-radius: 8px;
-    width: 240px; /* Cố định width để không bị bóp vỡ chữ */
+    width: min(280px, calc(100vw - 24px)); /* Giữ tooltip trong viewport */
     color: #cceeff; box-shadow: 0 4px 15px rgba(0,170,255,0.6);
     border: 1px solid rgba(0, 204, 255, 0.4); 
     z-index: 9999; 
