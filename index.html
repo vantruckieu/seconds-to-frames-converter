@@ -865,7 +865,6 @@ function updatePoseEst() {
 
     if(["fight","fly","break","run"].includes(action)) baseDensity *= 1.4;
     if(["talk","scale"].includes(action)) baseDensity *= 0.6;
-    // "other" dùng ngầm định số dư chuẩn *= 1.0 không cần code thêm
 
     let totalDrawings = totalFrames / style;
     let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
@@ -929,7 +928,6 @@ function updateRender(){
 function changeLang(lang) {
     currentLang = lang; let t = i18n[lang];
     
-    // Quét update Text theo ID
     for (let id in t) {
         let el = document.getElementById(id);
         if (el) {
@@ -938,7 +936,6 @@ function changeLang(lang) {
         }
     }
 
-    // Quét Update Tooltip an toàn
     document.querySelectorAll(".tooltip").forEach(el => {
         let tId = el.id;
         if(t[tId]) el.dataset.tip = t[tId];
@@ -987,7 +984,7 @@ function updateAllCustomSelects() { document.querySelectorAll("select").forEach(
 
 window.addEventListener("DOMContentLoaded", () => { 
     initCustomSelects(); 
-    changeLang('vi'); // Khởi tạo từ điển lần đầu cho các Tooltip
+    changeLang('vi'); 
     togglePoseActions();
     togglePoseSettings();
 });
