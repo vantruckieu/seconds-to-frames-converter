@@ -186,11 +186,23 @@ display:none;
 
 /* Footer */
 
-footer{
-margin-top:40px;
-font-size:14px;
-color:#66ccff;
-opacity:0.8;
+footer {
+    margin-top: 40px;
+    font-size: 14px;
+    color: #66ccff;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+footer select {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
 }
 </style>
 </head>
@@ -209,7 +221,6 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 <button id="tabRender" onclick="switchTab('render')">Render Time</button>
 </div>
 
-<!-- CONVERT MODE -->
 <div id="convertMode">
 
 <div class="row">
@@ -224,7 +235,7 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 
 <div class="row">
 <label>FPS</label>
-<input type="number" id="fps" step="0.001" value="24" oninput="updateConvert()">
+<input type="number" id="fps" step="0.001" value="24" min="1" oninput="updateConvert()">
 
 <div class="fps-presets">
 <button onclick="setFPS(12)">12</button>
@@ -236,28 +247,27 @@ Công cụ hỗ trợ chuyển đổi Frame ⇄ Time và ước tính thời gia
 
 <div class="row">
 <label>Nhập giá trị</label>
-<input type="number" id="inputValue" oninput="updateConvert()">
+<input type="number" id="inputValue" min="0" oninput="updateConvert()">
 </div>
 
 <div class="result" id="convertOutput">—</div>
 
 </div>
 
-<!-- RENDER MODE -->
 <div id="renderMode" class="hidden">
 
 <div class="row">
 <label>
 <span class="tooltip" data-tip="Tổng số frame cần render">Tổng số frame (?)</span>
 </label>
-<input type="number" id="totalFrames" oninput="updateRender()">
+<input type="number" id="totalFrames" min="0" oninput="updateRender()">
 </div>
 
 <div class="row">
 <label>
 <span class="tooltip" data-tip="Thời gian render của 1 frame (tính bằng giây)">Thời gian render 1 frame (giây) (?)</span>
 </label>
-<input type="number" id="renderPerFrame" step="0.01" oninput="updateRender()">
+<input type="number" id="renderPerFrame" step="0.01" min="0" oninput="updateRender()">
 </div>
 
 <div class="result" id="renderOutput">—</div>
@@ -283,67 +293,82 @@ Ngôn ngữ:
 let currentLang="vi";
 
 function switchTab(tab){
-document.getElementById("convertMode").classList.add("hidden");
-document.getElementById("renderMode").classList.add("hidden");
-document.getElementById("tabConvert").classList.remove("active");
-document.getElementById("tabRender").classList.remove("active");
+    document.getElementById("convertMode").classList.add("hidden");
+    document.getElementById("renderMode").classList.add("hidden");
+    document.getElementById("tabConvert").classList.remove("active");
+    document.getElementById("tabRender").classList.remove("active");
 
-if(tab==="convert"){
-document.getElementById("convertMode").classList.remove("hidden");
-document.getElementById("tabConvert").classList.add("active");
-}else{
-document.getElementById("renderMode").classList.remove("hidden");
-document.getElementById("tabRender").classList.add("active");
-}
+    if(tab==="convert"){
+        document.getElementById("convertMode").classList.remove("hidden");
+        document.getElementById("tabConvert").classList.add("active");
+    }else{
+        document.getElementById("renderMode").classList.remove("hidden");
+        document.getElementById("tabRender").classList.add("active");
+    }
 }
 
 function updateConvert(){
-let mode=document.getElementById("mode").value;
-let fps=parseFloat(document.getElementById("fps").value);
-let val=parseFloat(document.getElementById("inputValue").value);
+    let mode=document.getElementById("mode").value;
+    let fps=parseFloat(document.getElementById("fps").value);
+    let val=parseFloat(document.getElementById("inputValue").value);
 
-if(isNaN(val) || isNaN(fps) || fps<=0){
-document.getElementById("convertOutput").innerText="—";
-return;
-}
+    // Bắt lỗi: Nếu chưa nhập, nhập chữ, nhập số âm, hoặc FPS <= 0 thì ẩn kết quả
+    if(isNaN(val) || isNaN(fps) || fps<=0 || val < 0){
+        document.getElementById("convertOutput").innerText="—";
+        return;
+    }
 
-if(mode==="f2t"){
-let sec=(val/fps).toFixed(3);
-document.getElementById("convertOutput").innerText=
-currentLang==="vi"? sec+" giây": sec+" sec";
-}else{
-let frames=Math.round(val*fps);
-document.getElementById("convertOutput").innerText=
-currentLang==="vi"? frames+" frame": frames+" frames";
-}
+    if(mode==="f2t"){
+        let sec=(val/fps).toFixed(3);
+        document.getElementById("convertOutput").innerText=
+        currentLang==="vi"? sec+" giây": sec+" sec";
+    }else{
+        let frames=Math.round(val*fps);
+        document.getElementById("convertOutput").innerText=
+        currentLang==="vi"? frames+" frame": frames+" frames";
+    }
 }
 
 function updateRender(){
-let frames=parseFloat(document.getElementById("totalFrames").value);
-let perFrame=parseFloat(document.getElementById("renderPerFrame").value);
+    let frames=parseFloat(document.getElementById("totalFrames").value);
+    let perFrame=parseFloat(document.getElementById("renderPerFrame").value);
 
-if(isNaN(frames) || isNaN(perFrame)){
-document.getElementById("renderOutput").innerText="—";
-return;
-}
+    // Bắt lỗi: Không cho nhập số âm
+    if(isNaN(frames) || isNaN(perFrame) || frames < 0 || perFrame < 0){
+        document.getElementById("renderOutput").innerText="—";
+        return;
+    }
 
-let total=frames*perFrame;
-let hours=Math.floor(total/3600);
-let minutes=Math.floor((total%3600)/60);
-let seconds=Math.floor(total%60);
+    let total=frames*perFrame;
+    
+    // Thêm logic tính toán ngày (1 ngày = 86400 giây)
+    let days=Math.floor(total/86400);
+    let hours=Math.floor((total%86400)/3600);
+    let minutes=Math.floor((total%3600)/60);
+    let seconds=Math.floor(total%60);
 
-document.getElementById("renderOutput").innerText=
-hours+"h "+minutes+"m "+seconds+"s";
+    let outputStr = "";
+    
+    // Nếu có ngày thì mới hiển thị ngày
+    if(days > 0) {
+        let dayLabel = currentLang === "vi" ? " ngày " : "d ";
+        outputStr += days + dayLabel;
+    }
+    
+    outputStr += hours+"h "+minutes+"m "+seconds+"s";
+
+    document.getElementById("renderOutput").innerText = outputStr;
 }
 
 function setFPS(value){
-document.getElementById("fps").value=value;
-updateConvert();
+    document.getElementById("fps").value=value;
+    updateConvert();
 }
 
 function changeLang(lang){
-currentLang=lang;
-updateConvert();
+    currentLang=lang;
+    updateConvert();
+    updateRender(); // Cập nhật luôn lại ngôn ngữ cho phần Render (chữ ngày/d)
 }
 
 </script>
