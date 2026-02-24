@@ -1151,7 +1151,33 @@ function updatePoseEst() {
     if(jerkType !== "no" && !useSub && jerkVal > 0) {
         boxHtml += `<hr style="border-color:#1e3a5f; margin:10px 0;"><b>${t.dynHold}:</b><br>`;
         let unitText = jerkType === "sec" ? t.dynSec : t.dynFrames;
-        boxHtml += `${t.dynHoldMsg1} <b>${jerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
+        let actualJerkVal = jerkVal;
+        let isCapped = false;
+        
+        // BẢO VỆ LÔ-GIC: Không cho phép Hold vượt quá 40% tổng thời lượng cảnh
+        if (jerkType === "sec") {
+            let maxSec = totalSec * 0.4;
+            if (actualJerkVal > maxSec) {
+                actualJerkVal = maxSec;
+                isCapped = true;
+            }
+        } else {
+            let maxFrames = Math.floor(totalFrames * 0.4);
+            if (maxFrames < 1) maxFrames = 1;
+            if (actualJerkVal > maxFrames) {
+                actualJerkVal = maxFrames;
+                isCapped = true;
+            }
+        }
+        
+        // Làm tròn hiển thị để không bị số thập phân quá dài
+        actualJerkVal = jerkType === "sec" ? actualJerkVal.toFixed(2) : actualJerkVal;
+        
+        boxHtml += `${t.dynHoldMsg1} <b>${actualJerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
+        
+        if (isCapped) {
+            boxHtml += `<br><span style="color:#ffcc66; font-size: 12px;">(Đã tự động giảm xuống tối đa 40% cảnh để tránh hỏng nhịp)</span>`;
+        }
     }
 
     if(boxHtml !== "") out += `<div class="box-result">${boxHtml}</div>`;
