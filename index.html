@@ -113,7 +113,7 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
 .editor-btn-group { display: flex; gap: 8px; align-items: center; }
 .editor-btn { background: #0c1626; border: 1px solid #1b3555; color: #9ed8ff; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; transition: 0.2s;}
 .editor-btn:hover { background: #11233d; color: #00ccff; border-color:#00ccff; }
-.checkbox-lbl { font-size: 12px; color: #9ed8ff; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.checkbox-lbl { font-size: 12px; color: #9ed8ff; display: flex; align-items: center; gap: 4px; cursor: pointer; margin-right: 8px;}
 .checkbox-lbl input { width: auto; min-height: auto; }
 .editor-canvas-wrap { width: 100%; height: 160px; background: #050b18; border-radius: 8px; border: 1px dashed #1e3a5f; cursor: crosshair; touch-action: none; position: relative;}
 
@@ -204,16 +204,17 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
             
             <div id="customEditorWrap_anime" class="custom-editor hidden">
                 <div class="editor-controls">
-                    <span id="lblEditorA">Bộ dựng Đồ thị</span>
+                    <span id="lblEditorA">Bộ dựng Đồ thị tự do</span>
                     <div class="editor-btn-group">
-                        <label class="checkbox-lbl"><input type="checkbox" id="lockEnd_anime" checked> <span id="lblLockA">Khóa 2 mút</span></label>
+                        <label class="checkbox-lbl"><input type="checkbox" id="smoothCurve_anime" checked> <span id="lblSmoothA">Smooth</span></label>
+                        <label class="checkbox-lbl"><input type="checkbox" id="lockEnd_anime" checked> <span id="lblLockA">Khóa mút</span></label>
                         <button class="editor-btn" onclick="modifyCustomPoints('anime', 1)">+ Điểm</button>
                         <button class="editor-btn" onclick="modifyCustomPoints('anime', -1)">- Điểm</button>
                     </div>
                 </div>
                 <div class="editor-canvas-wrap"><canvas id="customCanvas_anime"></canvas></div>
             </div>
-            <div id="warnCustom_anime" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;">⚠️ Tùy chỉnh không khả dụng: Cần chọn Logic Nghiêm ngặt và cảnh phải dài từ 3 giây.</div>
+            <div id="warnCustom_anime" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;">⚠️ Tùy chỉnh không khả dụng: Cần chọn Logic Nghiêm ngặt và cảnh dài từ 3 giây.</div>
         </div>
         <div class="row">
             <label><span id="lblFocus">Tâm điểm & Trạng thái</span><span class="tooltip" id="tipFocus" data-tip="?">?</span></label>
@@ -238,7 +239,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
             <select id="calcLogic" onchange="toggleAnimeCustom(); updateAnime()"><option id="optLogicStrict" value="strict">Toán học nghiêm ngặt</option><option id="optLogicRandom" value="random">Xác suất ngẫu nhiên</option></select>
         </div>
         <div class="result" id="animeOutput">—</div>
-        <div class="warning" id="warnMathModelAnime">⚠ Chỉ dùng để tham khảo. Mô hình dựa trên nội suy toán học và đồ thị.</div>
+        <div class="warning" id="warnMathModelAnime">⚠ Lưu ý: Mô hình đồ thị và toán học chỉ mang tính chất gợi ý tham khảo.</div>
     </div>
 
     <div id="poseMode" class="hidden">
@@ -286,16 +287,17 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
             
             <div id="customEditorWrap_pose" class="custom-editor hidden">
                 <div class="editor-controls">
-                    <span id="lblEditorP">Bộ dựng Đồ thị</span>
+                    <span id="lblEditorP">Bộ dựng Đồ thị tự do</span>
                     <div class="editor-btn-group">
-                        <label class="checkbox-lbl"><input type="checkbox" id="lockEnd_pose" checked> <span id="lblLockP">Khóa 2 mút</span></label>
+                        <label class="checkbox-lbl"><input type="checkbox" id="smoothCurve_pose" checked> <span id="lblSmoothP">Smooth</span></label>
+                        <label class="checkbox-lbl"><input type="checkbox" id="lockEnd_pose" checked> <span id="lblLockP">Khóa mút</span></label>
                         <button class="editor-btn" onclick="modifyCustomPoints('pose', 1)">+ Điểm</button>
                         <button class="editor-btn" onclick="modifyCustomPoints('pose', -1)">- Điểm</button>
                     </div>
                 </div>
                 <div class="editor-canvas-wrap"><canvas id="customCanvas_pose"></canvas></div>
             </div>
-            <div id="warnCustom_pose" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;">⚠️ Tùy chỉnh không khả dụng: Cần chọn chế độ Theo Giây và cảnh dài từ 3 giây.</div>
+            <div id="warnCustom_pose" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;">⚠️ Tùy chỉnh không khả dụng: Cần chọn chế độ Theo Giây và thời lượng từ 3 giây.</div>
         </div>
         <div class="row">
             <label><span id="lblSubPose">Thêm Pose phụ trợ (In-betweens)</span><span class="tooltip" id="tipSubPose" data-tip="?">?</span></label>
@@ -314,7 +316,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
             </div>
         </div>
         <div class="result" id="poseOutput">—</div>
-        <div class="warning" id="warnMathModelPose">⚠ Chỉ để tham khảo, tính toán theo mô hình toán học và đồ thị.</div>
+        <div class="warning" id="warnMathModelPose">⚠ Lưu ý: Hệ thống chỉ tính toán gợi ý vị trí lý thuyết, mật độ thực tế phụ thuộc bản vẽ.</div>
     </div>
 
     <div id="renderMode" class="hidden">
@@ -373,14 +375,14 @@ const i18n = {
 
         lblMode: "Loại tính", optF2T: "Frame → Time", optT2F: "Time → Frame",
         lblFPS_conv: "FPS", lblInput: "Số khung hình/thời gian", optSec: "Giây", optMin: "Phút", optHour: "Giờ",
-        lblAnimStyle: "Kiểu diễn hoạt", optOn1s: "On 1s", optOn2s: "On 2s", optOn3s: "On 3s",
+        lblAnimStyle: "Kiểu diễn hoạt", optOn1s: "On 1s (Mượt / Hành động)", optOn2s: "On 2s (Chuẩn Anime)", optOn3s: "On 3s (Tĩnh / Chậm)",
         lblFPS_anime: "FPS gốc", lblCorePacingAnime: "Nhịp tâm điểm", 
         optCpSuperSlowA: "Super Slow", optCpSlowmoA: "Slow Motion", optCpSlowA: "Chậm", optCpNormalA: "Bình thường", optCpFastA: "Nhanh", optCpSuperFastA: "Cực nhanh", optCpTimeSplashA: "Time Splash",
         lblCurveTypeAnime: "Loại đồ thị (Phân bổ)", optCvNoneA: "Không (Đều)", optCvEaseOutA: "Đồ thị xuống (Chậm dần)", optCvEaseInA: "Đồ thị lên (Nhanh dần)", optCvClimaxA: "Điểm cao trào (Nhanh giữa)", optCvLowPointA: "Điểm trầm (Chậm giữa)", optCvWaveA: "Sóng (Nhanh chậm xen kẽ)", optCvCustomA: "Tùy chỉnh (Custom)",
         lblFocus: "Tâm điểm & Trạng thái", optFocScene: "Cảnh", optFocChar: "Nhân vật/Vật thể", optStateStatic: "Tĩnh", optStateDynamic: "Động",
         lblPose: "Số Pose chính", lblFrameRange: "Frame Bắt đầu - Kết thúc", 
         lblCalcLogic: "Logic tính toán", optLogicStrict: "Toán học nghiêm ngặt", optLogicRandom: "Xác suất ngẫu nhiên",
-        warnMathModelAnime: "⚠ Chỉ dùng để tham khảo. Mô hình dựa trên toán học.",
+        warnMathModelAnime: "⚠ Lưu ý: Mô hình đồ thị và toán học chỉ mang tính chất gợi ý tham khảo.",
         lblPoseCalcMode: "Cách tính toán", optPcalcRandom: "Xác suất ngẫu nhiên", optPcalcSeconds: "Theo số giây cảnh",
         lblPoseSeconds: "Nhập số giây cảnh", lblFPS_pose: "FPS gốc", lblAnimStylePose: "Loại diễn hoạt",
         lblFocusTypePose: "Loại tâm điểm", optFocCharP: "Nhân vật", optFocObjP: "Vật thể",
@@ -390,7 +392,7 @@ const i18n = {
         lblSubPose: "Pose phụ (In-betweens)", optNo: "Không", optYes: "Có",
         lblSubPoseLogic: "Quy tắc Pose phụ", optSpRandom: "Ngẫu nhiên",
         lblJerkiness: "Giật/Khựng (Hold)", optJerkNo: "Không", optJerkFrame: "Theo Frame", optJerkSec: "Theo Giây",
-        warnMathModelPose: "⚠ Chỉ để tham khảo toán học.",
+        warnMathModelPose: "⚠ Lưu ý: Hệ thống chỉ tính toán gợi ý vị trí lý thuyết, mật độ thực tế phụ thuộc bản vẽ.",
         lblTotalFrames: "Tổng frame", lblRenderPerFrame: "Thời gian render 1 frame (giây)",
         warningTextRender: "⚠ Thực tế cảnh nặng sẽ thay đổi thời gian.", lblLanguage: "Ngôn ngữ:",
         
@@ -399,17 +401,17 @@ const i18n = {
         dynHintFrames: "Gợi ý hợp lý: ",
         
         dynClampWarn1: "⚠️ Lưu ý: Thời gian cảnh không chia hết cho nhịp. Bị ép vào frame ", dynClampWarn2: " (phá vỡ On ", dynClampWarn3: "s).",
-        dynGraphLimitWarn: "⚠️ Cảnh báo: Vượt quá 25 giây. Biểu đồ bị ẩn để tránh giật lag điện thoại.",
-        dynShortageWarn1: "⚠️ Thiếu Frame / Thời gian: Độ dài cảnh quá ngắn để tạo nhịp (On ", dynShortageWarn2: "s).",
-        dynShortageFix: "💡 Hướng giải quyết: Hãy tăng số giây hoặc chọn loại On 1s.",
+        dynGraphLimitWarn: "⚠️ Cảnh báo: Vượt quá 25 giây. Đã ẩn biểu đồ đồ thị để tối ưu hóa hiệu suất thiết bị.",
+        dynShortageWarn1: "⚠️ Thiếu Frame / Thời gian: Số frame quá ít để tạo đủ 2 dáng theo nhịp On ", dynShortageWarn2: "s.",
+        dynShortageFix: "💡 Gợi ý: Hãy tăng số giây cảnh hoặc giảm loại diễn hoạt (ví dụ xuống On 1s).",
         
-        lblVisualGraph: "Vận tốc Easing", tipVisualGraph: "Đồ thị gia tốc. Đường chấm là tốc độ đều.",
-        lblDataGraph: "Dòng thời gian", tipDataGraph: "Vị trí thực tế của frame (Có thể cuộn ngang).",
+        lblVisualGraph: "Tổng quan (Gia tốc)", tipVisualGraph: "Đồ thị biểu diễn phân bổ tốc độ lý thuyết. Đường nét đứt là mốc tốc độ đều đặn.",
+        lblDataGraph: "Dòng thời gian (Keyframe)", tipDataGraph: "Vị trí thực tế của từng bản vẽ trên trục thời gian (Kéo sang phải để xem hết).",
         phStartFrame: "Bắt đầu (vd: 1)", phEndFrame: "Kết thúc (vd: 100)",
         legendMainKey: "Key chính", legendSubKey: "Key phụ",
-        lblEditorA: "Bộ dựng Đồ thị", lblEditorP: "Bộ dựng Đồ thị", lblLockA: "Khóa 2 mút", lblLockP: "Khóa 2 mút",
-        warnCustomAnime: "⚠️ Tùy chỉnh cần Logic Nghiêm ngặt và độ dài từ 3 giây trở lên.",
-        warnCustomPose: "⚠️ Tùy chỉnh cần đặt Theo số giây và phải từ 3 giây trở lên."
+        lblEditorA: "Bộ dựng Đồ thị tự do", lblEditorP: "Bộ dựng Đồ thị tự do", lblLockA: "Khóa mút", lblLockP: "Khóa mút", lblSmoothA: "Đường mượt", lblSmoothP: "Đường mượt",
+        warnCustomAnime: "⚠️ Chức năng Tùy chỉnh cần bật Logic Nghiêm ngặt và độ dài cảnh từ 3 giây trở lên.",
+        warnCustomPose: "⚠️ Chức năng Tùy chỉnh yêu cầu chọn chế độ Theo số giây cảnh và thời lượng từ 3 giây trở lên."
     },
     en: {
         introText: "Versatile tool for Animation Timing, Frame calculations, and Render estimation.",
@@ -438,7 +440,7 @@ const i18n = {
         lblFocus: "Focus & State", optFocScene: "Scene", optFocChar: "Character/Object", optStateStatic: "Static", optStateDynamic: "Dynamic",
         lblPose: "Pose Count", lblFrameRange: "Start - End Frame", 
         lblCalcLogic: "Logic", optLogicStrict: "Strict Math", optLogicRandom: "Random Prob",
-        warnMathModelAnime: "⚠ Reference only. Based on math interpolation.",
+        warnMathModelAnime: "⚠ Note: Graph models are for theoretical reference only.",
         lblPoseCalcMode: "Calc Mode", optPcalcRandom: "Random Prob", optPcalcSeconds: "By Scene Seconds",
         lblPoseSeconds: "Enter Seconds", lblFPS_pose: "Base FPS", lblAnimStylePose: "Anim Style",
         lblFocusTypePose: "Focus Type", optFocCharP: "Character", optFocObjP: "Object",
@@ -447,30 +449,32 @@ const i18n = {
         lblCurveTypePose: "Curve Type", optCvNoneP: "None", optCvEaseOutP: "Ease Out", optCvEaseInP: "Ease In", optCvClimaxP: "Climax", optCvLowPointP: "Low Point", optCvWaveP: "Wave", optCvCustomP: "Custom",
         lblSubPose: "Add In-betweens", optNo: "No", optYes: "Yes", lblSubPoseLogic: "In-between Logic", optSpRandom: "Random Prob",
         lblJerkiness: "Stutter / Hold", optJerkNo: "No", optJerkFrame: "By Frames", optJerkSec: "By Seconds",
-        warnMathModelPose: "⚠ Reference only, calculated via math models.",
+        warnMathModelPose: "⚠ Note: Theoretical suggestion; real density depends on the drawing.",
         lblTotalFrames: "Total Frames", lblRenderPerFrame: "Time per frame",
         warningTextRender: "⚠ Reference only.", lblLanguage: "Language:",
         
         dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses", dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact/climax.", dynHintFrames: "Suggested range: ",
         dynClampWarn1: "⚠️ Note: Duration breaking On ", dynClampWarn2: "s at frame ", dynClampWarn3: ".",
-        dynGraphLimitWarn: "⚠️ Warning: Scene > 25s. Graphs disabled to optimize performance.",
-        dynShortageWarn1: "⚠️ Shortage: Not enough frames for On ", dynShortageWarn2: "s rhythm.",
-        dynShortageFix: "💡 Fix: Increase duration or lower anim style to On 1s.",
+        dynGraphLimitWarn: "⚠️ Warning: Scene > 25s. Graphs disabled to optimize device performance.",
+        dynShortageWarn1: "⚠️ Shortage: Not enough frames for 2 poses On ", dynShortageWarn2: "s rhythm.",
+        dynShortageFix: "💡 Suggestion: Increase duration or lower anim style to On 1s.",
         
-        lblVisualGraph: "Easing Velocity", tipVisualGraph: "Acceleration graph. Dotted line is constant speed.", lblDataGraph: "Keyframe Timeline", tipDataGraph: "Actual frame placement (Scrollable).",
+        lblVisualGraph: "Overview (Acceleration)", tipVisualGraph: "Theoretical speed distribution. Dotted line is constant speed.", 
+        lblDataGraph: "Timeline (Keyframes)", tipDataGraph: "Actual frame placement on the timeline (Scrollable horizontally).",
         phStartFrame: "Start (e.g., 1)", phEndFrame: "End (e.g., 100)", legendMainKey: "Main Key", legendSubKey: "Sub Key",
-        lblEditorA: "Curve Editor", lblEditorP: "Curve Editor", lblLockA: "Lock Ends", lblLockP: "Lock Ends",
-        warnCustomAnime: "⚠️ Custom not available: Requires Strict Logic and > 3 seconds.",
-        warnCustomPose: "⚠️ Custom not available: Requires 'By Seconds' and > 3 seconds."
+        lblEditorA: "Free Curve Editor", lblEditorP: "Free Curve Editor", lblLockA: "Lock Ends", lblLockP: "Lock Ends", lblSmoothA: "Smooth", lblSmoothP: "Smooth",
+        warnCustomAnime: "⚠️ Custom not available: Requires Strict Logic and > 3 seconds duration.",
+        warnCustomPose: "⚠️ Custom not available: Requires 'By Scene Seconds' mode and > 3 seconds duration."
     }
 };
 
-// CUSTOM CURVE LOGIC
+// SPLINE & CUSTOM CURVE LOGIC
 let customData = {
     anime: { points: [{x:0, y:0}, {x:0.33, y:0.8}, {x:0.66, y:0.2}, {x:1, y:1}], activeNode: null },
     pose: { points: [{x:0, y:0}, {x:0.5, y:0.8}, {x:1, y:1}], activeNode: null }
 };
 
+// Linear Interpolation (Lerp)
 function lerpCustomCurve(x, points) {
     if (x <= points[0].x) return points[0].y;
     if (x >= points[points.length-1].x) return points[points.length-1].y;
@@ -483,8 +487,36 @@ function lerpCustomCurve(x, points) {
     return x;
 }
 
+// Catmull-Rom Spline Interpolation for smooth curves
+function splineCustomCurve(x, points) {
+    if (x <= points[0].x) return points[0].y;
+    if (x >= points[points.length-1].x) return points[points.length-1].y;
+    
+    let i = 0;
+    while (i < points.length - 2 && x > points[i+1].x) i++;
+    
+    let p0 = points[Math.max(0, i - 1)];
+    let p1 = points[i];
+    let p2 = points[i + 1];
+    let p3 = points[Math.min(points.length - 1, i + 2)];
+    
+    let t = (x - p1.x) / (p2.x - p1.x);
+    let t2 = t * t;
+    let t3 = t2 * t;
+    
+    let v0 = (p2.y - p0.y) * 0.5;
+    let v1 = (p3.y - p1.y) * 0.5;
+    
+    return (2 * p1.y - 2 * p2.y + v0 + v1) * t3 + 
+           (-3 * p1.y + 3 * p2.y - 2 * v0 - v1) * t2 + 
+           v0 * t + p1.y;
+}
+
 function getPacingCurve(x, type, tab) {
-    if(type === 'custom') return lerpCustomCurve(x, customData[tab].points);
+    if(type === 'custom') {
+        let isSmooth = document.getElementById("smoothCurve_" + tab) && document.getElementById("smoothCurve_" + tab).checked;
+        return isSmooth ? splineCustomCurve(x, customData[tab].points) : lerpCustomCurve(x, customData[tab].points);
+    }
     if(type === 'ease_in') return x * x * x; 
     if(type === 'ease_out') return 1 - Math.pow(1 - x, 3);
     if(type === 'climax') return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
@@ -508,14 +540,28 @@ function drawCustomEditor(tab) {
     ctx.strokeStyle = "rgba(30, 58, 95, 0.5)"; ctx.lineWidth = 1; ctx.beginPath();
     ctx.moveTo(pad, pad); ctx.lineTo(pad, h-pad); ctx.lineTo(w-pad, h-pad); ctx.stroke();
     
-    let pts = customData[tab].points; let isLocked = document.getElementById("lockEnd_" + tab).checked;
+    let pts = customData[tab].points; 
+    let isLocked = document.getElementById("lockEnd_" + tab).checked;
+    let isSmooth = document.getElementById("smoothCurve_" + tab).checked;
+    
+    // Draw Curve
     ctx.beginPath();
-    pts.forEach((p, i) => {
-        let px = pad + p.x * usableW; let py = h - pad - p.y * usableH;
-        if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-    });
+    if (isSmooth) {
+        for(let i=0; i<=100; i++) {
+            let x = i/100;
+            let valY = splineCustomCurve(x, pts);
+            let px = pad + x * usableW; let py = h - pad - valY * usableH;
+            if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+    } else {
+        pts.forEach((p, i) => {
+            let px = pad + p.x * usableW; let py = h - pad - p.y * usableH;
+            if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        });
+    }
     ctx.strokeStyle = "#ffcc66"; ctx.lineWidth = 2.5; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.stroke();
     
+    // Draw Points
     pts.forEach((p, i) => {
         let px = pad + p.x * usableW; let py = h - pad - p.y * usableH;
         ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI*2);
@@ -557,12 +603,12 @@ function initCustomCanvas(tab) {
         let newX = (pos.x - pad) / usableW; let newY = (canvas.clientHeight - pad - pos.y) / usableH;
         
         if (i === 0) {
-            pts[i].x = 0; pts[i].y = Math.max(0, Math.min(1, newY));
+            pts[i].x = 0; pts[i].y = Math.max(-0.2, Math.min(1.2, newY)); // Allow extending Y for overshoot effect
         } else if (i === pts.length - 1) {
-            pts[i].x = 1; pts[i].y = Math.max(0, Math.min(1, newY));
+            pts[i].x = 1; pts[i].y = Math.max(-0.2, Math.min(1.2, newY));
         } else {
             let minX = pts[i-1].x + 0.05; let maxX = pts[i+1].x - 0.05;
-            pts[i].x = Math.max(minX, Math.min(maxX, newX)); pts[i].y = Math.max(0, Math.min(1, newY));
+            pts[i].x = Math.max(minX, Math.min(maxX, newX)); pts[i].y = Math.max(-0.2, Math.min(1.2, newY));
         }
         drawCustomEditor(tab); if(tab === 'anime') updateAnime(); else updatePoseEst();
     }
@@ -572,6 +618,7 @@ function initCustomCanvas(tab) {
     canvas.addEventListener('mousedown', handleDown); canvas.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', handleUp);
     canvas.addEventListener('touchstart', handleDown, {passive:false}); canvas.addEventListener('touchmove', handleMove, {passive:false}); window.addEventListener('touchend', handleUp);
     document.getElementById("lockEnd_" + tab).addEventListener('change', () => drawCustomEditor(tab));
+    document.getElementById("smoothCurve_" + tab).addEventListener('change', () => { drawCustomEditor(tab); if(tab==='anime') updateAnime(); else updatePoseEst(); });
 }
 
 function modifyCustomPoints(tab, delta) {
@@ -734,16 +781,15 @@ function updateAnime() {
     let totalF = ef - sf + 1; let t = i18n[currentLang];
     let out = `Tổng: <span style="color:white">${totalF}</span> frames<br>`;
     
-    // Core Shortage Logic Warning
-    let isShortage = (totalF < style * 2);
-    if(isShortage && document.getElementById("focusState").value === "dynamic") {
-        out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynShortageWarn1}<b>${style}</b>${t.dynShortageWarn2}<br>${t.dynShortageFix}</div>`;
-        document.getElementById("animeOutput").innerHTML = out; return;
+    let isShortage = false; let shortageWarnHtml = "";
+    if (totalF < style * 2 && document.getElementById("focusState").value === "dynamic") {
+        isShortage = true;
+        shortageWarnHtml = `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynShortageWarn1}<b>${style}</b>${t.dynShortageWarn2}<br>${t.dynShortageFix}</div>`;
     }
 
     let isTooLong = (totalF / fps) > 25;
     let isCustomValid = !(curve === 'custom' && (logic !== 'strict' || (totalF/fps) < 3));
-    if(!isCustomValid) { document.getElementById("animeOutput").innerHTML = out; return; }
+    if(!isCustomValid) { document.getElementById("animeOutput").innerHTML = out + shortageWarnHtml; return; }
 
     let keys = []; let isClamped = false; let clampedTo = 0;
 
@@ -768,11 +814,12 @@ function updateAnime() {
         }
         
         out += `<div class="box-result"><b>${t.dynKeysSugg}:</b><br>${keys.join(" ➔ ")}</div>`;
-        if (isClamped) out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+        out += shortageWarnHtml;
+        if (isClamped && !isShortage) out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
         
         if (isTooLong) {
             out += `<div class="warning" style="text-align:left; margin-top: 15px; color:#ff6b6b; border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
-        } else {
+        } else if (!isShortage) {
             out += `
             <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;"><span>${t.lblVisualGraph}</span><span class="tooltip" data-tip="${t.tipVisualGraph}">?</span></div>
             <div class="static-graph-wrapper"><canvas id="animeStaticGraph" class="graph-canvas"></canvas></div>
@@ -836,17 +883,16 @@ function updatePoseEst() {
     let totalSec = mode === "seconds" ? sec : (Math.random() * 3.5 + 1.0); 
     let totalFrames = Math.round(totalSec * fps);
     let t = i18n[currentLang];
+    let isShortage = false; let shortageWarnHtml = "";
     
-    // Core Shortage Logic Warning
-    let isShortage = (totalFrames < style * 2);
-    if(isShortage) {
-        document.getElementById("poseOutput").innerHTML = `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynShortageWarn1}<b>${style}</b>${t.dynShortageWarn2}<br>${t.dynShortageFix}</div>`;
-        return;
+    if(totalFrames < style * 2) {
+        isShortage = true;
+        shortageWarnHtml = `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynShortageWarn1}<b>${style}</b>${t.dynShortageWarn2}<br>${t.dynShortageFix}</div>`;
     }
 
     let isTooLong = totalSec > 25;
     let isCustomValid = !(curve === 'custom' && (mode !== 'seconds' || sec < 3));
-    if(!isCustomValid) { document.getElementById("poseOutput").innerHTML = ""; return; }
+    if(!isCustomValid) { document.getElementById("poseOutput").innerHTML = shortageWarnHtml; return; }
 
     let baseDensity = 1.0;
     if(pacing==="superslow") baseDensity = 0.2; else if(pacing==="slowmo") baseDensity = 0.4; else if(pacing==="slow") baseDensity = 0.6;
@@ -896,11 +942,12 @@ function updatePoseEst() {
     }
 
     if(boxHtml !== "") out += `<div class="box-result">${boxHtml}</div>`;
-    if(isClamped) out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+    out += shortageWarnHtml;
+    if(isClamped && !isShortage) out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
 
     if (isTooLong) {
         out += `<div class="warning" style="text-align:left; margin-top: 15px; color:#ff6b6b; border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
-    } else {
+    } else if (!isShortage) {
         out += `
         <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;"><span>${t.lblVisualGraph}</span><span class="tooltip" data-tip="${t.tipVisualGraph}">?</span></div>
         <div class="static-graph-wrapper"><canvas id="poseStaticGraph" class="graph-canvas"></canvas></div>
@@ -913,7 +960,7 @@ function updatePoseEst() {
     }
     
     document.getElementById("poseOutput").innerHTML = out;
-    if(!isTooLong) {
+    if(!isTooLong && !isShortage) {
         let allKeys = keys.concat(subKeysList); let requiredWidth = Math.max(530, allKeys.length * 40);
         renderStaticCurve("poseStaticGraph", curve, 'pose'); renderGraph("poseGraph", keys, subKeysList, 1, totalFrames, requiredWidth);
     }
