@@ -995,9 +995,18 @@ function updateAnime() {
         else {
             for(let i=0; i<poses; i++) {
                 let x = i/(poses-1);
-                let y = getPacingCurve(x, curve);
-                let p = sf + y * (totalF - 1);
-                if(logic === "random" && i>0 && i<poses-1) p += (Math.random() * (totalF/poses)*0.3 * (Math.random()>0.5?1:-1));
+                let p = sf + getPacingCurve(x, curve) * (totalF - 1);
+                
+                // THUẬT TOÁN NHIỄU ĐỘNG (DYNAMIC JITTER) CẢI TIẾN
+                if(logic === "random" && i>0 && i<poses-1) {
+                    let prevX = (i-1)/(poses-1);
+                    let nextX = (i+1)/(poses-1);
+                    let prevP = sf + getPacingCurve(prevX, curve) * (totalF - 1);
+                    let nextP = sf + getPacingCurve(nextX, curve) * (totalF - 1);
+                    
+                    let maxJitter = Math.min(p - prevP, nextP - p) * 0.4; // Cho phép xê dịch tối đa 40% khoảng trống local
+                    p += (Math.random() * maxJitter * 2) - maxJitter; 
+                }
                 
                 // Thuật toán ép nhịp cũ
                 let rawSnap = sf + Math.round((p - sf)/style) * style;
@@ -1116,6 +1125,7 @@ function togglePoseActions() {
 
 function updatePoseEst() {
     let mode = document.getElementById("poseCalcMode").value;
+    // Cải tiến độ mượt random giây
     let sec = parseFloat(document.getElementById("poseSeconds").value) || 1;
     let fps = parseFloat(document.getElementById("fpsPose").value) || 24;
     let style = parseInt(document.getElementById("animStylePose").value) || 2;
@@ -1127,7 +1137,7 @@ function updatePoseEst() {
     let jerkType = document.getElementById("jerkToggle").value;
     let jerkVal = parseFloat(document.getElementById("jerkValue").value) || 0;
 
-    let totalSec = mode === "seconds" ? sec : (Math.random() * 3 + 1.5); 
+    let totalSec = mode === "seconds" ? sec : (Math.random() * 3.5 + 1.0); // Random nhạy hơn một chút (1.0s - 4.5s)
     let totalFrames = Math.round(totalSec * fps);
     let isTooLong = totalSec > 25;
 
@@ -1144,7 +1154,7 @@ function updatePoseEst() {
 
     let totalDrawings = totalFrames / style;
     let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
-    if(mode === "random" && Math.random() > 0.5) mainPoseCount += Math.floor(Math.random()*3);
+    if(mode === "random" && Math.random() > 0.4) mainPoseCount += Math.floor(Math.random()*3); // 60% cơ hội cộng thêm pose
 
     let keys = [];
     let isClamped = false;
@@ -1155,14 +1165,12 @@ function updatePoseEst() {
         let y = getPacingCurve(x, curve);
         let p = 1 + y * (totalFrames - 1);
         
-        // Thuật toán ép nhịp cũ
         let rawSnap = 1 + Math.round((p - 1)/style) * style;
         let snap = Math.max(1, Math.min(totalFrames, rawSnap));
         keys.push(snap);
     }
     keys = [...new Set(keys)].sort((a,b)=>a-b);
     
-    // Cảnh báo đứt nhịp theo logic cũ
     let lastKey = keys[keys.length - 1];
     if (keys.length > 0 && (lastKey - 1) % style !== 0) {
         isClamped = true;
@@ -1186,9 +1194,10 @@ function updatePoseEst() {
             
             if (validSlots.length > 0) {
                 let subs = [];
-                let step = Math.max(1, validSlots.length / subCount);
+                // THUẬT TOÁN PHÂN BỔ CENTER-WEIGHTED CHO IN-BETWEENS
+                let stepRatio = validSlots.length / subCount;
                 for(let j=0; j<subCount; j++) {
-                    let idx = Math.floor(j * step);
+                    let idx = Math.floor((j + 0.5) * stepRatio); // Cộng 0.5 để rải khung vào giữa
                     if(idx < validSlots.length && !subs.includes(validSlots[idx])) {
                         subs.push(validSlots[idx]);
                         subKeysList.push(validSlots[idx]);
