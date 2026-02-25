@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title id="title">Timing & Render Tool</title>
 
 <style>
@@ -36,6 +36,7 @@ h1 {
     margin-bottom: 30px;
     opacity: 0.8;
     line-height: 1.5;
+    font-size: 15px;
 }
 
 .container {
@@ -59,7 +60,8 @@ h1 {
 .tabs button {
     flex: 1;
     min-width: 120px;
-    padding: 10px 5px;
+    padding: 12px 5px;
+    min-height: 44px;
     background: #0c1626;
     border: 1px solid #1b3555;
     border-radius: 10px;
@@ -68,7 +70,7 @@ h1 {
     transition: 0.3s;
     font-weight: 500;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .tabs button:hover { background: #11233d; box-shadow: 0 0 12px rgba(0,170,255,0.4); }
@@ -79,18 +81,18 @@ h1 {
     color: #9ed8ff;
     background: rgba(0, 150, 255, 0.08);
     border-left: 3px solid #00ccff;
-    padding: 10px 15px;
+    padding: 12px 15px;
     margin-bottom: 22px;
     border-radius: 0 8px 8px 0;
     line-height: 1.5;
 }
 
-.row { margin-bottom: 18px; }
+.row { margin-bottom: 20px; }
 
 label {
     display: flex;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     font-size: 14px;
     opacity: 0.85;
     color: #9ed8ff;
@@ -98,8 +100,9 @@ label {
 
 input {
     width: 100%;
-    padding: 12px;
-    font-size: 15px;
+    padding: 14px;
+    font-size: 16px;
+    min-height: 44px;
     font-family: inherit;
     background: #0a1422;
     border: 1px solid #1e3a5f;
@@ -117,7 +120,8 @@ input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,
 .input-group .custom-select-wrapper { flex: 1; }
 
 .custom-select-trigger {
-    width: 100%; padding: 12px; font-size: 14px; font-family: inherit;
+    width: 100%; padding: 14px; font-size: 15px; font-family: inherit;
+    min-height: 44px;
     background: #0a1422; border: 1px solid #1e3a5f; border-radius: 10px;
     color: #e6f3ff; cursor: pointer; display: flex; justify-content: space-between;
     align-items: center; transition: 0.3s; box-sizing: border-box; user-select: none;
@@ -134,79 +138,70 @@ input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,
     position: absolute; top: calc(100% + 5px); left: 0; right: 0; background: #0a1422;
     border: 1px solid #1e3a5f; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.6);
     z-index: 99; opacity: 0; visibility: hidden; transform: translateY(-10px);
-    transition: all 0.2s ease-out; overflow-y: auto; max-height: 220px;
+    transition: all 0.2s ease-out; overflow-y: auto; max-height: 250px;
 }
 .custom-select-options.show { opacity: 1; visibility: visible; transform: translateY(0); }
-.custom-select-option { padding: 12px; font-size: 13px; cursor: pointer; transition: 0.2s; color: #e6f3ff; border-bottom: 1px solid rgba(30, 58, 95, 0.4); }
+.custom-select-option { padding: 14px; font-size: 14px; cursor: pointer; transition: 0.2s; color: #e6f3ff; border-bottom: 1px solid rgba(30, 58, 95, 0.4); }
 .custom-select-option:last-child { border-bottom: none; }
 .custom-select-option:hover, .custom-select-option.selected { background: #11233d; color: #00ccff; }
 
-.input-group { display: flex; gap: 10px; }
-.input-group input { flex: 1; }
-.fps-presets { display: flex; gap: 8px; margin-top: 8px; }
+.input-group { display: flex; gap: 10px; flex-wrap: wrap; }
+.input-group input, .input-group .custom-select-wrapper { flex: 1; min-width: 140px; }
+.fps-presets { display: flex; gap: 8px; margin-top: 10px; }
 .fps-presets button {
-    flex: 1; padding: 6px; background: #0e1c2f; border: 1px solid #1f4068;
-    border-radius: 8px; color: #66ccff; cursor: pointer; font-size: 13px; transition: 0.2s;
+    flex: 1; padding: 10px 6px; background: #0e1c2f; border: 1px solid #1f4068;
+    border-radius: 8px; color: #66ccff; cursor: pointer; font-size: 14px; transition: 0.2s; min-height: 40px;
 }
 .fps-presets button:hover { background: #133a66; box-shadow: 0 0 8px rgba(0,200,255,0.6); }
 
 /* Results */
 .result { margin-top: 25px; font-size: 24px; font-weight: bold; color: #00ccff; text-align: center; text-shadow: 0 0 15px rgba(0,200,255,0.6); }
 .sub-result { display: block; font-size: 14px; font-weight: normal; color: #9ed8ff; margin-top: 8px; opacity: 0.9; line-height: 1.5; }
-.box-result { font-size: 14px; color: #cceeff; background: rgba(0, 102, 255, 0.1); border: 1px dashed #0066ff; padding: 12px; border-radius: 8px; margin-top: 15px; text-align: left; line-height: 1.6;}
+.box-result { font-size: 14px; color: #cceeff; background: rgba(0, 102, 255, 0.1); border: 1px dashed #0066ff; padding: 15px; border-radius: 10px; margin-top: 15px; text-align: left; line-height: 1.6;}
 
 /* Tooltip & Warning */
 .tooltip {
-    display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;
+    display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;
     background: rgba(0, 204, 255, 0.1); border: 1px solid #00ccff; border-radius: 50%;
-    color: #00ccff; font-size: 11px; font-weight: bold; cursor: help; position: relative; margin-left: 8px; transition: 0.3s;
+    color: #00ccff; font-size: 12px; font-weight: bold; cursor: help; position: relative; margin-left: 8px; transition: 0.3s;
 }
 .tooltip:hover { background: #00ccff; color: #0a1422; box-shadow: 0 0 10px rgba(0, 204, 255, 0.6); }
 .tooltip:hover::after {
     content: attr(data-tip); position: absolute; bottom: 150%; left: 50%; transform: translateX(-50%);
-    background: #02111f; padding: 10px 14px; font-size: 12px; font-weight: normal; border-radius: 8px;
-    width: 240px;
-    color: #cceeff; box-shadow: 0 4px 15px rgba(0,170,255,0.6);
-    border: 1px solid rgba(0, 204, 255, 0.4); 
-    z-index: 9999; 
-    text-align: left; white-space: pre-wrap; line-height: 1.5; word-wrap: break-word;
+    background: #02111f; padding: 12px 14px; font-size: 13px; font-weight: normal; border-radius: 8px;
+    width: 250px; color: #cceeff; box-shadow: 0 4px 15px rgba(0,170,255,0.6);
+    border: 1px solid rgba(0, 204, 255, 0.4); z-index: 9999; text-align: left; white-space: pre-wrap; line-height: 1.5; word-wrap: break-word;
 }
 
-.warning { margin-top: 15px; font-size: 13px; color: #ffcc66; background: rgba(255, 204, 102, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 204, 102, 0.3); line-height: 1.5;}
+.warning { margin-top: 15px; font-size: 14px; color: #ffcc66; background: rgba(255, 204, 102, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 204, 102, 0.3); line-height: 1.5;}
 .hidden { display: none !important; }
 
-/* Canvas Graph Styling */
-.graph-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #9ed8ff;
-    margin-top: 25px;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
+/* Separated Canvas Graph Styling */
+.graph-title { font-size: 13px; font-weight: 600; color: #9ed8ff; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
 .static-graph-wrapper {
     background: rgba(10, 20, 34, 0.4);
-    border-radius: 10px;
+    border-radius: 12px;
     border: 1px dashed #1e3a5f;
     width: 100%;
     margin-top: 5px;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
-    padding: 10px 0;
+    padding: 15px 0;
+    overflow: hidden;
 }
+
 .graph-wrapper {
     margin-top: 5px;
     background: rgba(10, 20, 34, 0.6);
-    border-radius: 10px;
+    border-radius: 12px;
     border: 1px solid #1e3a5f;
     width: 100%;
     overflow-x: auto;
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
-    padding: 10px 0;
+    padding: 15px 0;
+    -webkit-overflow-scrolling: touch;
 }
 
 .graph-wrapper::-webkit-scrollbar { height: 8px; }
@@ -224,9 +219,16 @@ input:focus { outline: none; border-color: #00ccff; box-shadow: 0 0 12px rgba(0,
 
 footer { margin-top: 40px; font-size: 14px; color: #66ccff; opacity: 0.8; display: flex; align-items: center; justify-content: center; gap: 10px; }
 footer .custom-select-wrapper { width: auto; min-width: 110px; }
-footer .custom-select-trigger { padding: 6px 12px; font-size: 14px; border-radius: 6px; }
+footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radius: 6px; min-height: unset; }
 
-.note-text { font-size: 12px; color: #66ccff; margin-top: 4px; display: block; opacity: 0.8; }
+.note-text { font-size: 13px; color: #66ccff; margin-top: 6px; display: block; opacity: 0.8; }
+
+@media (max-width: 600px) {
+    body { padding: 20px 10px 50px 10px; }
+    .container { padding: 25px 20px; border-radius: 15px; }
+    h1 { font-size: 24px; }
+    .input-group input, .input-group .custom-select-wrapper { min-width: 100%; }
+}
 </style>
 </head>
 
@@ -565,7 +567,7 @@ footer .custom-select-trigger { padding: 6px 12px; font-size: 14px; border-radiu
 </footer>
 
 <script>
-// Canvas Polyfill cho thiết bị cũ không có roundRect
+// Canvas Polyfill cho thiết bị cũ
 if (!CanvasRenderingContext2D.prototype.roundRect) {
     CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
         if (w < 2 * r) r = w / 2;
@@ -647,9 +649,11 @@ const i18n = {
         dynSubPose: "Pose phụ", dynHold: "Giật/Khựng (Hold)", dynHoldMsg1: "Khuyên dùng giữ thêm", dynHoldMsg2: "tại điểm chạm/cao trào.",
         dynHintFrames: "Gợi ý hợp lý: ",
         
-        dynShortageWarn1: "⚠️ <b>Thiếu Frame / Thời gian:</b> Độ dài cảnh quá ngắn để tạo diễn hoạt đúng nhịp (On ",
-        dynShortageWarn2: "s).",
-        dynShortageFix: "💡 <i>Hướng giải quyết:</i> Hãy tăng số giây cảnh hoặc chọn loại diễn hoạt thấp hơn (vd: On 1s).",
+        dynClampWarn1: "⚠️ Lưu ý: Thời gian cảnh không chia hết cho nhịp. Keyframe cuối bị ép vào frame ",
+        dynClampWarn2: " (phá vỡ chuẩn nhịp On ",
+        dynClampWarn3: "s).<br>➔ Gợi ý: Kéo dài độ dài cảnh để tròn nhịp.",
+        
+        dynGraphLimitWarn: "⚠️ Cảnh báo: Cảnh vượt quá 25 giây. Biểu đồ đã bị ẩn để tối ưu hiệu suất tính toán và bộ nhớ thiết bị.",
         
         lblVisualGraph: "Vận tốc Easing (Lý thuyết)", tipVisualGraph: "Thể hiện gia tốc và sự thay đổi tốc độ (Vận tốc). Trục giữa là tốc độ đều.",
         lblDataGraph: "Biểu đồ Keyframe (Thực tế)", tipDataGraph: "Vị trí chính xác của từng frame trên trục thời gian sau khi tính toán.",
@@ -719,9 +723,11 @@ const i18n = {
         dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact/climax.",
         dynHintFrames: "Suggested range: ",
         
-        dynShortageWarn1: "⚠️ <b>Frame / Time Shortage:</b> Scene is too short for proper animation spacing (On ",
-        dynShortageWarn2: "s).",
-        dynShortageFix: "💡 <i>Fix:</i> Increase scene duration or choose a lower anim style (e.g., On 1s).",
+        dynClampWarn1: "⚠️ Note: Duration isn't a multiple of the rhythm. Last key forced to frame ",
+        dynClampWarn2: " (breaking On ",
+        dynClampWarn3: "s).<br>➔ Fix: Adjust duration to fit the anim style.",
+        
+        dynGraphLimitWarn: "⚠️ Warning: Scene exceeds 25 seconds. Graphs are disabled to optimize device performance and memory.",
         
         lblVisualGraph: "Easing Velocity (Theoretical)", tipVisualGraph: "Displays acceleration and changes in speed. Middle line is constant speed.",
         lblDataGraph: "Keyframe Timeline (Actual)", tipDataGraph: "Exact placement of each keyframe on the timeline after calculation.",
@@ -773,16 +779,16 @@ function updateConvert(){
     }
 }
 
+// Hàm Easing nâng cấp (Cubic & Sine curves)
 function getPacingCurve(x, type) {
-    if(type === 'ease_in') return x * x;
-    if(type === 'ease_out') return Math.sqrt(x);
-    if(type === 'climax') return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
-    if(type === 'low_point') return x < 0.5 ? Math.sqrt(2 * x) / 2 : 1 - Math.sqrt(-2 * x + 2) / 2;
-    if(type === 'wave') return x - 0.05 * Math.sin(x * Math.PI * 2 * 3);
+    if(type === 'ease_in') return x * x * x; 
+    if(type === 'ease_out') return 1 - Math.pow(1 - x, 3);
+    if(type === 'climax') return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    if(type === 'low_point') return x < 0.5 ? Math.pow(2 * x, 1/3) / 2 : 1 - Math.pow(-2 * x + 2, 1/3) / 2;
+    if(type === 'wave') return x + 0.1 * Math.sin(x * Math.PI * 4);
     return x;
 }
 
-// Hàm khởi tạo HiDPI Canvas cho hình ảnh sắc nét
 function setupHighResCanvas(canvasId, width, height) {
     let canvas = document.getElementById(canvasId);
     if(!canvas) return null;
@@ -794,67 +800,6 @@ function setupHighResCanvas(canvasId, width, height) {
     canvas.style.height = height + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     return { canvas, ctx, w: width, h: height };
-}
-
-function renderStaticCurve(canvasId, curveType) {
-    let wrapper = document.getElementById(canvasId).parentElement;
-    if(wrapper) wrapper.classList.remove("hidden");
-    
-    let res = setupHighResCanvas(canvasId, 530, 80);
-    if(!res) return;
-    let { ctx, w, h } = res;
-    
-    let padX = 25, padY = 15;
-    let usableW = w - padX * 2;
-    let usableH = h - padY * 2;
-    let midY = h / 2;
-    
-    ctx.clearRect(0, 0, w, h);
-    
-    let speeds = [];
-    let dx = 0.01;
-    for(let i=0; i<=100; i++) {
-        let x = i/100;
-        let y1 = getPacingCurve(x, curveType);
-        let y2 = getPacingCurve(x + dx, curveType);
-        speeds.push((y2 - y1) / dx);
-    }
-    
-    // Baseline
-    ctx.beginPath();
-    ctx.moveTo(padX, midY);
-    ctx.lineTo(w - padX, midY);
-    ctx.strokeStyle = "rgba(255, 204, 102, 0.4)";
-    ctx.setLineDash([4, 4]);
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-    ctx.setLineDash([]);
-    
-    // Graph
-    ctx.beginPath();
-    for(let i=0; i<=100; i++) {
-        let x = i/100;
-        let speed = speeds[i];
-        let yPos = midY - (speed - 1) * (usableH / 3); 
-        yPos = Math.max(padY, Math.min(h - padY, yPos));
-        if(i===0) ctx.moveTo(padX + x * usableW, yPos);
-        else ctx.lineTo(padX + x * usableW, yPos);
-    }
-    
-    ctx.strokeStyle = "#ffcc66"; 
-    ctx.lineWidth = 3;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    // Bottom Axis
-    ctx.beginPath();
-    ctx.moveTo(padX - 10, h - padY);
-    ctx.lineTo(w - padX + 10, h - padY);
-    ctx.strokeStyle = "#1e3a5f";
-    ctx.lineWidth = 2.5;
-    ctx.lineCap = "round";
-    ctx.stroke();
 }
 
 function drawPill(ctx, text, x, y, bgColor, color) {
@@ -871,22 +816,72 @@ function drawPill(ctx, text, x, y, bgColor, color) {
     ctx.fillText(text, x, y + 1);
 }
 
-function renderGraph(canvasId, mainKeys, subKeys, minF, maxF) {
-    let allKeys = mainKeys.concat(subKeys || []).sort((a,b)=>a-b);
-    let wrapper = document.getElementById(canvasId).parentElement;
+// Biểu đồ Vận tốc (Toàn cảnh - Fix cứng 530px để fit vừa vặn container, không cuộn)
+function renderStaticCurve(canvasId, curveType) {
+    let res = setupHighResCanvas(canvasId, 530, 70);
+    if(!res) return;
+    let { ctx, w, h } = res;
     
-    if(!allKeys || allKeys.length < 2) { 
-        if(wrapper) wrapper.classList.add("hidden"); 
-        return; 
+    let padX = 30, padY = 10;
+    let usableW = w - padX * 2;
+    let usableH = h - padY * 2;
+    let midY = h / 2;
+    
+    ctx.clearRect(0, 0, w, h);
+    
+    let speeds = [];
+    let dx = 0.01;
+    for(let i=0; i<=100; i++) {
+        let x = i/100;
+        let y1 = getPacingCurve(x, curveType);
+        let y2 = getPacingCurve(x + dx, curveType);
+        speeds.push((y2 - y1) / dx);
     }
-    if(wrapper) wrapper.classList.remove("hidden");
     
-    let requiredWidth = Math.max(530, allKeys.length * 40);
+    // Baseline (Tốc độ đều 1x)
+    ctx.beginPath();
+    ctx.moveTo(padX, midY);
+    ctx.lineTo(w - padX, midY);
+    ctx.strokeStyle = "rgba(255, 204, 102, 0.4)";
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Đồ thị gia tốc
+    ctx.beginPath();
+    for(let i=0; i<=100; i++) {
+        let x = i/100;
+        let speed = speeds[i];
+        let yPos = midY - (speed - 1) * (usableH / 3); 
+        yPos = Math.max(padY, Math.min(h - padY, yPos));
+        if(i===0) ctx.moveTo(padX + x * usableW, yPos);
+        else ctx.lineTo(padX + x * usableW, yPos);
+    }
+    
+    ctx.strokeStyle = "#ffcc66"; 
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    // Trục đáy
+    ctx.beginPath();
+    ctx.moveTo(padX - 10, h - padY);
+    ctx.lineTo(w - padX + 10, h - padY);
+    ctx.strokeStyle = "#1e3a5f";
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    ctx.stroke();
+}
+
+// Biểu đồ Keyframe (Chi tiết - Tính năng cuộn kéo dài)
+function renderGraph(canvasId, mainKeys, subKeys, minF, maxF, requiredWidth) {
     let res = setupHighResCanvas(canvasId, requiredWidth, 120);
     if(!res) return;
     let { ctx, w, h } = res;
     
-    let padX = 25, padY = 25;
+    let padX = 30, padY = 25;
     let usableW = w - padX * 2;
     let usableH = h - padY * 2;
     let range = maxF - minF;
@@ -977,6 +972,7 @@ function toggleAnimePoseInput() {
 
 function updateAnime() {
     let style = parseInt(document.getElementById("animStyle").value);
+    let fps = parseFloat(document.getElementById("fpsAnime").value) || 24;
     let curve = document.getElementById("curveTypeAnime").value;
     let poses = parseInt(document.getElementById("poseCount").value) || 1;
     let logic = document.getElementById("calcLogic").value;
@@ -988,15 +984,12 @@ function updateAnime() {
     let t = i18n[currentLang];
     let out = `Tổng: <span style="color:white">${totalF}</span> frames<br>`;
     
-    let isShortage = false;
-    if (totalF < style * 2) {
-        isShortage = true;
-    }
-    
-    let maxSlots = Math.floor((totalF - 1) / style) + 1;
-    if (poses > maxSlots) poses = Math.max(1, maxSlots);
+    let isTooLong = (totalF / fps) > 25;
     
     let keys = [];
+    let isClamped = false;
+    let clampedTo = 0;
+
     if (document.getElementById("focusState").value === "dynamic") {
         if(poses === 1) keys.push(sf);
         else {
@@ -1006,45 +999,55 @@ function updateAnime() {
                 let p = sf + y * (totalF - 1);
                 if(logic === "random" && i>0 && i<poses-1) p += (Math.random() * (totalF/poses)*0.3 * (Math.random()>0.5?1:-1));
                 
-                let snap = sf + Math.round((p - sf)/style) * style;
-                if(snap > ef) snap -= style; 
+                // Thuật toán ép nhịp cũ
+                let rawSnap = sf + Math.round((p - sf)/style) * style;
+                let snap = Math.max(sf, Math.min(ef, rawSnap));
                 keys.push(snap);
             }
             keys = [...new Set(keys)].sort((a,b)=>a-b);
+            
+            // Cảnh báo nếu frame cuối bị ép làm vỡ nhịp
+            let lastKey = keys[keys.length - 1];
+            if (keys.length > 0 && (lastKey - sf) % style !== 0) {
+                isClamped = true;
+                clampedTo = lastKey;
+            }
         }
         
         out += `<div class="box-result"><b>${t.dynKeysSugg}:</b><br>${keys.join(" ➔ ")}</div>`;
         
-        if (isShortage || keys.length < 2) {
-            out += `<div class="warning" style="text-align:left; margin-top: 15px;">
-                ${t.dynShortageWarn1}<b>${style}</b>${t.dynShortageWarn2}<br>
-                ${t.dynShortageFix}
-            </div>`;
+        if (isClamped) {
+            out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
         }
         
-        out += `
-        <div class="graph-title">
-            <span>${t.lblVisualGraph}</span>
-            <span class="tooltip" data-tip="${t.tipVisualGraph}">?</span>
-        </div>
-        <div class="static-graph-wrapper hidden">
-            <canvas id="animeStaticGraph" class="graph-canvas"></canvas>
-        </div>
-        
-        <div class="graph-title">
-            <span>${t.lblDataGraph}</span>
-            <span class="tooltip" data-tip="${t.tipDataGraph}">?</span>
-        </div>
-        <div class="graph-wrapper hidden">
-            <canvas id="animeGraph" class="graph-canvas"></canvas>
-        </div>`;
-        
-        document.getElementById("animeOutput").innerHTML = out;
-        renderStaticCurve("animeStaticGraph", curve);
-        renderGraph("animeGraph", keys, [], sf, ef);
+        if (isTooLong) {
+            out += `<div class="warning" style="text-align:left; margin-top: 15px; color:#ff6b6b; border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
+        } else {
+            out += `
+            <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;">
+                <span>${t.lblVisualGraph}</span><span class="tooltip" data-tip="${t.tipVisualGraph}">?</span>
+            </div>
+            <div class="static-graph-wrapper">
+                <canvas id="animeStaticGraph" class="graph-canvas"></canvas>
+            </div>
+            
+            <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;">
+                <span>${t.lblDataGraph}</span><span class="tooltip" data-tip="${t.tipDataGraph}">?</span>
+            </div>
+            <div class="graph-wrapper">
+                <canvas id="animeGraph" class="graph-canvas"></canvas>
+            </div>`;
+        }
     } else {
         out += `<div class="box-result">1 Pose giữ toàn bộ ${totalF} frames.</div>`;
-        document.getElementById("animeOutput").innerHTML = out;
+    }
+    
+    document.getElementById("animeOutput").innerHTML = out;
+    
+    if (document.getElementById("focusState").value === "dynamic" && !isTooLong) {
+        let requiredWidth = Math.max(530, keys.length * 40);
+        renderStaticCurve("animeStaticGraph", curve);
+        renderGraph("animeGraph", keys, [], sf, ef, requiredWidth);
     }
 }
 
@@ -1126,6 +1129,7 @@ function updatePoseEst() {
 
     let totalSec = mode === "seconds" ? sec : (Math.random() * 3 + 1.5); 
     let totalFrames = Math.round(totalSec * fps);
+    let isTooLong = totalSec > 25;
 
     let baseDensity = 1.0;
     if(pacing==="superslow") baseDensity = 0.2;
@@ -1142,25 +1146,28 @@ function updatePoseEst() {
     let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
     if(mode === "random" && Math.random() > 0.5) mainPoseCount += Math.floor(Math.random()*3);
 
-    let isShortage = false;
-    if (totalFrames < style * 2) {
-        isShortage = true;
-    }
-
-    let maxSlots = Math.floor((totalFrames - 1) / style) + 1;
-    if (mainPoseCount > maxSlots) mainPoseCount = Math.max(1, maxSlots);
-
     let keys = [];
+    let isClamped = false;
+    let clampedTo = 0;
+
     for(let i=0; i<mainPoseCount; i++) {
         let x = i/(mainPoseCount-1 || 1);
         let y = getPacingCurve(x, curve);
         let p = 1 + y * (totalFrames - 1);
-        let snap = 1 + Math.round((p - 1)/style) * style;
-        if (snap > totalFrames) snap -= style; 
-        if (snap < 1) snap = 1;
+        
+        // Thuật toán ép nhịp cũ
+        let rawSnap = 1 + Math.round((p - 1)/style) * style;
+        let snap = Math.max(1, Math.min(totalFrames, rawSnap));
         keys.push(snap);
     }
     keys = [...new Set(keys)].sort((a,b)=>a-b);
+    
+    // Cảnh báo đứt nhịp theo logic cũ
+    let lastKey = keys[keys.length - 1];
+    if (keys.length > 0 && (lastKey - 1) % style !== 0) {
+        isClamped = true;
+        clampedTo = lastKey;
+    }
 
     let t = i18n[currentLang];
     let out = `≈ ${totalSec.toFixed(2)} ${t.dynSec} | ${totalFrames} ${t.dynFrames}<br>`;
@@ -1169,18 +1176,13 @@ function updatePoseEst() {
     let boxHtml = "";
     let subKeysList = [];
     
-    // FIX LOGIC SUBPOSE
     if(useSub) {
         boxHtml += `<b>${t.dynSubPose}:</b><br>`;
         for(let i=0; i<keys.length-1; i++) {
             let k1 = keys[i], k2 = keys[i+1];
             let subCount = subRule === "random" ? Math.floor(Math.random()*3)+1 : parseInt(subRule);
-            
-            // Tìm tất cả các frame hợp lệ chuẩn theo On2/On3 nằm giữa 2 pose chính
             let validSlots = [];
-            for (let s = k1 + style; s < k2; s += style) {
-                validSlots.push(s);
-            }
+            for (let s = k1 + style; s < k2; s += style) validSlots.push(s);
             
             if (validSlots.length > 0) {
                 let subs = [];
@@ -1211,7 +1213,6 @@ function updatePoseEst() {
             if (maxFrames < 1) maxFrames = 1;
             if (actualJerkVal > maxFrames) { actualJerkVal = maxFrames; isCappedHold = true; }
         }
-        
         actualJerkVal = jerkType === "sec" ? actualJerkVal.toFixed(2) : actualJerkVal;
         boxHtml += `${t.dynHoldMsg1} <b>${actualJerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
         if (isCappedHold) boxHtml += `<br><span style="color:#ffcc66; font-size: 12px;">(Đã giảm xuống tối đa 40% cảnh để giữ nhịp)</span>`;
@@ -1219,34 +1220,37 @@ function updatePoseEst() {
 
     if(boxHtml !== "") out += `<div class="box-result">${boxHtml}</div>`;
     
-    // CẢNH BÁO MỚI (CHỈ THIẾU FRAME/TIME)
-    if(isShortage || keys.length < 2) {
-        out += `<div class="warning" style="text-align:left; margin-top: 15px;">
-            ${t.dynShortageWarn1}<b>${style}</b>${t.dynShortageWarn2}<br>
-            ${t.dynShortageFix}
-        </div>`;
+    if(isClamped) {
+        out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
     }
 
-    out += `
-    <div class="graph-title">
-        <span>${t.lblVisualGraph}</span>
-        <span class="tooltip" data-tip="${t.tipVisualGraph}">?</span>
-    </div>
-    <div class="static-graph-wrapper hidden">
-        <canvas id="poseStaticGraph" class="graph-canvas"></canvas>
-    </div>
-    
-    <div class="graph-title">
-        <span>${t.lblDataGraph}</span>
-        <span class="tooltip" data-tip="${t.tipDataGraph}">?</span>
-    </div>
-    <div class="graph-wrapper hidden">
-        <canvas id="poseGraph" class="graph-canvas"></canvas>
-    </div>`;
+    if (isTooLong) {
+        out += `<div class="warning" style="text-align:left; margin-top: 15px; color:#ff6b6b; border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
+    } else {
+        out += `
+        <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;">
+            <span>${t.lblVisualGraph}</span><span class="tooltip" data-tip="${t.tipVisualGraph}">?</span>
+        </div>
+        <div class="static-graph-wrapper">
+            <canvas id="poseStaticGraph" class="graph-canvas"></canvas>
+        </div>
+        
+        <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;">
+            <span>${t.lblDataGraph}</span><span class="tooltip" data-tip="${t.tipDataGraph}">?</span>
+        </div>
+        <div class="graph-wrapper">
+            <canvas id="poseGraph" class="graph-canvas"></canvas>
+        </div>`;
+    }
     
     document.getElementById("poseOutput").innerHTML = out;
-    renderStaticCurve("poseStaticGraph", curve);
-    renderGraph("poseGraph", keys, subKeysList, 1, totalFrames);
+    
+    if(!isTooLong) {
+        let allKeys = keys.concat(subKeysList);
+        let requiredWidth = Math.max(530, allKeys.length * 40);
+        renderStaticCurve("poseStaticGraph", curve);
+        renderGraph("poseGraph", keys, subKeysList, 1, totalFrames, requiredWidth);
+    }
 }
 
 function updateRender(){
@@ -1261,26 +1265,18 @@ function updateRender(){
 
 function changeLang(lang) {
     currentLang = lang; let t = i18n[lang];
-    
     for (let id in t) {
         let el = document.getElementById(id);
         if (el) {
-            if (el.classList.contains("tooltip")) {
-                el.dataset.tip = t[id];
-            } else if(el.hasAttribute("data-i18n-ph")) {
+            if (el.classList.contains("tooltip")) { el.dataset.tip = t[id]; } 
+            else if(el.hasAttribute("data-i18n-ph")) {
                 let pKey = el.getAttribute("data-i18n-ph");
                 if(t[pKey]) el.placeholder = t[pKey];
-            } else {
-                el.innerText = t[id];
-            }
+            } else { el.innerText = t[id]; }
         }
     }
-    
-    let sF = document.getElementById("startFrame");
-    if(sF) sF.placeholder = t.phStartFrame;
-    let eF = document.getElementById("endFrame");
-    if(eF) eF.placeholder = t.phEndFrame;
-
+    let sF = document.getElementById("startFrame"); if(sF) sF.placeholder = t.phStartFrame;
+    let eF = document.getElementById("endFrame"); if(eF) eF.placeholder = t.phEndFrame;
     updateConvert(); updateAnime(); updatePoseEst(); updateRender(); updateAllCustomSelects(); updateJerkHint();
 }
 
