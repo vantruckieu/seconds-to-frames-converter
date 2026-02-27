@@ -201,7 +201,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
 
         <div class="row">
             <label><span id="lblAnimStyle">Kiểu diễn hoạt</span><span class="tooltip" id="tipAnimStyle" data-tip="?">?</span></label>
-            <select id="animStyle" onchange="updateAnime()"><option id="optOn1s" value="1">On 1s (Mượt / Hành động)</option><option id="optOn2s" value="2" selected>On 2s (Chuẩn Anime)</option><option id="optOn3s" value="3">On 3s (Tĩnh / Chậm)</option></select>
+            <select id="animStyle" onchange="toggleAnimePoseInput(); updateAnime()"><option id="optOn1s" value="1">On 1s (Mượt / Hành động)</option><option id="optOn2s" value="2" selected>On 2s (Chuẩn Anime)</option><option id="optOn3s" value="3">On 3s (Tĩnh / Chậm)</option></select>
         </div>
         
         <div class="row">
@@ -301,7 +301,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         </div>
         <div class="row">
             <label><span id="lblAnimStylePose">Loại diễn hoạt</span><span class="tooltip" id="tipAnimStylePose" data-tip="?">?</span></label>
-            <select id="animStylePose" onchange="updatePoseEst(); updateJerkHint()"><option id="optPO1" value="1">On 1s</option><option id="optPO2" value="2" selected>On 2s</option><option id="optPO3" value="3">On 3s</option></select>
+            <select id="animStylePose" onchange="togglePoseSettings(); updatePoseEst(); updateJerkHint()"><option id="optPO1" value="1">On 1s</option><option id="optPO2" value="2" selected>On 2s</option><option id="optPO3" value="3">On 3s</option></select>
         </div>
         <div class="row">
             <label><span id="lblFocusTypePose">Loại tâm điểm</span><span class="tooltip" id="tipFocusTypePose" data-tip="?">?</span></label>
@@ -854,8 +854,10 @@ function toggleAnimeCustom() {
     
     let sfRaw = parseInt(document.getElementById("startFrame").value);
     let efRaw = parseInt(document.getElementById("endFrame").value);
-    let sf = isNaN(sfRaw) ? 1 : Math.min(sfRaw, efRaw || 100);
-    let ef = isNaN(efRaw) ? 100 : Math.max(sfRaw || 1, efRaw);
+    let sfVal = isNaN(sfRaw) ? 1 : sfRaw;
+    let efVal = isNaN(efRaw) ? 100 : efRaw;
+    let sf = Math.min(sfVal, efVal);
+    let ef = Math.max(sfVal, efVal);
     
     let timeSec = (ef - sf + 1) / fps;
     let wrap = document.getElementById("customEditorWrap_anime");
@@ -1020,11 +1022,15 @@ function updateConvert() {
 // ================================================================
 function toggleAnimePoseInput() {
     let isStatic = document.getElementById("focusState").value === "static";
+    let style = document.getElementById("animStyle").value;
+    
     document.getElementById("poseRow").classList.toggle("hidden", isStatic);
     document.getElementById("rowCorePacingA").classList.toggle("hidden", isStatic);
     document.getElementById("rowCurveTypeA").classList.toggle("hidden", isStatic);
     document.getElementById("rowLogicA").classList.toggle("hidden", isStatic);
-    document.getElementById("rowForceA").classList.toggle("hidden", isStatic);
+    
+    // Ẩn nút Ép Key khi ở chế độ Tĩnh HOẶC khi chọn On 1s
+    document.getElementById("rowForceA").classList.toggle("hidden", isStatic || style === "1");
 }
 
 function updateAnime() {
@@ -1051,7 +1057,6 @@ function updateAnime() {
     let out = `${t.dynTotal} <span style="color:white">${totalF}</span> ${t.dynFrames}<br>`;
     
     if(focusState === "dynamic") {
-        let isShortage = totalF < style * poses;
         let isCustomValid = !(curve==='custom' && (logic!=='strict' || (totalF/fps)<3));
         if(!isCustomValid) {
             out += `<div class="warning" style="text-align:left; margin-top:15px; color:#ffcc66; border-color:#ffcc66;">${t.warnCustomAnime}</div>`;
@@ -1063,38 +1068,60 @@ function updateAnime() {
         else {
             for(let i=0; i<poses; i++) {
                 let x = i/(poses-1); let p = sf + getPacingCurve(x, curve, 'anime') * (totalF-1);
+                if(logic==="random" && i>0 && i<poses-1) {
+                    let prevX=(i-1)/(poses-1); let nextX=(i+1)/(poses-1);
+                    let prevP=sf+getPacingCurve(prevX,curve,'anime')*(totalF-1);
+                    let nextP=sf+getPacingCurve(nextX,curve,'anime')*(totalF-1);
+                    let maxJitter=Math.max(style * 0.8, Math.min(p-prevP,nextP-p)*0.4);
+                    p+=(Math.random()*maxJitter*2)-maxJitter;
+                }
                 let rawSnap = sf + Math.round((p-sf)/style)*style;
                 keys.push(Math.max(sf, Math.min(ef, rawSnap)));
             }
             let uniqueKeys = [...new Set(keys)].sort((a,b)=>a-b);
             missingPoses = poses - uniqueKeys.length; keys = uniqueKeys;
-            let lastKey = keys[keys.length-1];
             
-            // Fix Vấn đề #2: Kiểm tra khoảng cách kể cả khi mảng chỉ có 1 phần tử
-            if(lastKey!==ef && (lastKey-sf)%style!==0) { isClamped=true; clampedTo=lastKey; }
-            else if(keys.length>0) {
-                let secondLast = keys.length > 1 ? keys[keys.length-2] : sf; // Fallback lấy sf nếu mảng có 1 phần tử
-                if(lastKey===ef && (ef-secondLast)%style!==0) { isClamped=true; clampedTo=lastKey; }
+            if(keys.length > 0) {
+                let lastKey = keys[keys.length-1];
+                if(lastKey !== ef) {
+                    isClamped = true; clampedTo = lastKey;
+                } else if(keys.length > 1) {
+                    let secondLast = keys[keys.length-2];
+                    if((lastKey - secondLast) % style !== 0) { isClamped = true; clampedTo = lastKey; }
+                } else {
+                    if((lastKey - sf) % style !== 0) { isClamped = true; clampedTo = lastKey; }
+                }
             }
         }
         
-        out += `<div class="box-result"><b>${t.dynKeysSugg}:</b><br>${keys.join(" ➔ ")}</div>`;
+        let isShortage = totalF < style * keys.length;
+        
+        let pacingA = document.getElementById("corePacingAnime").value;
+        let focusA = document.getElementById("focusTarget").value;
+        let baseDensityA = 1.0;
+        if(pacingA==="superslow") baseDensityA=0.2; else if(pacingA==="slowmo") baseDensityA=0.4; else if(pacingA==="slow") baseDensityA=0.6;
+        else if(pacingA==="fast") baseDensityA=1.5; else if(pacingA==="superfast") baseDensityA=2.0; else if(pacingA==="timesplash") baseDensityA=1.2;
+        if(focusA==="scene") baseDensityA *= 0.5;
+
+        let idealPoses = Math.max(2, Math.round((totalF / style) * 0.2 * baseDensityA));
+        let idealText = currentLang === 'vi' ? 'Gợi ý số Pose lý thuyết' : 'Suggested theoretical Pose count';
+        
+        out += `<div class="box-result"><b>${t.dynKeysSugg}:</b><br>${keys.join(" ➔ ")}<br><span style="color:#9ed8ff; font-size:12px; margin-top:5px; display:block;">* ${idealText}: <b>${idealPoses}</b></span></div>`;
+        
         if(missingPoses>0) out += `<div class="warning" style="text-align:left;margin-top:15px;color:#ffcc66;border-color:#ffcc66;">${t.dynMissingPose} <b>${missingPoses}</b>.</div>`;
         
-        if(isClamped||isShortage) {
+        if((isClamped||isShortage) && style !== 1) { // Không báo Clamp khi On 1s
             let isSafeToForce = totalF >= fps; 
             if (isForceClamp && isSafeToForce && !isShortage) {
                 out += `<div class="box-result box-safe" style="margin-top:15px;">⚠️ ${t.dynForceSafe1} <b>${clampedTo}</b> ${t.dynForceSafe2}</div>`;
             } else {
                 let rem = (ef - sf) % style;
-                // Fix Vấn đề #9: Chỉ hiển thị gợi ý sai nhịp nếu có dư số (rem != 0).
                 if(rem !== 0) {
                     let idealDown = ef - rem;
                     let idealUp = ef + (style - rem);
                     let suggestion = `${t.dynSuggestFrame1} <b>${idealDown}</b> ${t.dynSuggestFrame2} <b>${idealUp}</b> ${t.dynSuggestFrame3}`;
                     out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}<br>➔ ${suggestion}</div>`;
-                } else if (isShortage) {
-                    // Nếu chia chẵn nhưng báo shortage thì chỉ báo ngắn
+                } else {
                     out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
                 }
             }
@@ -1141,9 +1168,15 @@ function updateJerkHint() {
 
 function togglePoseSettings() {
     let mode = document.getElementById("poseCalcMode").value;
+    let style = document.getElementById("animStylePose").value;
+    
     document.getElementById("rowPoseSeconds").classList.toggle("hidden", mode!=="seconds");
     let sub = document.getElementById("subPoseToggle").value;
     document.getElementById("rowSubPoseLogic").classList.toggle("hidden", sub!=="yes");
+    
+    // Ẩn nút Ép Key khi chọn On 1s
+    document.getElementById("rowForceP").classList.toggle("hidden", style === "1");
+    
     if(sub==="yes") {
         document.getElementById("rowJerkiness").classList.add("hidden");
         document.getElementById("jerkToggle").value = "no";
@@ -1183,7 +1216,7 @@ function togglePoseActions() {
     }
 }
 
-// Biến lưu trữ giá trị Random dùng chung cho 1 phiên để chống loạn (Fix Vấn đề #10)
+// Biến lưu trữ giá trị Random dùng chung cho 1 phiên để chống loạn
 let currentRandomSec = null;
 
 function updatePoseEst() {
@@ -1193,13 +1226,12 @@ function updatePoseEst() {
     let sec = isNaN(secRaw) ? 1 : secRaw;
     if (sec <= 0) sec = 0.042; 
     
-    // Xử lý thống nhất nguồn Random
     let totalSec;
     if(mode === "seconds") {
         totalSec = sec;
-        currentRandomSec = null; // Reset bộ nhớ random nếu chuyển sang chỉnh tay
+        currentRandomSec = null; 
     } else {
-        if(currentRandomSec === null) currentRandomSec = (Math.random() * 3.5 + 1.0); // Tạo mới 1 lần
+        if(currentRandomSec === null) currentRandomSec = (Math.random() * 3.5 + 1.0);
         totalSec = currentRandomSec;
     }
     
@@ -1231,14 +1263,11 @@ function updatePoseEst() {
     if(["fight","fly","break","run"].includes(action)) baseDensity*=1.4;
     if(["talk","scale"].includes(action)) baseDensity*=0.6;
 
-    // Fix Vấn đề #11: Ép phần nguyên cho totalDrawings để chống nhảy frame
     let totalDrawings = Math.floor(totalFrames / style); 
     let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
     
     let maxReasonablePoses = Math.min(24, Math.max(2, Math.floor(totalDrawings / 2)));
     mainPoseCount = Math.min(mainPoseCount, maxReasonablePoses);
-
-    let isShortage = totalFrames < style * mainPoseCount;
 
     if(curve==='custom') updateCustomLUT('pose');
 
@@ -1253,17 +1282,18 @@ function updatePoseEst() {
     let rawKeyCount = keys.length;
     keys = [...new Set(keys)].sort((a,b)=>a-b);
     let missingPoses = rawKeyCount - keys.length;
+    
+    let isShortage = totalFrames < style * keys.length;
 
     if(keys.length > 0) {
         let lastKey = keys[keys.length-1];
-        if(keys.length > 1) {
+        if(lastKey !== totalFrames) {
+            isClamped = true; clampedTo = lastKey;
+        } else if(keys.length > 1) {
             let secondLast = keys[keys.length-2];
-            if(lastKey===totalFrames && (totalFrames-secondLast)%style!==0) { isClamped=true; clampedTo=lastKey; }
-            else if(lastKey!==totalFrames && (lastKey-1)%style!==0) { isClamped=true; clampedTo=lastKey; }
+            if((lastKey - secondLast) % style !== 0) { isClamped = true; clampedTo = lastKey; }
         } else {
-            // Fix Vấn đề #2: Kiểm tra khi mảng chỉ có 1 phần tử
-            if(lastKey!==totalFrames && (lastKey-1)%style!==0) { isClamped=true; clampedTo=lastKey; }
-            else if(lastKey===totalFrames && (totalFrames-1)%style!==0) { isClamped=true; clampedTo=lastKey; }
+            if((lastKey - 1) % style !== 0) { isClamped = true; clampedTo = lastKey; }
         }
     }
 
@@ -1320,14 +1350,13 @@ function updatePoseEst() {
 
     if(boxHtml!=="") out += `<div class="box-result">${boxHtml}</div>`;
     
-    if(isClamped||isShortage) {
+    if((isClamped||isShortage) && style !== 1) { // Không báo Clamp khi On 1s
         let isSafeToForce = totalFrames >= fps;
         if(isForceClamp && isSafeToForce && !isShortage) {
             out += `<div class="box-result box-safe" style="margin-top:15px;">⚠️ ${t.dynForceSafe1} <b>${clampedTo}</b> ${t.dynForceSafe2}</div>`;
         } else {
             let rem = (totalFrames - 1) % style;
             
-            // Fix Vấn đề #9: Check dư số
             if(rem !== 0) {
                 let idealDownF = totalFrames - rem;
                 let idealUpF = totalFrames + (style - rem);
@@ -1339,7 +1368,7 @@ function updatePoseEst() {
                     : `${t.dynSuggestFrame1} <b>${idealDownF}</b> ${t.dynSuggestFrame2} <b>${idealUpF}</b> ${t.dynSuggestFrame3}`;
                     
                 out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}<br>➔ ${suggestion}</div>`;
-            } else if (isShortage) {
+            } else {
                 out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
             }
         }
@@ -1447,10 +1476,9 @@ window.addEventListener("DOMContentLoaded", ()=>{
     initCustomSelects(); changeLang('vi');
     togglePoseActions(); togglePoseSettings(); toggleAnimePoseInput();
     
-    // Add event listener to the "Random" button to force a new random number
     document.getElementById("poseCalcMode").addEventListener('change', function() {
        if (this.value === "random") {
-           currentRandomSec = null; // Forces a new random value on selection
+           currentRandomSec = null; 
            updatePoseEst();
        }
     });
