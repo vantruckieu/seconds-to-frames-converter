@@ -105,33 +105,82 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
 .graph-wrapper::-webkit-scrollbar-thumb:hover { background: #00ccff; }
 .graph-canvas { display: block; background: transparent; border: none; box-shadow: none; margin: 0 auto; }
 
-/* Custom Curve Editor */
-.custom-editor { margin-top: 15px; padding: 15px 20px; background: rgba(10, 20, 34, 0.8); border: 1px solid #00ccff; border-radius: 12px; position: relative; }
-.custom-editor.disabled { opacity: 0.4; pointer-events: none; border-color: #1e3a5f; }
-.editor-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
-.editor-controls span { font-size: 13px; color: #00ccff; font-weight: 600;}
-.editor-controls-left { display: flex; align-items: center; gap: 15px; }
-.editor-btn-group { display: flex; gap: 8px; align-items: center; }
-.editor-btn { background: #0c1626; border: 1px solid #1b3555; color: #9ed8ff; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; transition: 0.2s;}
-.editor-btn:hover { background: #11233d; color: #00ccff; border-color:#00ccff; }
-.btn-reset { color: #ffcc66; border-color: rgba(255, 204, 102, 0.4); }
-.btn-reset:hover { background: rgba(255, 204, 102, 0.1); border-color: #ffcc66; color: #ffcc66; }
+/* Custom Curve Editor — styled like graph-wrapper / Dòng thời gian */
+.custom-editor {
+    margin-top: 12px;
+    background: rgba(10, 20, 34, 0.6);
+    border-radius: 12px;
+    border: 1px solid #1e3a5f;
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+.custom-editor.disabled { opacity: 0.4; pointer-events: none; }
+.custom-editor.hidden { display: none !important; }
+
+/* Header bar inside editor — same feel as graph-title */
+.custom-editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #1e3a5f;
+    background: rgba(0, 102, 255, 0.05);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.custom-editor-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #9ed8ff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.custom-editor-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
 
 /* Fix Checkbox Alignment */
-.checkbox-lbl { font-size: 13px; color: #9ed8ff; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; margin: 0;}
+.checkbox-lbl { font-size: 12px; color: #9ed8ff; display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; margin: 0;}
 .checkbox-lbl input[type="checkbox"] { 
     appearance: none; -webkit-appearance: none;
-    width: 16px; height: 16px; background: #0a1422; border: 1px solid #1e3a5f; border-radius: 4px; 
+    width: 14px; height: 14px; background: #0a1422; border: 1px solid #1e3a5f; border-radius: 3px; 
     cursor: pointer; position: relative; margin: 0; outline: none; flex-shrink: 0; transition: 0.2s;
 }
 .checkbox-lbl input[type="checkbox"]:checked { background: #00ccff; border-color: #00ccff; }
 .checkbox-lbl input[type="checkbox"]:checked::after {
-    content: ''; position: absolute; top: 2px; left: 5px;
-    width: 3px; height: 7px; border: solid #050b18; border-width: 0 2px 2px 0;
+    content: ''; position: absolute; top: 1px; left: 4px;
+    width: 3px; height: 6px; border: solid #050b18; border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
 
-.editor-canvas-wrap { width: 100%; height: 160px; background: #050b18; border-radius: 8px; border: 1px dashed #1e3a5f; cursor: crosshair; touch-action: none; position: relative;}
+.editor-btn { background: #0c1626; border: 1px solid #1b3555; color: #9ed8ff; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 11px; transition: 0.2s; white-space: nowrap;}
+.editor-btn:hover { background: #11233d; color: #00ccff; border-color:#00ccff; }
+.btn-reset { color: #ffcc66; border-color: rgba(255, 204, 102, 0.4); }
+.btn-reset:hover { background: rgba(255, 204, 102, 0.1); border-color: #ffcc66; color: #ffcc66; }
+
+/* Canvas area inside editor — scrollable like graph-wrapper */
+.custom-editor-canvas-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px 0 0 0;
+}
+.custom-editor-canvas-wrap::-webkit-scrollbar { height: 8px; }
+.custom-editor-canvas-wrap::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+.custom-editor-canvas-wrap::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 10px; }
+.custom-editor-canvas-wrap::-webkit-scrollbar-thumb:hover { background: #00ccff; }
+
+.editor-canvas-inner {
+    cursor: crosshair;
+    touch-action: none;
+    display: block;
+    background: transparent;
+    margin: 0 auto;
+}
 
 /* Outside Legend */
 .graph-legend-box { display: flex; justify-content: center; gap: 20px; padding: 12px 0 0 0; font-size: 13px; color: #9ed8ff; }
@@ -164,6 +213,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <button id="tabRender" onclick="switchTab('render')">Render Time</button>
     </div>
 
+    <!-- TAB: Convert -->
     <div id="convertMode">
         <div class="tab-desc" id="descConvert">Chuyển đổi qua lại giữa thời lượng (Giây/Phút/Giờ) và Số khung hình (Frames) theo tốc độ chuẩn.</div>
         <div class="row">
@@ -190,6 +240,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <div class="result" id="convertOutput">—</div>
     </div>
 
+    <!-- TAB: Anime -->
     <div id="animeMode" class="hidden">
         <div class="tab-desc" id="descAnime">Phân bổ khoảng cách các Keyframe theo quy tắc Animation (On 1s, 2s, 3s) và nội suy nhịp độ cảnh.</div>
         
@@ -227,23 +278,25 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <div class="row" id="rowCurveTypeA">
             <label><span id="lblCurveTypeAnime">Loại đồ thị (Phân bổ)</span><span class="tooltip" id="tipCurveTypeAnime" data-tip="?">?</span></label>
             <select id="curveTypeAnime" onchange="toggleAnimeCustom(); updateAnime()">
-                <option id="optCvNoneA" value="linear">Không (Đều)</option><option id="optCvEaseOutA" value="ease_out">Đồ thị xuống (Chậm dần)</option><option id="optCvEaseInA" value="ease_in">Đồ thị lên (Nhanh dần)</option><option id="optCvClimaxA" value="climax">Điểm cao trào (Nhanh giữa)</option><option id="optCvLowPointA" value="low_point">Điểm trầm (Chậm giữa)</option><option id="optCvWaveA" value="wave">Sóng (Nhanh chậm xen kẽ)</option><option id="optCvCustomA" value="custom">Tùy chỉnh (Custom)</option>
+                <option id="optCvNoneA" value="linear">Không (Đều)</option><option id="optCvEaseOutA" value="ease_out">Đồ thị xuống (Chậm dần)</option><option id="optCvEaseInA" value="ease_in">Đồ thị lên (Nhanh dần)</option><option id="optCvClimaxA" value="climax">Điểm cao trào (Nhanh giữa)</option><option id="optCvLowPointA" value="low_point">Điểm trầm (Chậm giữa)</option><option id="optCvWaveA" value="wave">Sóng (Nhanh chậm xen kẽ)</option><option id="optCvCustomA" value="custom">Tùy chỉnh (Đồ thị tốc độ)</option>
             </select>
             
             <div id="customEditorWrap_anime" class="custom-editor hidden">
-                <div class="editor-controls">
-                    <div class="editor-controls-left">
-                        <span id="lblEditorA">Bộ dựng Đồ thị</span>
-                        <label class="checkbox-lbl"><input type="checkbox" id="smoothCurve_anime" checked> <span id="lblSmoothA">Đường mượt</span></label>
+                <div class="custom-editor-header">
+                    <div class="custom-editor-title">
+                        <span id="lblEditorA">Time Remapping</span>
+                        <label class="checkbox-lbl"><input type="checkbox" id="smoothCurve_anime" checked> <span id="lblSmoothA">Mượt</span></label>
                         <label class="checkbox-lbl"><input type="checkbox" id="lockEnd_anime" checked> <span id="lblLockA">Khóa mút</span></label>
                     </div>
-                    <div class="editor-btn-group">
-                        <button class="editor-btn btn-reset" onclick="resetCustomPoints('anime')" id="btnResetA">Khôi phục</button>
+                    <div class="custom-editor-controls">
+                        <button class="editor-btn btn-reset" onclick="resetCustomPoints('anime')" id="btnResetA">Đặt lại</button>
                         <button class="editor-btn" onclick="modifyCustomPoints('anime', 1)">+ Điểm</button>
-                        <button class="editor-btn" onclick="modifyCustomPoints('anime', -1)">- Điểm</button>
+                        <button class="editor-btn" onclick="modifyCustomPoints('anime', -1)">− Điểm</button>
                     </div>
                 </div>
-                <div class="editor-canvas-wrap"><canvas id="customCanvas_anime"></canvas></div>
+                <div class="custom-editor-canvas-wrap">
+                    <canvas id="customCanvas_anime" class="editor-canvas-inner"></canvas>
+                </div>
             </div>
             <div id="warnCustomAnime" class="warning hidden" style="color:#ffcc66; border-color:#ffcc66;"></div>
         </div>
@@ -270,13 +323,14 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <div class="warning" id="warnMathModelAnime">⚠ Lưu ý: Mô hình đồ thị và toán học chỉ mang tính chất gợi ý tham khảo.</div>
     </div>
 
+    <!-- TAB: Pose -->
     <div id="poseMode" class="hidden">
         <div class="tab-desc" id="descPose">Tự động ước tính số lượng Pose chính và Pose phụ trợ (In-betweens) phụ thuộc vào hành động cụ thể và thời lượng.</div>
         <div class="row">
             <label><span id="lblPoseCalcMode">Cách tính toán</span><span class="tooltip" id="tipPoseCalcMode" data-tip="?">?</span></label>
             <select id="poseCalcMode" onchange="togglePoseSettings(); togglePoseCustom(); updatePoseEst()"><option id="optPcalcRandom" value="random">Xác suất ngẫu nhiên</option><option id="optPcalcSeconds" value="seconds" selected>Theo số giây cảnh</option></select>
         </div>
-        <div class="row hidden" id="rowPoseSeconds">
+        <div class="row" id="rowPoseSeconds">
             <label><span id="lblPoseSeconds">Nhập số giây cảnh</span><span class="tooltip" id="tipPoseSeconds" data-tip="?">?</span></label>
             <input type="number" id="poseSeconds" value="4" min="0.1" step="0.1" oninput="togglePoseCustom(); updatePoseEst()">
         </div>
@@ -310,23 +364,25 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <div class="row">
             <label><span id="lblCurveTypePose">Loại đồ thị</span><span class="tooltip" id="tipCurveTypePose" data-tip="?">?</span></label>
             <select id="curveTypePose" onchange="togglePoseCustom(); updatePoseEst()">
-                <option id="optCvNoneP" value="linear">Không</option><option id="optCvEaseOutP" value="ease_out">Đồ thị xuống</option><option id="optCvEaseInP" value="ease_in">Đồ thị lên</option><option id="optCvClimaxP" value="climax">Điểm cao trào</option><option id="optCvLowPointP" value="low_point">Điểm trầm</option><option id="optCvWaveP" value="wave">Sóng (Cao/thấp cạnh nhau)</option><option id="optCvCustomP" value="custom">Tùy chỉnh (Custom)</option>
+                <option id="optCvNoneP" value="linear">Không</option><option id="optCvEaseOutP" value="ease_out">Đồ thị xuống</option><option id="optCvEaseInP" value="ease_in">Đồ thị lên</option><option id="optCvClimaxP" value="climax">Điểm cao trào</option><option id="optCvLowPointP" value="low_point">Điểm trầm</option><option id="optCvWaveP" value="wave">Sóng (Cao/thấp cạnh nhau)</option><option id="optCvCustomP" value="custom">Tùy chỉnh (Đồ thị tốc độ)</option>
             </select>
             
             <div id="customEditorWrap_pose" class="custom-editor hidden">
-                <div class="editor-controls">
-                    <div class="editor-controls-left">
-                        <span id="lblEditorP">Bộ dựng Đồ thị tự do</span>
-                        <label class="checkbox-lbl"><input type="checkbox" id="smoothCurve_pose" checked> <span id="lblSmoothP">Đường mượt</span></label>
+                <div class="custom-editor-header">
+                    <div class="custom-editor-title">
+                        <span id="lblEditorP">Time Remapping</span>
+                        <label class="checkbox-lbl"><input type="checkbox" id="smoothCurve_pose" checked> <span id="lblSmoothP">Mượt</span></label>
                         <label class="checkbox-lbl"><input type="checkbox" id="lockEnd_pose" checked> <span id="lblLockP">Khóa mút</span></label>
                     </div>
-                    <div class="editor-btn-group">
-                        <button class="editor-btn btn-reset" onclick="resetCustomPoints('pose')" id="btnResetP">Khôi phục</button>
+                    <div class="custom-editor-controls">
+                        <button class="editor-btn btn-reset" onclick="resetCustomPoints('pose')" id="btnResetP">Đặt lại</button>
                         <button class="editor-btn" onclick="modifyCustomPoints('pose', 1)">+ Điểm</button>
-                        <button class="editor-btn" onclick="modifyCustomPoints('pose', -1)">- Điểm</button>
+                        <button class="editor-btn" onclick="modifyCustomPoints('pose', -1)">− Điểm</button>
                     </div>
                 </div>
-                <div class="editor-canvas-wrap"><canvas id="customCanvas_pose"></canvas></div>
+                <div class="custom-editor-canvas-wrap">
+                    <canvas id="customCanvas_pose" class="editor-canvas-inner"></canvas>
+                </div>
             </div>
             <div id="warnCustomPose" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;"></div>
         </div>
@@ -351,6 +407,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <div class="warning" id="warnMathModelPose">⚠ Lưu ý: Hệ thống chỉ tính toán gợi ý vị trí lý thuyết, mật độ thực tế phụ thuộc bản vẽ.</div>
     </div>
 
+    <!-- TAB: Render -->
     <div id="renderMode" class="hidden">
         <div class="tab-desc" id="descRender">Ước tính tổng thời gian xuất file (Render) của toàn bộ dự án dựa trên thời gian chạy 1 khung hình.</div>
         <div class="row">
@@ -396,12 +453,12 @@ const i18n = {
         tipMode: "Chọn loại chuyển đổi.", tipFPS_conv: "Tốc độ khung hình (thường là 24).", tipInput: "Nhập tổng số lượng tính toán.",
         tipAnimStyle: "Quy định số bản vẽ trên giây:\n• On 1s: 24 fps (Mượt).\n• On 2s: 12 fps (Anime).\n• On 3s: 8 fps (Chậm).",
         tipFPS_anime: "Khung hình tiêu chuẩn của dự án.", tipCorePacingAnime: "Tốc độ diễn hoạt cảnh.",
-        tipCurveTypeAnime: "Đường cong gia tốc (Easing):\n• Tùy chỉnh: Tự vẽ đồ thị (Yêu cầu >3s và Logic Nghiêm ngặt).",
+        tipCurveTypeAnime: "Đường cong tốc độ (Time Remapping):\n• Tùy chỉnh: Đồ thị tốc độ tùy chỉnh (Yêu cầu >3s và Logic Nghiêm ngặt).",
         tipFocus: "Vật thể đang đứng im hay di chuyển.", tipPose: "Tổng số Pose chính cần vẽ.", tipFrameRange: "Giới hạn thời gian của đoạn diễn hoạt.",
         tipCalcLogic: "• Nghiêm ngặt: Cố định toán học.\n• Ngẫu nhiên: Thêm sai lệch tự nhiên.", tipPoseCalcMode: "Tự bịa số giây hay ấn định trước.", tipPoseSeconds: "Độ dài cảnh (giây).",
         tipFPS_pose: "Khung hình tiêu chuẩn của dự án.", tipAnimStylePose: "Số frame để giữ 1 bản vẽ.", tipFocusTypePose: "Loại đối tượng chính.",
         tipFocusActionPose: "Hành động để thuật toán đo độ khó.", tipCorePacingPose: "Nhịp hành động tổng thể.",
-        tipCurveTypePose: "Quy luật Easing.\n• Tùy chỉnh: Tự vẽ (Yêu cầu >3s và Theo giây).",
+        tipCurveTypePose: "Quy luật Easing.\n• Tùy chỉnh: Đồ thị tốc độ tùy chỉnh (Yêu cầu >3s và Theo giây).",
         tipSubPose: "Tự động chèn In-betweens.", tipSubPoseLogic: "Số lượng bản vẽ phụ chèn giữa.", tipJerkiness: "Kỹ thuật Hold ở điểm chạm.",
         tipTotalFrames: "Tổng frame xuất.", tipRenderPerFrame: "Thời gian máy render 1 frame.",
 
@@ -410,7 +467,7 @@ const i18n = {
         lblAnimStyle: "Kiểu diễn hoạt", optOn1s: "On 1s (Mượt / Hành động)", optOn2s: "On 2s (Chuẩn Anime)", optOn3s: "On 3s (Tĩnh / Chậm)",
         lblFPS_anime: "FPS gốc", lblCorePacingAnime: "Nhịp tâm điểm", 
         optCpSuperSlowA: "Super Slow", optCpSlowmoA: "Slow Motion", optCpSlowA: "Chậm", optCpNormalA: "Bình thường", optCpFastA: "Nhanh", optCpSuperFastA: "Cực nhanh", optCpTimeSplashA: "Time Splash",
-        lblCurveTypeAnime: "Loại đồ thị (Phân bổ)", optCvNoneA: "Không (Đều)", optCvEaseOutA: "Đồ thị xuống (Chậm dần)", optCvEaseInA: "Đồ thị lên (Nhanh dần)", optCvClimaxA: "Điểm cao trào (Nhanh giữa)", optCvLowPointA: "Điểm trầm (Chậm giữa)", optCvWaveA: "Sóng (Nhanh chậm xen kẽ)", optCvCustomA: "Tùy chỉnh (Custom)",
+        lblCurveTypeAnime: "Loại đồ thị (Phân bổ)", optCvNoneA: "Không (Đều)", optCvEaseOutA: "Đồ thị xuống (Chậm dần)", optCvEaseInA: "Đồ thị lên (Nhanh dần)", optCvClimaxA: "Điểm cao trào (Nhanh giữa)", optCvLowPointA: "Điểm trầm (Chậm giữa)", optCvWaveA: "Sóng (Nhanh chậm xen kẽ)", optCvCustomA: "Tùy chỉnh (Đồ thị tốc độ)",
         lblFocus: "Tâm điểm & Trạng thái", optFocScene: "Cảnh", optFocChar: "Nhân vật/Vật thể", optStateStatic: "Tĩnh", optStateDynamic: "Động",
         lblPose: "Số Pose chính", lblFrameRange: "Frame Bắt đầu - Kết thúc", 
         lblCalcLogic: "Logic tính toán", optLogicStrict: "Toán học nghiêm ngặt", optLogicRandom: "Xác suất ngẫu nhiên",
@@ -420,7 +477,7 @@ const i18n = {
         lblFocusTypePose: "Loại tâm điểm", optFocCharP: "Nhân vật", optFocObjP: "Vật thể",
         lblFocusActionPose: "Hành động cụ thể", actTalk: "Nói chuyện", actWalk: "Đi bộ", actRun: "Chạy", actFight: "Đánh nhau", actOtherC: "Hành động khác", actFly: "Bay", actFall: "Rơi", actBreak: "Vỡ/Gãy", actBounce: "Nảy", actScale: "Scale", actOtherO: "Hành động khác",
         lblCorePacingPose: "Nhịp tâm điểm", optCpSuperSlowP: "Super Slow", optCpSlowmoP: "Slow Motion", optCpSlowP: "Chậm", optCpNormalP: "Bình thường", optCpFastP: "Nhanh", optCpSuperFastP: "Cực nhanh", optCpTimeSplashP: "Time Splash",
-        lblCurveTypePose: "Loại đồ thị", optCvNoneP: "Không", optCvEaseOutP: "Đồ thị xuống", optCvEaseInP: "Đồ thị lên", optCvClimaxP: "Điểm cao trào", optCvLowPointP: "Điểm trầm", optCvWaveP: "Sóng", optCvCustomP: "Tùy chỉnh (Custom)",
+        lblCurveTypePose: "Loại đồ thị", optCvNoneP: "Không", optCvEaseOutP: "Đồ thị xuống", optCvEaseInP: "Đồ thị lên", optCvClimaxP: "Điểm cao trào", optCvLowPointP: "Điểm trầm", optCvWaveP: "Sóng", optCvCustomP: "Tùy chỉnh (Đồ thị tốc độ)",
         lblSubPose: "Pose phụ (In-betweens)", optNo: "Không", optYes: "Có",
         lblSubPoseLogic: "Quy tắc Pose phụ", optSpRandom: "Ngẫu nhiên",
         lblJerkiness: "Giật/Khựng (Hold)", optJerkNo: "Không", optJerkFrame: "Theo Frame", optJerkSec: "Theo Giây",
@@ -431,15 +488,22 @@ const i18n = {
         dynFrames: "Frames", dynSec: "giây", dynKeysSugg: "Gợi ý Keyframe", dynEstPoses: "Pose ước tính",
         dynSubPose: "Pose phụ", dynHold: "Giật/Khựng (Hold)", dynHoldMsg1: "Khuyên dùng giữ thêm", dynHoldMsg2: "tại điểm chạm.",
         dynHintFrames: "Gợi ý hợp lý: ",
+        dynHoldCapNote: "(Đã giảm xuống tối đa 40% cảnh để giữ nhịp)",
         
-        dynClampWarn1: "⚠️ Lưu ý: Thời gian cảnh quá ngắn. Keyframe cuối bị ép vào frame ", dynClampWarn2: " (phá vỡ chuẩn nhịp On ", dynClampWarn3: "s).<br>➔ Gợi ý: Kéo dài cảnh hoặc đổi sang nhịp On 1s/2s.",
+        dynClampWarn1: "⚠️ Lưu ý: Thời gian cảnh quá ngắn hoặc nhịp điệu không khớp hoàn toàn. Keyframe cuối bị ép vào frame ", dynClampWarn2: " (phá vỡ chuẩn nhịp On ", dynClampWarn3: "s).<br>➔ Gợi ý: Kéo dài cảnh, hoặc đổi sang nhịp On 1s/2s để đủ không gian phân bổ.",
         dynGraphLimitWarn: "⚠️ Cảnh báo: Vượt quá 25 giây. Đã ẩn biểu đồ đồ thị để tối ưu hóa hiệu suất thiết bị.",
+        dynMissingPose: "⚠️ Lưu ý: Bị trùng lặp frame do khoảng cách quá sát, số keyframe bị mất:",
+        dynSubBetween: "Lót giữa",
+        dynSubNoSlot: "⚠️ Không đủ khoảng trống để chèn Pose phụ giữa",
+        dynStaticTitle: "Trạng thái Tĩnh (Static)",
+        dynStaticDesc: "Cần vẽ 1 Pose duy nhất",
+        dynStaticHold: "và giữ xuyên suốt",
         
         lblVisualGraph: "Tổng quan (Gia tốc)", tipVisualGraph: "Đồ thị biểu diễn phân bổ tốc độ lý thuyết. Đường nét đứt là mốc tốc độ đều đặn.",
         lblDataGraph: "Dòng thời gian (Keyframe)", tipDataGraph: "Vị trí thực tế của từng bản vẽ trên trục thời gian (Kéo sang phải để xem hết).",
         phStartFrame: "Bắt đầu (vd: 1)", phEndFrame: "Kết thúc (vd: 100)",
         legendMainKey: "Key chính", legendSubKey: "Key phụ",
-        lblEditorA: "Bộ dựng Đồ thị tự do", lblEditorP: "Bộ dựng Đồ thị tự do", lblLockA: "Khóa mút", lblLockP: "Khóa mút", lblSmoothA: "Đường mượt", lblSmoothP: "Đường mượt", btnResetA: "Khôi phục", btnResetP: "Khôi phục",
+        lblEditorA: "Time Remapping", lblEditorP: "Time Remapping", lblLockA: "Khóa mút", lblLockP: "Khóa mút", lblSmoothA: "Mượt", lblSmoothP: "Mượt", btnResetA: "Đặt lại", btnResetP: "Đặt lại",
         
         warnCustomAnime: "⚠️ Tùy chỉnh không khả dụng: \"Logic tính toán\" cần chọn chế độ Toán học nghiêm ngặt và thời lượng từ 3 giây.",
         warnCustomPose: "⚠️ Tùy chỉnh không khả dụng: \"Cách tính toán\" cần chọn chế độ Theo Số Giây Cảnh và thời lượng từ 3 giây."
@@ -454,12 +518,12 @@ const i18n = {
         
         tipMode: "Select conversion type.", tipFPS_conv: "FPS determines the speed.", tipInput: "Enter the value to compute.",
         tipAnimStyle: "Defines keys per second.", tipFPS_anime: "Standard framerate.", tipCorePacingAnime: "Overall scene speed.",
-        tipCurveTypeAnime: "Acceleration curve.\n• Custom: Draw your own (Requires >3s & Strict Logic).",
+        tipCurveTypeAnime: "Acceleration curve.\n• Custom: Custom Speed Curve (Requires >3s & Strict Logic).",
         tipFocus: "Dynamic (moving) or Static (still).", tipPose: "Number of main poses.", tipFrameRange: "Time boundary.",
         tipCalcLogic: "Strict math or Random deviation.", tipPoseCalcMode: "Random or Custom seconds.", tipPoseSeconds: "Desired duration.",
         tipFPS_pose: "Standard framerate.", tipAnimStylePose: "Keyframe density.", tipFocusTypePose: "Character or Object.",
         tipFocusActionPose: "Specific action.", tipCorePacingPose: "Overall speed.",
-        tipCurveTypePose: "Acceleration curve.\n• Custom: Draw your own (Requires >3s & Fixed Seconds).",
+        tipCurveTypePose: "Acceleration curve.\n• Custom: Custom Speed Curve (Requires >3s & Fixed Seconds).",
         tipSubPose: "Generate In-between poses.", tipSubPoseLogic: "In-between padding rule.", tipJerkiness: "Hold frames at impact.",
         tipTotalFrames: "Total frames to render.", tipRenderPerFrame: "Actual time to render a single frame.",
 
@@ -468,7 +532,7 @@ const i18n = {
         lblAnimStyle: "Anim Style", optOn1s: "On 1s", optOn2s: "On 2s", optOn3s: "On 3s",
         lblFPS_anime: "Base FPS", lblCorePacingAnime: "Core Pacing", 
         optCpSuperSlowA: "Super Slow", optCpSlowmoA: "Slow Motion", optCpSlowA: "Slow", optCpNormalA: "Normal", optCpFastA: "Fast", optCpSuperFastA: "Super Fast", optCpTimeSplashA: "Time Splash",
-        lblCurveTypeAnime: "Curve Type", optCvNoneA: "None (Linear)", optCvEaseOutA: "Ease Out", optCvEaseInA: "Ease In", optCvClimaxA: "Climax", optCvLowPointA: "Low Point", optCvWaveA: "Wave", optCvCustomA: "Custom",
+        lblCurveTypeAnime: "Curve Type", optCvNoneA: "None (Linear)", optCvEaseOutA: "Ease Out", optCvEaseInA: "Ease In", optCvClimaxA: "Climax", optCvLowPointA: "Low Point", optCvWaveA: "Wave", optCvCustomA: "Custom (Speed Curve)",
         lblFocus: "Focus & State", optFocScene: "Scene", optFocChar: "Character/Object", optStateStatic: "Static", optStateDynamic: "Dynamic",
         lblPose: "Pose Count", lblFrameRange: "Start - End Frame", 
         lblCalcLogic: "Logic", optLogicStrict: "Strict Math", optLogicRandom: "Random Prob",
@@ -478,7 +542,7 @@ const i18n = {
         lblFocusTypePose: "Focus Type", optFocCharP: "Character", optFocObjP: "Object",
         lblFocusActionPose: "Specific Action", actTalk: "Talking", actWalk: "Walking", actRun: "Running", actFight: "Fighting", actOtherC: "Other Action", actFly: "Flying", actFall: "Falling", actBreak: "Breaking", actBounce: "Bouncing", actScale: "Scaling", actOtherO: "Other Action",
         lblCorePacingPose: "Core Pacing", optCpSuperSlowP: "Super Slow", optCpSlowmoP: "Slow Motion", optCpSlowP: "Slow", optCpNormalP: "Normal", optCpFastP: "Fast", optCpSuperFastP: "Super Fast", optCpTimeSplashP: "Time Splash",
-        lblCurveTypePose: "Curve Type", optCvNoneP: "None", optCvEaseOutP: "Ease Out", optCvEaseInP: "Ease In", optCvClimaxP: "Climax", optCvLowPointP: "Low Point", optCvWaveP: "Wave", optCvCustomP: "Custom",
+        lblCurveTypePose: "Curve Type", optCvNoneP: "None", optCvEaseOutP: "Ease Out", optCvEaseInP: "Ease In", optCvClimaxP: "Climax", optCvLowPointP: "Low Point", optCvWaveP: "Wave", optCvCustomP: "Custom (Speed Curve)",
         lblSubPose: "Add In-betweens", optNo: "No", optYes: "Yes", lblSubPoseLogic: "In-between Logic", optSpRandom: "Random Prob",
         lblJerkiness: "Stutter / Hold", optJerkNo: "No", optJerkFrame: "By Frames", optJerkSec: "By Seconds",
         warnMathModelPose: "⚠ Note: Theoretical suggestion; real density depends on the drawing.",
@@ -486,135 +550,240 @@ const i18n = {
         warningTextRender: "⚠ Reference only.", lblLanguage: "Language:",
         
         dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses", dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact.", dynHintFrames: "Suggested range: ",
-        dynClampWarn1: "⚠️ Note: Scene duration is too short. The last key was forced to frame ", dynClampWarn2: " (breaking the On ", dynClampWarn3: "s rhythm).<br>➔ Fix: Increase scene duration or switch to On 1s/2s.",
+        dynHoldCapNote: "(Capped at 40% of scene to preserve rhythm)",
+        dynClampWarn1: "⚠️ Note: Scene duration is too short or pacing is mismatched. The last key was forced to frame ", dynClampWarn2: " (breaking the On ", dynClampWarn3: "s rhythm).<br>➔ Fix: Increase scene duration or switch to On 1s/2s.",
         dynGraphLimitWarn: "⚠️ Warning: Scene > 25s. Graphs disabled to optimize device performance.",
+        dynMissingPose: "⚠️ Note: Duplicate frames due to tight spacing — poses lost:",
+        dynSubBetween: "Between",
+        dynSubNoSlot: "⚠️ Not enough space to insert sub poses between",
+        dynStaticTitle: "Static State",
+        dynStaticDesc: "Draw 1 single Pose",
+        dynStaticHold: "and hold for",
         
         lblVisualGraph: "Overview (Acceleration)", tipVisualGraph: "Theoretical speed distribution. Dotted line is constant speed.", 
         lblDataGraph: "Timeline (Keyframes)", tipDataGraph: "Actual frame placement on the timeline (Scrollable horizontally).",
         phStartFrame: "Start (e.g., 1)", phEndFrame: "End (e.g., 100)", legendMainKey: "Main Key", legendSubKey: "Sub Key",
-        lblEditorA: "Free Curve Editor", lblEditorP: "Free Curve Editor", lblLockA: "Lock Ends", lblLockP: "Lock Ends", lblSmoothA: "Smooth", lblSmoothP: "Smooth", btnResetA: "Reset", btnResetP: "Reset",
+        lblEditorA: "Time Remapping", lblEditorP: "Time Remapping", lblLockA: "Lock Ends", lblLockP: "Lock Ends", lblSmoothA: "Smooth", lblSmoothP: "Smooth", btnResetA: "Reset", btnResetP: "Reset",
         
         warnCustomAnime: "⚠️ Custom not available: \"Logic\" must be set to Strict Math and duration >= 3 seconds.",
         warnCustomPose: "⚠️ Custom not available: \"Calc Mode\" must be set to By Scene Seconds and duration >= 3 seconds."
     }
 };
 
-// SPLINE & CUSTOM CURVE LOGIC
-// Thay đổi default data thành tuyến tính hoàn hảo (y=x) để render ra đường thẳng ------
+// ================================================================
+// CUSTOM CURVE LOGIC
+// ================================================================
 let customData = {
-    anime: { points: [{x:0, y:0}, {x:0.33, y:0.33}, {x:0.66, y:0.66}, {x:1, y:1}], activeNode: null },
-    pose: { points: [{x:0, y:0}, {x:0.5, y:0.5}, {x:1, y:1}], activeNode: null }
+    anime: { points: [{x:0, y:0.5}, {x:0.5, y:0.5}, {x:1, y:0.5}], activeNode: null, lut: [] },
+    pose:  { points: [{x:0, y:0.5}, {x:0.5, y:0.5}, {x:1, y:0.5}], activeNode: null, lut: [] }
 };
 
-function resetCustomPoints(tab) {
-    if (tab === 'anime') {
-        customData.anime.points = [{x:0, y:0}, {x:0.33, y:0.33}, {x:0.66, y:0.66}, {x:1, y:1}];
-    } else {
-        customData.pose.points = [{x:0, y:0}, {x:0.5, y:0.5}, {x:1, y:1}];
+function updateCustomLUT(tab) {
+    let pts = customData[tab].points; let lut = []; let sum = 0; let steps = 1000;
+    let isSmoothEl = document.getElementById("smoothCurve_" + tab);
+    let isSmooth = isSmoothEl ? isSmoothEl.checked : true;
+    for(let i=0; i<=steps; i++) {
+        let x = i / steps;
+        let y = isSmooth ? splineCustomCurve(x, pts) : lerpCustomCurve(x, pts);
+        y = Math.max(0, Math.min(1, y));
+        let speed = Math.pow(10, (y - 0.5) * 2);
+        sum += speed; lut.push(sum);
     }
-    drawCustomEditor(tab);
+    let total = lut[steps]; if(total === 0) total = 1;
+    for(let i=0; i<=steps; i++) lut[i] /= total;
+    customData[tab].lut = lut;
+}
+
+function resetCustomPoints(tab) {
+    customData[tab].points = [{x:0, y:0.5}, {x:0.5, y:0.5}, {x:1, y:0.5}];
+    updateCustomLUT(tab); drawCustomEditor(tab);
     if(tab === 'anime') updateAnime(); else updatePoseEst();
 }
 
 function lerpCustomCurve(x, points) {
-    if (x <= points[0].x) return points[0].y;
-    if (x >= points[points.length-1].x) return points[points.length-1].y;
-    for (let i=0; i<points.length-1; i++) {
-        if (x >= points[i].x && x <= points[i+1].x) {
-            let t = (x - points[i].x) / (points[i+1].x - points[i].x);
-            return points[i].y + t * (points[i+1].y - points[i].y);
+    if(x <= points[0].x) return points[0].y;
+    if(x >= points[points.length-1].x) return points[points.length-1].y;
+    for(let i=0; i<points.length-1; i++) {
+        if(x >= points[i].x && x <= points[i+1].x) {
+            let tl = (x - points[i].x) / (points[i+1].x - points[i].x);
+            return points[i].y + tl * (points[i+1].y - points[i].y);
         }
     }
     return x;
 }
 
 function splineCustomCurve(x, points) {
-    if (x <= points[0].x) return points[0].y;
-    if (x >= points[points.length-1].x) return points[points.length-1].y;
-    
+    if(x <= points[0].x) return points[0].y;
+    if(x >= points[points.length-1].x) return points[points.length-1].y;
     let i = 0;
-    while (i < points.length - 2 && x > points[i+1].x) i++;
-    
-    let p0 = points[Math.max(0, i - 1)];
-    let p1 = points[i];
-    let p2 = points[i + 1];
-    let p3 = points[Math.min(points.length - 1, i + 2)];
-    
-    let t = (x - p1.x) / (p2.x - p1.x);
-    let t2 = t * t;
-    let t3 = t2 * t;
-    
-    let v0 = (p2.y - p0.y) * 0.5;
-    let v1 = (p3.y - p1.y) * 0.5;
-    
-    let rawVal = (2 * p1.y - 2 * p2.y + v0 + v1) * t3 + (-3 * p1.y + 3 * p2.y - 2 * v0 - v1) * t2 + v0 * t + p1.y;
-    return Math.max(0, Math.min(1, rawVal)); 
+    while(i < points.length - 2 && x > points[i+1].x) i++;
+    let p1 = points[i], p2 = points[i+1];
+    let p0 = i > 0 ? points[i-1] : { x: p1.x-(p2.x-p1.x), y: p1.y-(p2.y-p1.y) };
+    let p3 = i+2 < points.length ? points[i+2] : { x: p2.x+(p2.x-p1.x), y: p2.y+(p2.y-p1.y) };
+    let tl = (x - p1.x) / (p2.x - p1.x); let t2 = tl*tl; let t3 = t2*tl;
+    let v0 = (p2.y - p0.y) * 0.5; let v1 = (p3.y - p1.y) * 0.5;
+    let rawVal = (2*p1.y - 2*p2.y + v0 + v1)*t3 + (-3*p1.y + 3*p2.y - 2*v0 - v1)*t2 + v0*tl + p1.y;
+    return Math.max(0, Math.min(1, rawVal));
 }
 
 function getPacingCurve(x, type, tab) {
     if(type === 'custom') {
-        let isSmooth = document.getElementById("smoothCurve_" + tab) && document.getElementById("smoothCurve_" + tab).checked;
-        return isSmooth ? splineCustomCurve(x, customData[tab].points) : lerpCustomCurve(x, customData[tab].points);
+        if(!customData[tab].lut || customData[tab].lut.length === 0) updateCustomLUT(tab);
+        let lut = customData[tab].lut; let steps = lut.length - 1;
+        let exactIdx = x * steps; let idx1 = Math.floor(exactIdx); let idx2 = Math.ceil(exactIdx);
+        if(idx1 < 0) idx1 = 0; if(idx2 > steps) idx2 = steps;
+        if(idx1 === idx2) return lut[idx1];
+        let tl = exactIdx - idx1; return lut[idx1]*(1-tl) + lut[idx2]*tl;
     }
-    if(type === 'ease_in') return x * x * x; 
-    if(type === 'ease_out') return 1 - Math.pow(1 - x, 3);
-    if(type === 'climax') return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-    if(type === 'low_point') return x < 0.5 ? Math.pow(2 * x, 1/3) / 2 : 1 - Math.pow(-2 * x + 2, 1/3) / 2;
-    if(type === 'wave') return x + 0.1 * Math.sin(x * Math.PI * 4);
+    if(type === 'ease_in')   return x * x * x;
+    if(type === 'ease_out')  return 1 - Math.pow(1-x, 3);
+    if(type === 'climax')    return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2;
+    if(type === 'low_point') return x + 0.15 * Math.sin(x * Math.PI * 2); // chậm giữa, nhanh 2 đầu
+    if(type === 'wave')      return Math.max(0, Math.min(1, x + 0.1 * Math.sin(x * Math.PI * 4)));
     return x;
 }
 
+// ================================================================
+// CUSTOM CURVE EDITOR DRAWING — Styled like Dòng thời gian
+// ================================================================
+const EDITOR_W = 530;
+const EDITOR_H = 140;
+
 function drawCustomEditor(tab) {
     let canvas = document.getElementById("customCanvas_" + tab); if(!canvas) return;
-    let wrap = canvas.parentElement; let dpr = window.devicePixelRatio || 1;
-    let w = wrap.clientWidth; let h = wrap.clientHeight;
+    let dpr = window.devicePixelRatio || 1;
+    let w = EDITOR_W, h = EDITOR_H;
     if(canvas.width !== w * dpr) {
         canvas.width = w * dpr; canvas.height = h * dpr;
         canvas.style.width = w + "px"; canvas.style.height = h + "px";
         canvas.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0);
     }
-    let ctx = canvas.getContext("2d"); ctx.clearRect(0,0,w,h);
-    let pad = 20; let usableW = w - pad*2; let usableH = h - pad*2;
+    let ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, w, h);
     
-    ctx.strokeStyle = "rgba(30, 58, 95, 0.5)"; ctx.lineWidth = 1; ctx.beginPath();
-    ctx.moveTo(pad, pad); ctx.lineTo(pad, h-pad); ctx.lineTo(w-pad, h-pad); ctx.stroke();
+    let padX = 30, padY = 15;
+    let usableW = w - padX * 2;
+    let usableH = h - padY * 2;
+    let midY = h / 2;
     
-    let pts = customData[tab].points; 
+    // Grid lines (matching timeline style)
+    ctx.strokeStyle = "rgba(255,255,255,0.06)";
+    ctx.lineWidth = 1;
+    for(let xi = 0; xi <= 4; xi++) {
+        let gx = padX + (xi / 4) * usableW;
+        ctx.beginPath(); ctx.moveTo(gx, padY); ctx.lineTo(gx, h - padY); ctx.stroke();
+    }
+    
+    // Speed reference labels
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.font = "10px 'Be Vietnam Pro', sans-serif";
+    ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.fillText("10x", padX + 3, padY + 8);
+    ctx.fillText("1x",  padX + 3, midY - 8);
+    ctx.fillText("0.1x",padX + 3, h - padY - 8);
+    
+    // Mid reference line (1x speed) — dashed like static graph
+    ctx.beginPath(); ctx.moveTo(padX, midY); ctx.lineTo(w - padX, midY);
+    ctx.strokeStyle = "rgba(255, 204, 102, 0.35)";
+    ctx.setLineDash([4, 4]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
+    
+    // Top/bottom reference lines
+    ctx.strokeStyle = "rgba(255,255,255,0.08)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padX, padY); ctx.lineTo(w - padX, padY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padX, h - padY); ctx.lineTo(w - padX, h - padY); ctx.stroke();
+    
+    // Bottom axis line — matching timeline baseline
+    ctx.beginPath(); ctx.moveTo(padX - 10, h - padY); ctx.lineTo(w - padX + 10, h - padY);
+    ctx.strokeStyle = "#1e3a5f"; ctx.lineWidth = 2.5; ctx.stroke();
+    
+    let pts = customData[tab].points;
     let isLocked = document.getElementById("lockEnd_" + tab).checked;
     let isSmooth = document.getElementById("smoothCurve_" + tab).checked;
     
+    // Speed curve fill area
     ctx.beginPath();
-    if (isSmooth) {
-        let step = 0.005; // Increase precision for smoother drawing
-        for(let x=0; x<=1; x+=step) {
-            let valY = splineCustomCurve(x, pts);
-            let px = pad + x * usableW; let py = h - pad - valY * usableH;
-            if(x===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    if(isSmooth) {
+        ctx.moveTo(padX, h - padY);
+        for(let xi = 0; xi <= 1; xi += 0.005) {
+            let val = splineCustomCurve(xi, pts);
+            val = Math.max(0, Math.min(1, val));
+            let px = padX + xi * usableW;
+            let py = h - padY - val * usableH;
+            ctx.lineTo(px, py);
         }
-        // Ensure it connects to the very end mathematically
-        let valY = splineCustomCurve(1, pts);
-        ctx.lineTo(pad + usableW, h - pad - valY * usableH);
     } else {
-        pts.forEach((p, i) => {
-            let px = pad + p.x * usableW; let py = h - pad - p.y * usableH;
-            if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        ctx.moveTo(padX, h - padY);
+        pts.forEach(p => {
+            ctx.lineTo(padX + p.x * usableW, h - padY - p.y * usableH);
         });
     }
-    ctx.strokeStyle = "#ffcc66"; ctx.lineWidth = 2.5; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.stroke();
+    ctx.lineTo(w - padX, h - padY);
+    ctx.closePath();
+    ctx.fillStyle = "rgba(0, 204, 255, 0.06)"; ctx.fill();
     
+    // Speed curve line — same color/weight as timeline line
+    ctx.beginPath();
+    if(isSmooth) {
+        let first = true;
+        for(let xi = 0; xi <= 1; xi += 0.005) {
+            let val = splineCustomCurve(xi, pts);
+            val = Math.max(0, Math.min(1, val));
+            let px = padX + xi * usableW;
+            let py = h - padY - val * usableH;
+            if(first) { ctx.moveTo(px, py); first = false; } else ctx.lineTo(px, py);
+        }
+        let lastVal = splineCustomCurve(1, pts);
+        ctx.lineTo(padX + usableW, h - padY - Math.max(0,Math.min(1,lastVal)) * usableH);
+    } else {
+        pts.forEach((p, i) => {
+            let px = padX + p.x * usableW; let py = h - padY - p.y * usableH;
+            if(i===0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        });
+    }
+    ctx.strokeStyle = "#00ccff"; ctx.lineWidth = 2.5;
+    ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke();
+    
+    // Control points — styled like timeline key dots
     pts.forEach((p, i) => {
-        let px = pad + p.x * usableW; let py = h - pad - p.y * usableH;
-        ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI*2);
-        let isEndNode = (i===0 || i===pts.length-1);
-        ctx.fillStyle = (isEndNode && isLocked) ? "#1e3a5f" : "#00ccff";
-        ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle="#fff"; ctx.stroke();
+        let px = padX + p.x * usableW;
+        let py = h - padY - p.y * usableH;
+        let isEndNode = (i === 0 || i === pts.length - 1);
+        
+        // Vertical drop line to baseline
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, h - padY);
+        ctx.strokeStyle = "rgba(0, 204, 255, 0.2)"; ctx.lineWidth = 1.5; ctx.stroke();
+        
+        if(isEndNode && isLocked) {
+            // Locked end: small dim dot
+            ctx.beginPath(); ctx.arc(px, py, 3, 0, Math.PI*2);
+            ctx.fillStyle = "rgba(0, 204, 255, 0.4)"; ctx.fill();
+            // Baseline tick
+            ctx.beginPath(); ctx.arc(px, h - padY, 4, 0, Math.PI*2);
+            ctx.fillStyle = "rgba(0, 204, 255, 0.3)"; ctx.fill();
+        } else {
+            // Curve node: white dot like timeline main key
+            ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI*2);
+            ctx.fillStyle = "#fff"; ctx.fill();
+            ctx.strokeStyle = "rgba(0, 204, 255, 0.6)"; ctx.lineWidth = 1.5; ctx.stroke();
+            // Baseline dot — yellow like timeline
+            ctx.beginPath(); ctx.arc(px, h - padY, 5, 0, Math.PI*2);
+            ctx.fillStyle = "#ffcc66"; ctx.fill();
+        }
     });
 }
 
 function initCustomCanvas(tab) {
     let canvas = document.getElementById("customCanvas_" + tab);
-    if(!canvas || canvas.dataset.initialized) return; canvas.dataset.initialized = "true";
+    if(!canvas || canvas.dataset.initialized) return;
+    canvas.dataset.initialized = "true";
     let isDragging = false;
+    
+    // Make canvas fixed size, container scrollable (matching graph-wrapper)
+    canvas.width = EDITOR_W * (window.devicePixelRatio || 1);
+    canvas.height = EDITOR_H * (window.devicePixelRatio || 1);
+    canvas.style.width = EDITOR_W + "px";
+    canvas.style.height = EDITOR_H + "px";
+    canvas.getContext("2d").setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
     
     function getMousePos(e) {
         let rect = canvas.getBoundingClientRect();
@@ -624,95 +793,129 @@ function initCustomCanvas(tab) {
     }
     
     function handleDown(e) {
-        e.preventDefault(); let pos = getMousePos(e);
-        let pad = 20; let usableW = canvas.clientWidth - pad*2; let usableH = canvas.clientHeight - pad*2;
-        let pts = customData[tab].points; let isLocked = document.getElementById("lockEnd_" + tab).checked;
-        
-        let startIdx = isLocked ? 1 : 0; let endIdx = isLocked ? pts.length - 1 : pts.length;
-        for (let i = startIdx; i < endIdx; i++) {
-            let px = pad + pts[i].x * usableW; let py = canvas.clientHeight - pad - pts[i].y * usableH;
-            if (Math.hypot(pos.x - px, pos.y - py) < 20) { isDragging = true; customData[tab].activeNode = i; break; }
+        e.preventDefault();
+        let pos = getMousePos(e);
+        let padX = 30, padY = 15;
+        let usableW = EDITOR_W - padX*2; let usableH = EDITOR_H - padY*2;
+        let pts = customData[tab].points;
+        let isLocked = document.getElementById("lockEnd_" + tab).checked;
+        let startIdx = isLocked ? 1 : 0;
+        let endIdx = isLocked ? pts.length - 1 : pts.length;
+        for(let i = startIdx; i < endIdx; i++) {
+            let px = padX + pts[i].x * usableW;
+            let py = EDITOR_H - padY - pts[i].y * usableH;
+            if(Math.hypot(pos.x - px, pos.y - py) < 20) {
+                isDragging = true; customData[tab].activeNode = i; break;
+            }
         }
     }
     
     function handleMove(e) {
-        if (!isDragging || customData[tab].activeNode === null) return;
-        e.preventDefault(); let pos = getMousePos(e);
-        let pad = 20; let usableW = canvas.clientWidth - pad*2; let usableH = canvas.clientHeight - pad*2;
-        let i = customData[tab].activeNode; let pts = customData[tab].points;
-        let newX = (pos.x - pad) / usableW; let newY = (canvas.clientHeight - pad - pos.y) / usableH;
-        
-        if (i === 0) {
+        if(!isDragging || customData[tab].activeNode === null) return;
+        e.preventDefault();
+        let pos = getMousePos(e);
+        let padX = 30, padY = 15;
+        let usableW = EDITOR_W - padX*2; let usableH = EDITOR_H - padY*2;
+        let i = customData[tab].activeNode;
+        let pts = customData[tab].points;
+        let newX = (pos.x - padX) / usableW;
+        let newY = (EDITOR_H - padY - pos.y) / usableH;
+        if(i === 0) {
             pts[i].x = 0; pts[i].y = Math.max(0, Math.min(1, newY));
-        } else if (i === pts.length - 1) {
+        } else if(i === pts.length - 1) {
             pts[i].x = 1; pts[i].y = Math.max(0, Math.min(1, newY));
         } else {
             let minX = pts[i-1].x + 0.02; let maxX = pts[i+1].x - 0.02;
-            pts[i].x = Math.max(minX, Math.min(maxX, newX)); pts[i].y = Math.max(0, Math.min(1, newY));
+            pts[i].x = Math.max(minX, Math.min(maxX, newX));
+            pts[i].y = Math.max(0, Math.min(1, newY));
         }
-        drawCustomEditor(tab); if(tab === 'anime') updateAnime(); else updatePoseEst();
+        updateCustomLUT(tab); drawCustomEditor(tab);
+        if(tab === 'anime') updateAnime(); else updatePoseEst();
     }
     
-    function handleUp(e) { isDragging = false; customData[tab].activeNode = null; }
-
-    canvas.addEventListener('mousedown', handleDown); canvas.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', handleUp);
-    canvas.addEventListener('touchstart', handleDown, {passive:false}); canvas.addEventListener('touchmove', handleMove, {passive:false}); window.addEventListener('touchend', handleUp);
+    function handleUp() { isDragging = false; customData[tab].activeNode = null; }
+    
+    canvas.addEventListener('mousedown', handleDown);
+    canvas.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    canvas.addEventListener('touchstart', handleDown, {passive:false});
+    canvas.addEventListener('touchmove', handleMove, {passive:false});
+    window.addEventListener('touchend', handleUp);
+    
     document.getElementById("lockEnd_" + tab).addEventListener('change', () => drawCustomEditor(tab));
-    document.getElementById("smoothCurve_" + tab).addEventListener('change', () => { drawCustomEditor(tab); if(tab==='anime') updateAnime(); else updatePoseEst(); });
+    document.getElementById("smoothCurve_" + tab).addEventListener('change', () => {
+        updateCustomLUT(tab); drawCustomEditor(tab);
+        if(tab==='anime') updateAnime(); else updatePoseEst();
+    });
 }
 
 function modifyCustomPoints(tab, delta) {
     let pts = customData[tab].points;
-    if (delta > 0 && pts.length < 6) {
+    if(delta > 0 && pts.length < 6) {
         let newPts = [pts[0]];
         for(let i=1; i<pts.length; i++) {
-            newPts.push({ x: (pts[i-1].x + pts[i].x)/2, y: (pts[i-1].y + pts[i].y)/2 });
+            newPts.push({ x:(pts[i-1].x+pts[i].x)/2, y:(pts[i-1].y+pts[i].y)/2 });
             newPts.push(pts[i]);
         }
         while(newPts.length > pts.length + 1 && newPts.length > 6) newPts.splice(2, 1);
         customData[tab].points = newPts;
-    } else if (delta < 0 && pts.length > 3) {
+    } else if(delta < 0 && pts.length > 3) {
         pts.splice(pts.length-2, 1);
     }
-    drawCustomEditor(tab); if(tab === 'anime') updateAnime(); else updatePoseEst();
+    updateCustomLUT(tab); drawCustomEditor(tab);
+    if(tab === 'anime') updateAnime(); else updatePoseEst();
 }
 
 function toggleAnimeCustom() {
-    let curve = document.getElementById("curveTypeAnime").value; let logic = document.getElementById("calcLogic").value;
-    let fps = parseFloat(document.getElementById("fpsAnime").value) || 24; let sf = parseInt(document.getElementById("startFrame").value) || 1; let ef = parseInt(document.getElementById("endFrame").value) || 100;
-    let timeSec = (ef - sf + 1) / fps; let wrap = document.getElementById("customEditorWrap_anime"); let warn = document.getElementById("warnCustomAnime");
-    if (curve === "custom") {
+    let curve = document.getElementById("curveTypeAnime").value;
+    let logic = document.getElementById("calcLogic").value;
+    let fps = parseFloat(document.getElementById("fpsAnime").value) || 24;
+    let sf = parseInt(document.getElementById("startFrame").value) || 1;
+    let ef = parseInt(document.getElementById("endFrame").value) || 100;
+    let timeSec = (ef - sf + 1) / fps;
+    let wrap = document.getElementById("customEditorWrap_anime");
+    let warn = document.getElementById("warnCustomAnime");
+    if(curve === "custom") {
         wrap.classList.remove("hidden");
-        if (logic !== "strict" || timeSec < 3) { 
-            wrap.classList.add("disabled"); 
-            warn.innerText = i18n[currentLang].warnCustomAnime;
-            warn.classList.remove("hidden");
-        } else { 
-            wrap.classList.remove("disabled"); 
-            warn.classList.add("hidden"); 
-            initCustomCanvas('anime'); requestAnimationFrame(() => drawCustomEditor('anime')); 
+        if(logic !== "strict" || timeSec < 3) {
+            wrap.classList.add("disabled");
+            if(warn) { warn.innerText = i18n[currentLang].warnCustomAnime; warn.classList.remove("hidden"); }
+        } else {
+            wrap.classList.remove("disabled");
+            if(warn) warn.classList.add("hidden");
+            initCustomCanvas('anime'); requestAnimationFrame(() => drawCustomEditor('anime'));
         }
-    } else { wrap.classList.add("hidden"); warn.classList.add("hidden"); }
+    } else {
+        wrap.classList.add("hidden");
+        if(warn) warn.classList.add("hidden");
+    }
 }
 
 function togglePoseCustom() {
-    let curve = document.getElementById("curveTypePose").value; let mode = document.getElementById("poseCalcMode").value;
+    let curve = document.getElementById("curveTypePose").value;
+    let mode = document.getElementById("poseCalcMode").value;
     let sec = parseFloat(document.getElementById("poseSeconds").value) || 0;
-    let wrap = document.getElementById("customEditorWrap_pose"); let warn = document.getElementById("warnCustomPose");
-    if (curve === "custom") {
+    let wrap = document.getElementById("customEditorWrap_pose");
+    let warn = document.getElementById("warnCustomPose");
+    if(curve === "custom") {
         wrap.classList.remove("hidden");
-        if (mode !== "seconds" || sec < 3) { 
-            wrap.classList.add("disabled"); 
-            warn.innerText = i18n[currentLang].warnCustomPose;
-            warn.classList.remove("hidden");
-        } else { 
-            wrap.classList.remove("disabled"); 
-            warn.classList.add("hidden"); 
-            initCustomCanvas('pose'); requestAnimationFrame(() => drawCustomEditor('pose')); 
+        if(mode !== "seconds" || sec < 3) {
+            wrap.classList.add("disabled");
+            if(warn) { warn.innerText = i18n[currentLang].warnCustomPose; warn.classList.remove("hidden"); }
+        } else {
+            wrap.classList.remove("disabled");
+            if(warn) warn.classList.add("hidden");
+            initCustomCanvas('pose'); requestAnimationFrame(() => drawCustomEditor('pose'));
         }
-    } else { wrap.classList.add("hidden"); warn.classList.add("hidden"); }
+    } else {
+        wrap.classList.add("hidden");
+        if(warn) warn.classList.add("hidden");
+    }
 }
 
+// ================================================================
+// GRAPH RENDERING
+// ================================================================
 function setupHighResCanvas(canvasId, width, height) {
     let canvas = document.getElementById(canvasId); if(!canvas) return null;
     let ctx = canvas.getContext("2d"); let dpr = window.devicePixelRatio || 1;
@@ -729,105 +932,95 @@ function drawPill(ctx, text, x, y, bgColor, color) {
 
 function renderStaticCurve(canvasId, curveType, tab) {
     let res = setupHighResCanvas(canvasId, 530, 110); if(!res) return;
-    let { ctx, w, h } = res; let padX = 30, padY = 15; let usableW = w - padX * 2; let usableH = h - padY * 2; let midY = h / 2;
+    let { ctx, w, h } = res; let padX = 30, padY = 15; let usableW = w - padX*2; let usableH = h - padY*2; let midY = h/2;
     ctx.clearRect(0, 0, w, h);
-    
-    let dx = 0.005; // Increase precision for derivative calculation
-    let rawSpeeds = [];
-
-    // Tính đạo hàm thô (Tốc độ) tại từng điểm để đồ thị Tổng quan Gia tốc mịn hơn
-    for(let i=0; i<=100; i++) { 
-        let x = i/100; 
-        let nextX = Math.min(1, x + dx);
-        let y1 = getPacingCurve(x, curveType, tab); 
-        let y2 = getPacingCurve(nextX, curveType, tab); 
-        let speed = (y2 - y1) / (nextX - x); 
-        rawSpeeds.push(speed);
+    let dx = 0.001; let rawSpeeds = [];
+    for(let i=0; i<=100; i++) {
+        let x = i/100; let x0 = Math.max(0,x-dx); let x1 = Math.min(1,x+dx);
+        let y0 = getPacingCurve(x0, curveType, tab); let y1 = getPacingCurve(x1, curveType, tab);
+        rawSpeeds.push((x1>x0) ? (y1-y0)/(x1-x0) : 1);
     }
-    
-    // Đường tâm đứt đoạn (Tốc độ tuyến tính = 1)
-    ctx.beginPath(); ctx.moveTo(padX, midY); ctx.lineTo(w - padX, midY);
-    ctx.strokeStyle = "rgba(255, 204, 102, 0.4)"; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
-    
-    // Đường đồ thị tốc độ thực tế
+    ctx.beginPath(); ctx.moveTo(padX, midY); ctx.lineTo(w-padX, midY);
+    ctx.strokeStyle = "rgba(255,204,102,0.4)"; ctx.setLineDash([4,4]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
     ctx.beginPath();
     for(let i=0; i<=100; i++) {
-        let x = i/100; 
-        let speed = rawSpeeds[i]; 
-        let yOffset = (speed - 1) * (usableH / 3); 
-        let yPos = Math.max(padY - 5, Math.min(h - padY + 5, midY - yOffset));
-        if(i===0) ctx.moveTo(padX + x * usableW, yPos); else ctx.lineTo(padX + x * usableW, yPos);
+        let x = i/100; let yOffset = (rawSpeeds[i]-1) * (usableH/3);
+        let yPos = Math.max(padY-5, Math.min(h-padY+5, midY - yOffset));
+        if(i===0) ctx.moveTo(padX + x*usableW, yPos); else ctx.lineTo(padX + x*usableW, yPos);
     }
     ctx.strokeStyle = "#ffcc66"; ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke();
-    
-    ctx.beginPath(); ctx.moveTo(padX - 10, h - padY); ctx.lineTo(w - padX + 10, h - padY);
+    ctx.beginPath(); ctx.moveTo(padX-10, h-padY); ctx.lineTo(w-padX+10, h-padY);
     ctx.strokeStyle = "#1e3a5f"; ctx.lineWidth = 2.5; ctx.stroke();
 }
 
 function renderGraph(canvasId, mainKeys, subKeys, minF, maxF, requiredWidth) {
-    let padYBottom = 45; 
+    let padYBottom = 45;
     let res = setupHighResCanvas(canvasId, requiredWidth, 90 + padYBottom); if(!res) return;
-    let { ctx, w, h } = res; let padX = 30, padY = 25; let usableW = w - padX * 2; let usableH = h - padYBottom - padY;
+    let { ctx, w, h } = res; let padX = 30, padY = 25; let usableW = w-padX*2; let usableH = h-padYBottom-padY;
     let range = maxF - minF; if(range <= 0) range = 1;
-
     ctx.beginPath();
     mainKeys.forEach((key, index) => {
-        let x = padX + ((key - minF) / range) * usableW; let y = h - padYBottom - (index / (mainKeys.length - 1)) * usableH;
-        if(index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        let x = padX + ((key-minF)/range)*usableW;
+        let y = h - padYBottom - (mainKeys.length>1 ? (index/(mainKeys.length-1))*usableH : usableH/2);
+        if(index===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.strokeStyle = "#00ccff"; ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke();
-
-    ctx.beginPath(); ctx.moveTo(padX - 10, h - padYBottom); ctx.lineTo(w - padX + 10, h - padYBottom);
+    ctx.beginPath(); ctx.moveTo(padX-10, h-padYBottom); ctx.lineTo(w-padX+10, h-padYBottom);
     ctx.strokeStyle = "#1e3a5f"; ctx.lineWidth = 2.5; ctx.stroke();
-
-    if (subKeys && subKeys.length > 0) {
-        subKeys.forEach((key) => {
-            let x = padX + ((key - minF) / range) * usableW;
-            ctx.beginPath(); ctx.arc(x, h - padYBottom, 4, 0, Math.PI*2); ctx.fillStyle = "#00ccff"; ctx.fill();
-            drawPill(ctx, key, x, h - padYBottom - 18, "rgba(0, 204, 255, 0.15)", "#00ccff");
+    if(subKeys && subKeys.length > 0) {
+        let dedupSubs = [...new Set(subKeys)];
+        dedupSubs.forEach(key => {
+            let x = padX + ((key-minF)/range)*usableW;
+            ctx.beginPath(); ctx.arc(x, h-padYBottom, 4, 0, Math.PI*2); ctx.fillStyle = "#00ccff"; ctx.fill();
+            drawPill(ctx, key, x, h-padYBottom-18, "rgba(0,204,255,0.15)", "#00ccff");
         });
     }
-
     let lastTextX = -999; let staggerLevel = 0;
     mainKeys.forEach((key, index) => {
-        let x = padX + ((key - minF) / range) * usableW; let y = h - padYBottom - (index / (mainKeys.length - 1)) * usableH;
-        
-        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, h - padYBottom);
-        ctx.strokeStyle = "rgba(0, 204, 255, 0.3)"; ctx.lineWidth = 1.5; ctx.stroke();
-
+        let x = padX + ((key-minF)/range)*usableW;
+        let y = h-padYBottom - (mainKeys.length>1 ? (index/(mainKeys.length-1))*usableH : usableH/2);
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, h-padYBottom);
+        ctx.strokeStyle = "rgba(0,204,255,0.3)"; ctx.lineWidth = 1.5; ctx.stroke();
         ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2); ctx.fillStyle = "#fff"; ctx.fill();
-        ctx.beginPath(); ctx.arc(x, h - padYBottom, 5, 0, Math.PI*2); ctx.fillStyle = "#ffcc66"; ctx.fill();
-
-        if (x - lastTextX < 32) { staggerLevel = (staggerLevel + 1) % 3; } else { staggerLevel = 0; }
-        lastTextX = x; let textY = h - padYBottom + 12 + (staggerLevel * 14);
-        drawPill(ctx, key, x, textY, "rgba(255, 204, 102, 0.15)", "#ffcc66");
+        ctx.beginPath(); ctx.arc(x, h-padYBottom, 5, 0, Math.PI*2); ctx.fillStyle = "#ffcc66"; ctx.fill();
+        if(x - lastTextX < 32) { staggerLevel = (staggerLevel+1)%3; } else { staggerLevel = 0; }
+        lastTextX = x; let textY = h-padYBottom+12+(staggerLevel*14);
+        drawPill(ctx, key, x, textY, "rgba(255,204,102,0.15)", "#ffcc66");
     });
 }
 
-function switchTab(tab){
-    ["convertMode", "animeMode", "poseMode", "renderMode"].forEach(id => document.getElementById(id).classList.add("hidden"));
-    ["tabConvert", "tabAnime", "tabPose", "tabRender"].forEach(id => document.getElementById(id).classList.remove("active"));
-    document.getElementById(tab + "Mode" + (tab==="convert"?"":"")).classList.remove("hidden");
-    if(tab==="convert") document.getElementById("convertMode").classList.remove("hidden");
+// ================================================================
+// TAB SWITCHING
+// ================================================================
+function switchTab(tab) {
+    ["convertMode","animeMode","poseMode","renderMode"].forEach(id => document.getElementById(id).classList.add("hidden"));
+    ["tabConvert","tabAnime","tabPose","tabRender"].forEach(id => document.getElementById(id).classList.remove("active"));
+    let modeId = tab + "Mode";
+    document.getElementById(modeId).classList.remove("hidden");
     document.getElementById("tab" + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add("active");
-    if(tab === "convert") updateConvert(); if(tab === "anime") { toggleAnimeCustom(); updateAnime(); }
-    if(tab === "pose") { togglePoseCustom(); updatePoseEst(); } if(tab === "render") updateRender();
+    if(tab === "convert") updateConvert();
+    if(tab === "anime") { toggleAnimePoseInput(); toggleAnimeCustom(); updateAnime(); }
+    if(tab === "pose")  { togglePoseSettings(); togglePoseCustom(); updatePoseEst(); }
+    if(tab === "render") updateRender();
     updateAllCustomSelects();
 }
 
 function setField(id, val) { document.getElementById(id).value = val; }
 
-function updateConvert(){
+// ================================================================
+// CONVERT
+// ================================================================
+function updateConvert() {
     let mode = document.getElementById("mode").value; let fps = parseFloat(document.getElementById("fps").value);
     let val = parseFloat(document.getElementById("inputValue").value); let tUnit = document.getElementById("timeUnit");
     let isTime2Frame = (mode === "t2f");
     tUnit.classList.toggle("hidden", !isTime2Frame);
-    if (tUnit.parentNode && tUnit.parentNode.classList.contains("custom-select-wrapper")) tUnit.parentNode.classList.toggle("hidden", !isTime2Frame);
-    if(isNaN(val) || isNaN(fps) || fps <= 0 || val < 0) { document.getElementById("convertOutput").innerHTML = "—"; return; }
-    if(mode === "f2t"){
-        let totalSec = val / fps; let mainStr = totalSec.toFixed(3) + " " + i18n[currentLang].dynSec;
-        let h = Math.floor(totalSec / 3600), m = Math.floor((totalSec % 3600) / 60), s = parseFloat((totalSec % 60).toFixed(3));
-        let subStr = (h > 0 || m > 0) ? `<span class="sub-result">≈ ${h>0?h+"h ":""}${m}m ${s}s</span>` : "";
+    if(tUnit.parentNode && tUnit.parentNode.classList.contains("custom-select-wrapper")) tUnit.parentNode.classList.toggle("hidden", !isTime2Frame);
+    if(isNaN(val)||isNaN(fps)||fps<=0||val<0) { document.getElementById("convertOutput").innerHTML = "—"; return; }
+    if(mode === "f2t") {
+        let totalSec = val/fps; let mainStr = totalSec.toFixed(3) + " " + i18n[currentLang].dynSec;
+        let h2 = Math.floor(totalSec/3600), m = Math.floor((totalSec%3600)/60), s = parseFloat((totalSec%60).toFixed(3));
+        let subStr = (h2>0||m>0) ? `<span class="sub-result">≈ ${h2>0?h2+"h ":""}${m}m ${s}s</span>` : "";
         document.getElementById("convertOutput").innerHTML = mainStr + subStr;
     } else {
         let frames = Math.round(val * parseFloat(tUnit.value) * fps);
@@ -835,7 +1028,10 @@ function updateConvert(){
     }
 }
 
-function toggleAnimePoseInput() { 
+// ================================================================
+// ANIME TAB
+// ================================================================
+function toggleAnimePoseInput() {
     let isStatic = document.getElementById("focusState").value === "static";
     document.getElementById("poseRow").classList.toggle("hidden", isStatic);
     document.getElementById("rowCorePacingA").classList.toggle("hidden", isStatic);
@@ -844,261 +1040,392 @@ function toggleAnimePoseInput() {
 }
 
 function updateAnime() {
-    let style = parseInt(document.getElementById("animStyle").value); let fps = parseFloat(document.getElementById("fpsAnime").value) || 24;
-    let curve = document.getElementById("curveTypeAnime").value; let poses = parseInt(document.getElementById("poseCount").value) || 1;
-    let logic = document.getElementById("calcLogic").value; let sf = parseInt(document.getElementById("startFrame").value) || 1;
-    let ef = parseInt(document.getElementById("endFrame").value) || 100;
-    if(sf > ef) { let t = sf; sf = ef; ef = t; }
-
+    let focusState = document.getElementById("focusState").value;
+    let style = parseInt(document.getElementById("animStyle").value);
+    let fps = parseFloat(document.getElementById("fpsAnime").value) || 24;
+    let curve = document.getElementById("curveTypeAnime").value;
+    let poses = parseInt(document.getElementById("poseCount").value) || 1;
+    let logic = document.getElementById("calcLogic").value;
+    let sfInput = document.getElementById("startFrame"); let efInput = document.getElementById("endFrame");
+    let sf = parseInt(sfInput.value); let ef = parseInt(efInput.value);
+    if(isNaN(sf)) { sf = 1; sfInput.value = 1; } if(isNaN(ef)) { ef = 100; efInput.value = 100; }
+    if(sf > ef) { let tmp = sf; sf = ef; ef = tmp; sfInput.value = sf; efInput.value = ef; }
     let totalF = ef - sf + 1; let t = i18n[currentLang];
+    let isTooLong = (totalF/fps) > 25;
     let out = `Tổng: <span style="color:white">${totalF}</span> frames<br>`;
     
-    let isShortage = false; 
-    if (totalF < style * 2 && document.getElementById("focusState").value === "dynamic") {
-        isShortage = true;
-    }
-
-    let isTooLong = (totalF / fps) > 25;
-    let isCustomValid = !(curve === 'custom' && (logic !== 'strict' || (totalF/fps) < 3));
-    
-    if(document.getElementById("focusState").value === "dynamic" && !isCustomValid) { 
-        document.getElementById("animeOutput").innerHTML = out; 
-        return; 
-    }
-
-    let keys = []; let isClamped = false; let clampedTo = 0;
-
-    if (document.getElementById("focusState").value === "dynamic") {
+    if(focusState === "dynamic") {
+        let isShortage = totalF < style * poses;
+        let isCustomValid = !(curve==='custom' && (logic!=='strict' || (totalF/fps)<3));
+        if(!isCustomValid) {
+            out += `<div class="warning" style="text-align:left; margin-top:15px; color:#ffcc66; border-color:#ffcc66;">${t.warnCustomAnime}</div>`;
+            document.getElementById("animeOutput").innerHTML = out; return;
+        }
+        if(curve==='custom') updateCustomLUT('anime');
+        let keys = []; let isClamped = false; let clampedTo = 0; let missingPoses = 0;
         if(poses === 1) keys.push(sf);
         else {
             for(let i=0; i<poses; i++) {
-                let x = i/(poses-1); let p = sf + getPacingCurve(x, curve, 'anime') * (totalF - 1);
-                if(logic === "random" && i>0 && i<poses-1 && curve !== 'custom') {
-                    let prevX = (i-1)/(poses-1); let nextX = (i+1)/(poses-1);
-                    let prevP = sf + getPacingCurve(prevX, curve, 'anime') * (totalF - 1);
-                    let nextP = sf + getPacingCurve(nextX, curve, 'anime') * (totalF - 1);
-                    let maxJitter = Math.min(p - prevP, nextP - p) * 0.4;
-                    p += (Math.random() * maxJitter * 2) - maxJitter; 
+                let x = i/(poses-1); let p = sf + getPacingCurve(x, curve, 'anime') * (totalF-1);
+                if(logic==="random" && i>0 && i<poses-1 && curve!=='custom') {
+                    let prevX=(i-1)/(poses-1); let nextX=(i+1)/(poses-1);
+                    let prevP=sf+getPacingCurve(prevX,curve,'anime')*(totalF-1);
+                    let nextP=sf+getPacingCurve(nextX,curve,'anime')*(totalF-1);
+                    let maxJitter=Math.min(p-prevP,nextP-p)*0.4;
+                    p+=(Math.random()*maxJitter*2)-maxJitter;
                 }
-                let rawSnap = sf + Math.round((p - sf)/style) * style;
+                let rawSnap = sf + Math.round((p-sf)/style)*style;
                 keys.push(Math.max(sf, Math.min(ef, rawSnap)));
             }
-            keys = [...new Set(keys)].sort((a,b)=>a-b);
-            let lastKey = keys[keys.length - 1];
-            if (keys.length > 0 && (lastKey - sf) % style !== 0) { isClamped = true; clampedTo = lastKey; }
+            let uniqueKeys = [...new Set(keys)].sort((a,b)=>a-b);
+            missingPoses = poses - uniqueKeys.length; keys = uniqueKeys;
+            let lastKey = keys[keys.length-1];
+            if(lastKey!==ef && (lastKey-sf)%style!==0) { isClamped=true; clampedTo=lastKey; }
+            else if(keys.length>1) {
+                let secondLast=keys[keys.length-2];
+                if(lastKey===ef && (ef-secondLast)%style!==0) { isClamped=true; clampedTo=lastKey; }
+            }
         }
-        
         out += `<div class="box-result"><b>${t.dynKeysSugg}:</b><br>${keys.join(" ➔ ")}</div>`;
-        
-        if (isClamped || isShortage) {
-            out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo || keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
-        }
-        
-        if (isTooLong) {
-            out += `<div class="warning" style="text-align:left; margin-top: 15px; color:#ff6b6b; border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
+        if(missingPoses>0) out += `<div class="warning" style="text-align:left;margin-top:15px;color:#ffcc66;border-color:#ffcc66;">${t.dynMissingPose} <b>${missingPoses}</b>.</div>`;
+        if(isClamped||isShortage) out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+        if(isTooLong) {
+            out += `<div class="warning" style="text-align:left;margin-top:15px;color:#ff6b6b;border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
         } else {
             out += `
-            <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;"><span>${t.lblVisualGraph}</span><span class="tooltip" data-tip="${t.tipVisualGraph}">?</span></div>
+            <div class="graph-title" style="margin-top:25px;margin-bottom:8px;"><span>${t.lblVisualGraph}</span><span class="tooltip" data-tip="${t.tipVisualGraph}">?</span></div>
             <div class="static-graph-wrapper"><canvas id="animeStaticGraph" class="graph-canvas"></canvas></div>
-            <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;"><span>${t.lblDataGraph}</span><span class="tooltip" data-tip="${t.tipDataGraph}">?</span></div>
+            <div class="graph-title" style="margin-top:25px;margin-bottom:8px;"><span>${t.lblDataGraph}</span><span class="tooltip" data-tip="${t.tipDataGraph}">?</span></div>
             <div class="graph-wrapper"><canvas id="animeGraph" class="graph-canvas"></canvas></div>
             <div class="graph-legend-box"><span style="color:#ffcc66">●</span><span data-i18n="legendMainKey">${t.legendMainKey}</span></div>`;
         }
-    } else { 
+        document.getElementById("animeOutput").innerHTML = out;
+        if(!isTooLong) {
+            let requiredWidth = Math.max(530, keys.length*40);
+            renderStaticCurve("animeStaticGraph", curve, 'anime');
+            renderGraph("animeGraph", keys, [], sf, ef, requiredWidth);
+        }
+    } else {
+        // [FIX P-15] Dùng i18n thay vì hardcode
         out += `<div class="box-result">
-            <b style="color:#ffcc66;">Trạng thái Tĩnh (Static)</b><br>
-            Cần vẽ <b>1 Pose duy nhất</b> (đặt tại frame ${sf}) và giữ xuyên suốt ${totalF} frames.
-        </div>`; 
-    }
-    
-    document.getElementById("animeOutput").innerHTML = out;
-    
-    if (document.getElementById("focusState").value === "dynamic" && !isTooLong) {
-        let requiredWidth = Math.max(530, keys.length * 40);
-        renderStaticCurve("animeStaticGraph", curve, 'anime'); renderGraph("animeGraph", keys, [], sf, ef, requiredWidth);
+            <b style="color:#ffcc66;">${t.dynStaticTitle}</b><br>
+            ${t.dynStaticDesc} (${currentLang==='vi'?'đặt tại':'placed at'} frame ${sf}) ${t.dynStaticHold} ${totalF} frames.
+        </div>`;
+        document.getElementById("animeOutput").innerHTML = out;
     }
 }
 
+// ================================================================
+// POSE TAB — với tất cả bug fixes
+// ================================================================
 function updateJerkHint() {
-    let jerkType = document.getElementById("jerkToggle").value; let hintEl = document.getElementById("jerkHint");
-    if(jerkType === "frame") {
-        let style = parseInt(document.getElementById("animStylePose").value) || 2; let fps = parseFloat(document.getElementById("fpsPose").value) || 24;
-        let min = style * 2; let max = Math.round((fps / 24) * 6) * style; if(max < min) max = min + style;
+    let jerkType = document.getElementById("jerkToggle").value;
+    let hintEl = document.getElementById("jerkHint");
+    if(jerkType==="frame") {
+        let style = parseInt(document.getElementById("animStylePose").value)||2;
+        let fps = parseFloat(document.getElementById("fpsPose").value)||24;
+        let min = style*2; let max = Math.round((fps/24)*6)*style; if(max<min) max=min+style;
         hintEl.innerText = `${i18n[currentLang].dynHintFrames}${min} - ${max} frames`; hintEl.classList.remove("hidden");
     } else { hintEl.classList.add("hidden"); }
 }
 
 function togglePoseSettings() {
-    let mode = document.getElementById("poseCalcMode").value; document.getElementById("rowPoseSeconds").classList.toggle("hidden", mode !== "seconds");
-    let sub = document.getElementById("subPoseToggle").value; document.getElementById("rowSubPoseLogic").classList.toggle("hidden", sub !== "yes");
-    if(sub === "yes") { document.getElementById("rowJerkiness").classList.add("hidden"); document.getElementById("jerkToggle").value = "no";
-    } else { document.getElementById("rowJerkiness").classList.remove("hidden"); }
-    let jerkType = document.getElementById("jerkToggle").value; let inputBlock = document.getElementById("jerkInputBlock");
-    if(jerkType === "no") { inputBlock.classList.add("hidden"); } else {
-        inputBlock.classList.remove("hidden"); let jInput = document.getElementById("jerkValue");
-        if(jerkType === "sec") { jInput.step = "0.1"; if(jInput.value > 2) jInput.value = 0.2; } else { jInput.step = "1"; if(jInput.value < 1) jInput.value = 4; }
+    let mode = document.getElementById("poseCalcMode").value;
+    // [FIX P-14 partial] rowPoseSeconds visibility
+    document.getElementById("rowPoseSeconds").classList.toggle("hidden", mode!=="seconds");
+    let sub = document.getElementById("subPoseToggle").value;
+    document.getElementById("rowSubPoseLogic").classList.toggle("hidden", sub!=="yes");
+    if(sub==="yes") {
+        document.getElementById("rowJerkiness").classList.add("hidden");
+        document.getElementById("jerkToggle").value = "no";
+        if(document.getElementById("jerkToggle").updateCustomUI) document.getElementById("jerkToggle").updateCustomUI();
+    } else {
+        document.getElementById("rowJerkiness").classList.remove("hidden");
+    }
+    let jerkType = document.getElementById("jerkToggle").value;
+    let inputBlock = document.getElementById("jerkInputBlock");
+    if(jerkType==="no") {
+        inputBlock.classList.add("hidden");
+    } else {
+        inputBlock.classList.remove("hidden");
+        let jInput = document.getElementById("jerkValue");
+        // [FIX P-7] Reset jerk value properly when switching units
+        if(jerkType==="sec") {
+            jInput.step = "0.1";
+            // Reset nếu giá trị không hợp lý cho đơn vị giây (>5s là quá lớn thường)
+            let currentVal = parseFloat(jInput.value);
+            if(isNaN(currentVal) || currentVal > 5 || currentVal < 0) jInput.value = 0.2;
+        } else {
+            jInput.step = "1";
+            let currentVal = parseFloat(jInput.value);
+            // Reset nếu giá trị là số thập phân rõ ràng (dư từ chế độ sec)
+            if(isNaN(currentVal) || currentVal < 1 || (currentVal % 1 !== 0 && currentVal < 1)) jInput.value = 4;
+            else jInput.value = Math.round(currentVal); // làm tròn thành số nguyên
+        }
         updateJerkHint();
     }
-    if(document.getElementById("jerkToggle").updateCustomUI) document.getElementById("jerkToggle").updateCustomUI();
 }
 
 function togglePoseActions() {
     let type = document.getElementById("focusTypePose").value;
-    let charWrap = document.getElementById("focusActionChar").previousElementSibling; let objWrap = document.getElementById("focusActionObj").previousElementSibling;
-    if(type === "char") {
-        document.getElementById("focusActionObj").classList.add("hidden"); if(objWrap) objWrap.parentNode.style.display = "none";
-        document.getElementById("focusActionChar").classList.remove("hidden"); if(charWrap) charWrap.parentNode.style.display = "block";
+    let charSel = document.getElementById("focusActionChar");
+    let objSel = document.getElementById("focusActionObj");
+    let charWrap = charSel.previousElementSibling;
+    let objWrap = objSel.previousElementSibling;
+    if(type==="char") {
+        objSel.classList.add("hidden"); if(objWrap && objWrap.classList.contains("custom-select-wrapper")) objWrap.style.display="none";
+        charSel.classList.remove("hidden"); if(charWrap && charWrap.classList.contains("custom-select-wrapper")) charWrap.style.display="";
     } else {
-        document.getElementById("focusActionChar").classList.add("hidden"); if(charWrap) charWrap.parentNode.style.display = "none";
-        document.getElementById("focusActionObj").classList.remove("hidden"); if(objWrap) objWrap.parentNode.style.display = "block";
+        charSel.classList.add("hidden"); if(charWrap && charWrap.classList.contains("custom-select-wrapper")) charWrap.style.display="none";
+        objSel.classList.remove("hidden"); if(objWrap && objWrap.classList.contains("custom-select-wrapper")) objWrap.style.display="";
     }
 }
 
 function updatePoseEst() {
-    let mode = document.getElementById("poseCalcMode").value; let sec = parseFloat(document.getElementById("poseSeconds").value) || 1;
-    let fps = parseFloat(document.getElementById("fpsPose").value) || 24; let style = parseInt(document.getElementById("animStylePose").value) || 2;
-    let pacing = document.getElementById("corePacingPose").value; let curve = document.getElementById("curveTypePose").value;
-    let action = document.getElementById("focusTypePose").value === "char" ? document.getElementById("focusActionChar").value : document.getElementById("focusActionObj").value;
-    let useSub = document.getElementById("subPoseToggle").value === "yes"; let subRule = document.getElementById("subPoseLogic").value;
-    let jerkType = document.getElementById("jerkToggle").value; let jerkVal = parseFloat(document.getElementById("jerkValue").value) || 0;
-
-    let totalSec = mode === "seconds" ? sec : (Math.random() * 3.5 + 1.0); 
-    let totalFrames = Math.round(totalSec * fps);
+    let mode = document.getElementById("poseCalcMode").value;
+    
+    // [FIX P-4 + NOTE-P-1] Guard poseSeconds âm và cập nhật UI
+    let secRaw = parseFloat(document.getElementById("poseSeconds").value);
+    let sec;
+    if(isNaN(secRaw) || secRaw <= 0) {
+        sec = 1;
+        document.getElementById("poseSeconds").value = 1; // [FIX NOTE-P-1] cập nhật ngược UI
+    } else if(secRaw < 0.042) {
+        sec = 0.042; // tối thiểu 1 frame tại 24fps
+        document.getElementById("poseSeconds").value = 0.042;
+    } else {
+        sec = secRaw;
+    }
+    
+    let fps = parseFloat(document.getElementById("fpsPose").value) || 24;
+    let style = parseInt(document.getElementById("animStylePose").value) || 2;
+    let pacing = document.getElementById("corePacingPose").value;
+    let curve = document.getElementById("curveTypePose").value;
+    let action = document.getElementById("focusTypePose").value==="char" ? document.getElementById("focusActionChar").value : document.getElementById("focusActionObj").value;
+    let useSub = document.getElementById("subPoseToggle").value==="yes";
+    let subRule = document.getElementById("subPoseLogic").value;
+    let jerkType = document.getElementById("jerkToggle").value;
+    let jerkVal = parseFloat(document.getElementById("jerkValue").value) || 0;
     let t = i18n[currentLang];
     
-    let isShortage = false;
-    if(totalFrames < style * 2) { isShortage = true; }
-
+    let totalSec = mode==="seconds" ? sec : (Math.random() * 3.5 + 1.0);
+    
+    // [FIX UNKNOWN-1] Guard totalFrames = 0
+    let totalFrames = Math.max(1, Math.round(totalSec * fps));
+    
     let isTooLong = totalSec > 25;
-    let isCustomValid = !(curve === 'custom' && (mode !== 'seconds' || sec < 3));
-    if(!isCustomValid) { document.getElementById("poseOutput").innerHTML = ""; return; }
+    
+    // [FIX UNKNOWN-15/16] Hiển thị warning thay vì xóa trắng khi custom invalid
+    let isCustomValid = !(curve==='custom' && (mode!=='seconds' || sec < 3));
+    if(!isCustomValid) {
+        document.getElementById("poseOutput").innerHTML = `<div class="warning" style="text-align:left;">${t.warnCustomPose}</div>`;
+        return;
+    }
 
     let baseDensity = 1.0;
-    if(pacing==="superslow") baseDensity = 0.2; else if(pacing==="slowmo") baseDensity = 0.4; else if(pacing==="slow") baseDensity = 0.6;
-    else if(pacing==="fast") baseDensity = 1.5; else if(pacing==="superfast") baseDensity = 2.0; else if(pacing==="timesplash") baseDensity = 1.2;
-    if(["fight","fly","break","run"].includes(action)) baseDensity *= 1.4; if(["talk","scale"].includes(action)) baseDensity *= 0.6;
+    if(pacing==="superslow") baseDensity=0.2; else if(pacing==="slowmo") baseDensity=0.4; else if(pacing==="slow") baseDensity=0.6;
+    else if(pacing==="fast") baseDensity=1.5; else if(pacing==="superfast") baseDensity=2.0; else if(pacing==="timesplash") baseDensity=1.2;
+    if(["fight","fly","break","run"].includes(action)) baseDensity*=1.4;
+    if(["talk","scale"].includes(action)) baseDensity*=0.6;
 
-    let totalDrawings = totalFrames / style; let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
-    if(mode === "random" && Math.random() > 0.4 && curve !== 'custom') mainPoseCount += Math.floor(Math.random()*3);
+    let totalDrawings = totalFrames / style;
+    let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
+    
+    // [FIX P-2] Giới hạn random mode: chỉ cộng thêm tối đa 1 pose, không random totalSec độc lập
+    if(mode==="random" && Math.random()>0.5 && curve!=='custom') mainPoseCount += 1;
+    
+    // [FIX UNKNOWN-5] Hard cap mainPoseCount để tránh bùng nổ
+    let maxReasonablePoses = Math.min(24, Math.max(2, Math.floor(totalDrawings / 2)));
+    mainPoseCount = Math.min(mainPoseCount, maxReasonablePoses);
+
+    // [FIX P-3] isShortage dùng mainPoseCount thực tế
+    let isShortage = totalFrames < style * mainPoseCount;
+
+    if(curve==='custom') updateCustomLUT('pose');
 
     let keys = []; let isClamped = false; let clampedTo = 0;
     for(let i=0; i<mainPoseCount; i++) {
-        let x = i/(mainPoseCount-1 || 1); let p = 1 + getPacingCurve(x, curve, 'pose') * (totalFrames - 1);
-        let rawSnap = 1 + Math.round((p - 1)/style) * style;
+        let x = i/(mainPoseCount-1 || 1);
+        let p = 1 + getPacingCurve(x, curve, 'pose') * (totalFrames-1);
+        let rawSnap = 1 + Math.round((p-1)/style)*style;
         keys.push(Math.max(1, Math.min(totalFrames, rawSnap)));
     }
+
+    // [FIX BUG #1 Pose] missingPoses counter
+    let rawKeyCount = keys.length;
     keys = [...new Set(keys)].sort((a,b)=>a-b);
-    let lastKey = keys[keys.length - 1];
-    if (keys.length > 0 && (lastKey - 1) % style !== 0) { isClamped = true; clampedTo = lastKey; }
+    let missingPoses = rawKeyCount - keys.length;
+
+    // [FIX BUG #2 Pose] isClamped dùng secondLast logic
+    if(keys.length > 0) {
+        let lastKey = keys[keys.length-1];
+        if(keys.length > 1) {
+            let secondLast = keys[keys.length-2];
+            if(lastKey===totalFrames && (totalFrames-secondLast)%style!==0) { isClamped=true; clampedTo=lastKey; }
+            else if(lastKey!==totalFrames && (lastKey-1)%style!==0) { isClamped=true; clampedTo=lastKey; }
+        }
+    }
 
     let out = `≈ ${totalSec.toFixed(2)} ${t.dynSec} | ${totalFrames} ${t.dynFrames}<br>`;
     out += `<div class="sub-result">${t.dynEstPoses}: ${keys.length} (KFs: ${keys.join(", ")})</div>`;
 
+    if(missingPoses>0) out += `<div class="warning" style="text-align:left;margin-top:15px;color:#ffcc66;border-color:#ffcc66;">${t.dynMissingPose} <b>${missingPoses}</b>.</div>`;
+
     let boxHtml = ""; let subKeysList = [];
+    let subWarnings = [];
     if(useSub) {
         boxHtml += `<b>${t.dynSubPose}:</b><br>`;
         for(let i=0; i<keys.length-1; i++) {
-            let k1 = keys[i], k2 = keys[i+1]; let subCount = subRule === "random" ? Math.floor(Math.random()*3)+1 : parseInt(subRule);
-            let validSlots = []; for (let s = k1 + style; s < k2; s += style) validSlots.push(s);
-            if (validSlots.length > 0) {
+            let k1=keys[i], k2=keys[i+1];
+            let subCount = subRule==="random" ? Math.floor(Math.random()*3)+1 : parseInt(subRule);
+            let validSlots = [];
+            for(let s=k1+style; s<k2; s+=style) validSlots.push(s);
+            if(validSlots.length === 0) {
+                // [FIX P-10 + UNKNOWN-6] Cảnh báo thay vì im lặng
+                subWarnings.push(`[${k1}↔${k2}]`);
+            } else {
                 let subs = []; let stepRatio = validSlots.length / subCount;
                 for(let j=0; j<subCount; j++) {
-                    let idx = Math.floor((j + 0.5) * stepRatio);
-                    if(idx < validSlots.length && !subs.includes(validSlots[idx])) { subs.push(validSlots[idx]); subKeysList.push(validSlots[idx]); }
+                    let idx = Math.floor((j+0.5)*stepRatio);
+                    if(idx<validSlots.length && !subs.includes(validSlots[idx])) {
+                        subs.push(validSlots[idx]); subKeysList.push(validSlots[idx]);
+                    }
                 }
-                if(subs.length) boxHtml += `• Lót giữa [${k1}] và [${k2}]: ${subs.join(", ")}<br>`;
+                // [FIX UNKNOWN-6] Thông báo nếu ít sub hơn yêu cầu
+                if(subs.length < subCount && subs.length > 0) {
+                    boxHtml += `• ${t.dynSubBetween} [${k1}] → [${k2}]: ${subs.join(", ")} <span style="color:#ffcc66;font-size:11px;">(${subs.length}/${subCount})</span><br>`;
+                } else if(subs.length > 0) {
+                    // [FIX P-15] Dùng i18n key dynSubBetween
+                    boxHtml += `• ${t.dynSubBetween} [${k1}] → [${k2}]: ${subs.join(", ")}<br>`;
+                }
             }
         }
-    }
-    if(jerkType !== "no" && !useSub && jerkVal > 0) {
-        boxHtml += `<hr style="border-color:#1e3a5f; margin:10px 0;"><b>${t.dynHold}:</b><br>`;
-        let unitText = jerkType === "sec" ? t.dynSec : t.dynFrames; let actualJerkVal = jerkVal; let isCappedHold = false;
-        if (jerkType === "sec") { let maxSec = totalSec * 0.4; if (actualJerkVal > maxSec) { actualJerkVal = maxSec; isCappedHold = true; } } 
-        else { let maxFrames = Math.floor(totalFrames * 0.4); if (maxFrames < 1) maxFrames = 1; if (actualJerkVal > maxFrames) { actualJerkVal = maxFrames; isCappedHold = true; } }
-        actualJerkVal = jerkType === "sec" ? actualJerkVal.toFixed(2) : actualJerkVal;
-        boxHtml += `${t.dynHoldMsg1} <b>${actualJerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
-        if (isCappedHold) boxHtml += `<br><span style="color:#ffcc66; font-size: 12px;">(Đã giảm xuống tối đa 40% cảnh để giữ nhịp)</span>`;
-    }
-
-    if(boxHtml !== "") out += `<div class="box-result">${boxHtml}</div>`;
-    if(isClamped || isShortage) out += `<div class="warning" style="text-align:left; margin-top: 15px;">${t.dynClampWarn1}<b>${clampedTo || keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
-
-    if (isTooLong) {
-        out += `<div class="warning" style="text-align:left; margin-top: 15px; color:#ff6b6b; border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
-    } else {
-        out += `
-        <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;"><span>${t.lblVisualGraph}</span><span class="tooltip" data-tip="${t.tipVisualGraph}">?</span></div>
-        <div class="static-graph-wrapper"><canvas id="poseStaticGraph" class="graph-canvas"></canvas></div>
-        <div class="graph-title" style="margin-top: 25px; margin-bottom: 8px;"><span>${t.lblDataGraph}</span><span class="tooltip" data-tip="${t.tipDataGraph}">?</span></div>
-        <div class="graph-wrapper"><canvas id="poseGraph" class="graph-canvas"></canvas></div>
-        <div class="graph-legend-box">
-            <span style="color:#ffcc66">●</span><span data-i18n="legendMainKey">${t.legendMainKey}</span>
-            <span style="color:#00ccff; margin-left:15px;">●</span><span data-i18n="legendSubKey">${t.legendSubKey}</span>
-        </div>`;
+        if(subWarnings.length > 0) {
+            boxHtml += `<span style="color:#ffcc66;font-size:12px;">${t.dynSubNoSlot} ${subWarnings.join(", ")}</span><br>`;
+        }
     }
     
+    if(jerkType!=="no" && !useSub && jerkVal>0) {
+        boxHtml += `<hr style="border-color:#1e3a5f;margin:10px 0;"><b>${t.dynHold}:</b><br>`;
+        let actualJerkVal = jerkVal; let isCappedHold = false;
+        if(jerkType==="sec") {
+            let maxSec = totalSec*0.4; if(actualJerkVal>maxSec) { actualJerkVal=maxSec; isCappedHold=true; }
+        } else {
+            let maxFrames = Math.max(1, Math.floor(totalFrames*0.4));
+            if(actualJerkVal>maxFrames) { actualJerkVal=maxFrames; isCappedHold=true; }
+        }
+        let unitText = jerkType==="sec" ? t.dynSec : t.dynFrames;
+        actualJerkVal = jerkType==="sec" ? actualJerkVal.toFixed(2) : Math.round(actualJerkVal);
+        boxHtml += `${t.dynHoldMsg1} <b>${actualJerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
+        // [FIX P-15] dynHoldCapNote từ i18n
+        if(isCappedHold) boxHtml += `<br><span style="color:#ffcc66;font-size:12px;">${t.dynHoldCapNote}</span>`;
+    }
+
+    if(boxHtml!=="") out += `<div class="box-result">${boxHtml}</div>`;
+    if(isClamped||isShortage) out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+
+    if(isTooLong) {
+        out += `<div class="warning" style="text-align:left;margin-top:15px;color:#ff6b6b;border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
+    } else {
+        out += `
+        <div class="graph-title" style="margin-top:25px;margin-bottom:8px;"><span>${t.lblVisualGraph}</span><span class="tooltip" data-tip="${t.tipVisualGraph}">?</span></div>
+        <div class="static-graph-wrapper"><canvas id="poseStaticGraph" class="graph-canvas"></canvas></div>
+        <div class="graph-title" style="margin-top:25px;margin-bottom:8px;"><span>${t.lblDataGraph}</span><span class="tooltip" data-tip="${t.tipDataGraph}">?</span></div>
+        <div class="graph-wrapper"><canvas id="poseGraph" class="graph-canvas"></canvas></div>
+        <div class="graph-legend-box">
+            <span style="color:#ffcc66">●</span><span>${t.legendMainKey}</span>
+            <span style="color:#00ccff;margin-left:15px;">●</span><span>${t.legendSubKey}</span>
+        </div>`;
+    }
     document.getElementById("poseOutput").innerHTML = out;
     if(!isTooLong) {
-        let allKeys = keys.concat(subKeysList); let requiredWidth = Math.max(530, allKeys.length * 40);
-        renderStaticCurve("poseStaticGraph", curve, 'pose'); renderGraph("poseGraph", keys, subKeysList, 1, totalFrames, requiredWidth);
+        let allKeys = keys.concat([...new Set(subKeysList)]);
+        let requiredWidth = Math.max(530, allKeys.length*40);
+        renderStaticCurve("poseStaticGraph", curve, 'pose');
+        renderGraph("poseGraph", keys, subKeysList, 1, totalFrames, requiredWidth);
     }
 }
 
-function updateRender(){
-    let frames = parseFloat(document.getElementById("totalFrames").value); let pFrame = parseFloat(document.getElementById("renderPerFrame").value);
-    if(isNaN(frames) || isNaN(pFrame) || frames < 0 || pFrame < 0) { document.getElementById("renderOutput").innerText = "—"; return; }
-    let tot = frames * pFrame; let d = Math.floor(tot / 86400), h = Math.floor((tot % 86400) / 3600), m = Math.floor((tot % 3600) / 60), s = Math.floor(tot % 60);
-    let str = (d > 0 ? d + (currentLang==="vi"?" ngày ":"d ") : "") + `${h}h ${m}m ${s}s`; document.getElementById("renderOutput").innerText = str;
+// ================================================================
+// RENDER TAB
+// ================================================================
+function updateRender() {
+    let frames = parseFloat(document.getElementById("totalFrames").value);
+    let pFrame = parseFloat(document.getElementById("renderPerFrame").value);
+    if(isNaN(frames)||isNaN(pFrame)||frames<0||pFrame<0) { document.getElementById("renderOutput").innerText = "—"; return; }
+    let tot = frames*pFrame;
+    let d = Math.floor(tot/86400), h = Math.floor((tot%86400)/3600), m = Math.floor((tot%3600)/60), s = Math.floor(tot%60);
+    document.getElementById("renderOutput").innerText = (d>0?d+(currentLang==="vi"?" ngày ":"d "):"") + `${h}h ${m}m ${s}s`;
 }
 
+// ================================================================
+// LANGUAGE + I18N
+// ================================================================
 function changeLang(lang) {
     currentLang = lang; let t = i18n[lang];
     document.querySelectorAll('[data-i18n]').forEach(el => { el.innerText = t[el.getAttribute('data-i18n')]; });
-    for (let id in t) {
+    for(let id in t) {
         let el = document.getElementById(id);
-        if (el) {
-            if (el.classList.contains("tooltip")) { el.dataset.tip = t[id]; } 
-            else if(el.tagName === "INPUT" && el.hasAttribute("data-i18n-ph")) { let pKey = el.getAttribute("data-i18n-ph"); if(t[pKey]) el.placeholder = t[pKey]; } 
+        if(el) {
+            if(el.classList.contains("tooltip")) { el.dataset.tip = t[id]; }
+            else if(el.tagName==="INPUT" && el.hasAttribute("data-i18n-ph")) { let pKey = el.getAttribute("data-i18n-ph"); if(t[pKey]) el.placeholder = t[pKey]; }
             else { el.innerText = t[id]; }
         }
     }
     let sF = document.getElementById("startFrame"); if(sF) sF.placeholder = t.phStartFrame;
     let eF = document.getElementById("endFrame"); if(eF) eF.placeholder = t.phEndFrame;
+    
+    // [FIX P-14] changeLang phải gọi togglePoseSettings để đồng bộ visibility rows
+    togglePoseSettings();
+    toggleAnimePoseInput();
+    
     updateConvert(); updateAnime(); updatePoseEst(); updateRender(); updateAllCustomSelects(); updateJerkHint();
 }
 
+// ================================================================
+// CUSTOM DROPDOWNS
+// ================================================================
 function initCustomSelects() {
     document.querySelectorAll("select").forEach(sel => {
         if(sel.nextElementSibling && sel.nextElementSibling.classList.contains("custom-select-options")) return;
-        const wrap = document.createElement("div"); wrap.className = "custom-select-wrapper"; sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(sel);
-        const trig = document.createElement("div"); trig.className = "custom-select-trigger"; const opts = document.createElement("div"); opts.className = "custom-select-options"; wrap.appendChild(trig); wrap.appendChild(opts);
-        function updateUI() { if(sel.selectedIndex >= 0) trig.innerHTML = `<span>${sel.options[sel.selectedIndex].text}</span><div class="arrow"></div>`; }
+        const wrap = document.createElement("div"); wrap.className = "custom-select-wrapper";
+        sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(sel);
+        const trig = document.createElement("div"); trig.className = "custom-select-trigger";
+        const opts = document.createElement("div"); opts.className = "custom-select-options";
+        wrap.appendChild(trig); wrap.appendChild(opts);
+        function updateUI() { if(sel.selectedIndex>=0) trig.innerHTML = `<span>${sel.options[sel.selectedIndex].text}</span><div class="arrow"></div>`; }
         function buildOpts() {
             opts.innerHTML = "";
-            Array.from(sel.options).forEach((o, i) => {
+            Array.from(sel.options).forEach((o,i) => {
                 const od = document.createElement("div"); od.className = "custom-select-option";
-                if(i === sel.selectedIndex) od.classList.add("selected"); od.innerText = o.text;
-                od.addEventListener("click", (e) => { e.stopPropagation(); sel.selectedIndex = i; sel.dispatchEvent(new Event("change")); updateUI(); opts.classList.remove("show"); trig.classList.remove("active"); });
+                if(i===sel.selectedIndex) od.classList.add("selected"); od.innerText = o.text;
+                od.addEventListener("click", e => { e.stopPropagation(); sel.selectedIndex=i; sel.dispatchEvent(new Event("change")); updateUI(); opts.classList.remove("show"); trig.classList.remove("active"); });
                 opts.appendChild(od);
             });
         }
-        trig.addEventListener("click", (e) => {
+        trig.addEventListener("click", e => {
             e.stopPropagation(); const isS = opts.classList.contains("show");
-            document.querySelectorAll(".custom-select-options").forEach(el => el.classList.remove("show"));
-            document.querySelectorAll(".custom-select-trigger").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".custom-select-options").forEach(el=>el.classList.remove("show"));
+            document.querySelectorAll(".custom-select-trigger").forEach(el=>el.classList.remove("active"));
             if(!isS) { buildOpts(); opts.classList.add("show"); trig.classList.add("active"); }
         });
-        updateUI(); sel.style.display = "none"; sel.updateCustomUI = updateUI;
+        updateUI(); sel.style.display="none"; sel.updateCustomUI=updateUI;
     });
-    document.addEventListener("click", () => {
-        document.querySelectorAll(".custom-select-options").forEach(el => el.classList.remove("show"));
-        document.querySelectorAll(".custom-select-trigger").forEach(el => el.classList.remove("active"));
+    document.addEventListener("click", ()=>{
+        document.querySelectorAll(".custom-select-options").forEach(el=>el.classList.remove("show"));
+        document.querySelectorAll(".custom-select-trigger").forEach(el=>el.classList.remove("active"));
     });
 }
-function updateAllCustomSelects() { document.querySelectorAll("select").forEach(s => { if(s.updateCustomUI) s.updateCustomUI(); }); }
 
-window.addEventListener("DOMContentLoaded", () => { 
-    initCustomSelects(); changeLang('vi'); togglePoseActions(); togglePoseSettings(); toggleAnimePoseInput();
+function updateAllCustomSelects() { document.querySelectorAll("select").forEach(s=>{ if(s.updateCustomUI) s.updateCustomUI(); }); }
+
+// ================================================================
+// INIT
+// ================================================================
+window.addEventListener("DOMContentLoaded", ()=>{
+    updateCustomLUT('anime'); updateCustomLUT('pose');
+    initCustomSelects(); changeLang('vi');
+    togglePoseActions(); togglePoseSettings(); toggleAnimePoseInput();
 });
 </script>
 </body>
