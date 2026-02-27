@@ -105,7 +105,7 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
 .graph-wrapper::-webkit-scrollbar-thumb:hover { background: #00ccff; }
 .graph-canvas { display: block; background: transparent; border: none; box-shadow: none; margin: 0 auto; }
 
-/* Custom Curve Editor — styled like graph-wrapper / Dòng thời gian */
+/* Custom Curve Editor */
 .custom-editor {
     margin-top: 12px;
     background: rgba(10, 20, 34, 0.6);
@@ -117,7 +117,7 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
 .custom-editor.disabled { opacity: 0.4; pointer-events: none; }
 .custom-editor.hidden { display: none !important; }
 
-/* Header bar inside editor — same feel as graph-title */
+/* Header bar inside editor */
 .custom-editor-header {
     display: flex;
     justify-content: space-between;
@@ -143,7 +143,7 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
     flex-wrap: wrap;
 }
 
-/* Fix Checkbox Alignment */
+/* Checkbox Alignment */
 .checkbox-lbl { font-size: 12px; color: #9ed8ff; display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; margin: 0;}
 .checkbox-lbl input[type="checkbox"] { 
     appearance: none; -webkit-appearance: none;
@@ -162,7 +162,7 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
 .btn-reset { color: #ffcc66; border-color: rgba(255, 204, 102, 0.4); }
 .btn-reset:hover { background: rgba(255, 204, 102, 0.1); border-color: #ffcc66; color: #ffcc66; }
 
-/* Canvas area inside editor — scrollable like graph-wrapper */
+/* Canvas area */
 .custom-editor-canvas-wrap {
     width: 100%;
     overflow-x: auto;
@@ -213,7 +213,6 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <button id="tabRender" onclick="switchTab('render')">Render Time</button>
     </div>
 
-    <!-- TAB: Convert -->
     <div id="convertMode">
         <div class="tab-desc" id="descConvert">Chuyển đổi qua lại giữa thời lượng (Giây/Phút/Giờ) và Số khung hình (Frames) theo tốc độ chuẩn.</div>
         <div class="row">
@@ -240,7 +239,6 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <div class="result" id="convertOutput">—</div>
     </div>
 
-    <!-- TAB: Anime -->
     <div id="animeMode" class="hidden">
         <div class="tab-desc" id="descAnime">Phân bổ khoảng cách các Keyframe theo quy tắc Animation (On 1s, 2s, 3s) và nội suy nhịp độ cảnh.</div>
         
@@ -323,7 +321,6 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <div class="warning" id="warnMathModelAnime">⚠ Lưu ý: Mô hình đồ thị và toán học chỉ mang tính chất gợi ý tham khảo.</div>
     </div>
 
-    <!-- TAB: Pose -->
     <div id="poseMode" class="hidden">
         <div class="tab-desc" id="descPose">Tự động ước tính số lượng Pose chính và Pose phụ trợ (In-betweens) phụ thuộc vào hành động cụ thể và thời lượng.</div>
         <div class="row">
@@ -407,7 +404,6 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
         <div class="warning" id="warnMathModelPose">⚠ Lưu ý: Hệ thống chỉ tính toán gợi ý vị trí lý thuyết, mật độ thực tế phụ thuộc bản vẽ.</div>
     </div>
 
-    <!-- TAB: Render -->
     <div id="renderMode" class="hidden">
         <div class="tab-desc" id="descRender">Ước tính tổng thời gian xuất file (Render) của toàn bộ dự án dựa trên thời gian chạy 1 khung hình.</div>
         <div class="row">
@@ -485,7 +481,8 @@ const i18n = {
         lblTotalFrames: "Tổng frame", lblRenderPerFrame: "Thời gian render 1 frame (giây)",
         warningTextRender: "⚠ Thực tế cảnh nặng sẽ thay đổi thời gian.", lblLanguage: "Ngôn ngữ:",
         
-        dynFrames: "Frames", dynSec: "giây", dynKeysSugg: "Gợi ý Keyframe", dynEstPoses: "Pose ước tính",
+        dynFrames: "frames", dynSec: "giây", dynKeysSugg: "Gợi ý Keyframe", dynEstPoses: "Pose ước tính",
+        dynTotal: "Tổng:", // Thêm từ i18n
         dynSubPose: "Pose phụ", dynHold: "Giật/Khựng (Hold)", dynHoldMsg1: "Khuyên dùng giữ thêm", dynHoldMsg2: "tại điểm chạm.",
         dynHintFrames: "Gợi ý hợp lý: ",
         dynHoldCapNote: "(Đã giảm xuống tối đa 40% cảnh để giữ nhịp)",
@@ -549,7 +546,9 @@ const i18n = {
         lblTotalFrames: "Total Frames", lblRenderPerFrame: "Time per frame",
         warningTextRender: "⚠ Reference only.", lblLanguage: "Language:",
         
-        dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses", dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact.", dynHintFrames: "Suggested range: ",
+        dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses",
+        dynTotal: "Total:", // Thêm từ i18n
+        dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact.", dynHintFrames: "Suggested range: ",
         dynHoldCapNote: "(Capped at 40% of scene to preserve rhythm)",
         dynClampWarn1: "⚠️ Note: Scene duration is too short or pacing is mismatched. The last key was forced to frame ", dynClampWarn2: " (breaking the On ", dynClampWarn3: "s rhythm).<br>➔ Fix: Increase scene duration or switch to On 1s/2s.",
         dynGraphLimitWarn: "⚠️ Warning: Scene > 25s. Graphs disabled to optimize device performance.",
@@ -644,7 +643,7 @@ function getPacingCurve(x, type, tab) {
 }
 
 // ================================================================
-// CUSTOM CURVE EDITOR DRAWING — Styled like Dòng thời gian
+// CUSTOM CURVE EDITOR DRAWING
 // ================================================================
 const EDITOR_W = 530;
 const EDITOR_H = 140;
@@ -870,8 +869,12 @@ function toggleAnimeCustom() {
     let curve = document.getElementById("curveTypeAnime").value;
     let logic = document.getElementById("calcLogic").value;
     let fps = parseFloat(document.getElementById("fpsAnime").value) || 24;
-    let sf = parseInt(document.getElementById("startFrame").value) || 1;
-    let ef = parseInt(document.getElementById("endFrame").value) || 100;
+    
+    let sfRaw = parseInt(document.getElementById("startFrame").value);
+    let efRaw = parseInt(document.getElementById("endFrame").value);
+    let sf = isNaN(sfRaw) ? 1 : Math.min(sfRaw, efRaw || 100);
+    let ef = isNaN(efRaw) ? 100 : Math.max(sfRaw || 1, efRaw);
+    
     let timeSec = (ef - sf + 1) / fps;
     let wrap = document.getElementById("customEditorWrap_anime");
     let warn = document.getElementById("warnCustomAnime");
@@ -894,7 +897,9 @@ function toggleAnimeCustom() {
 function togglePoseCustom() {
     let curve = document.getElementById("curveTypePose").value;
     let mode = document.getElementById("poseCalcMode").value;
-    let sec = parseFloat(document.getElementById("poseSeconds").value) || 0;
+    let secRaw = parseFloat(document.getElementById("poseSeconds").value);
+    let sec = isNaN(secRaw) ? 1 : secRaw;
+    
     let wrap = document.getElementById("customEditorWrap_pose");
     let warn = document.getElementById("warnCustomPose");
     if(curve === "custom") {
@@ -1046,13 +1051,24 @@ function updateAnime() {
     let curve = document.getElementById("curveTypeAnime").value;
     let poses = parseInt(document.getElementById("poseCount").value) || 1;
     let logic = document.getElementById("calcLogic").value;
-    let sfInput = document.getElementById("startFrame"); let efInput = document.getElementById("endFrame");
-    let sf = parseInt(sfInput.value); let ef = parseInt(efInput.value);
-    if(isNaN(sf)) { sf = 1; sfInput.value = 1; } if(isNaN(ef)) { ef = 100; efInput.value = 100; }
-    if(sf > ef) { let tmp = sf; sf = ef; ef = tmp; sfInput.value = sf; efInput.value = ef; }
+    
+    // Đã gỡ bỏ tính năng tự động ghi đè số trên UI (UI Write-back)
+    let sfRaw = parseInt(document.getElementById("startFrame").value); 
+    let efRaw = parseInt(document.getElementById("endFrame").value);
+    
+    // Gán default phục vụ tính toán nếu bị rỗng (NaN)
+    let sfVal = isNaN(sfRaw) ? 1 : sfRaw; 
+    let efVal = isNaN(efRaw) ? 100 : efRaw; 
+    
+    // Tránh bị lỗi do start > end nhưng ko ép sửa ô input đang gõ
+    let sf = Math.min(sfVal, efVal);
+    let ef = Math.max(sfVal, efVal);
+    
     let totalF = ef - sf + 1; let t = i18n[currentLang];
     let isTooLong = (totalF/fps) > 25;
-    let out = `Tổng: <span style="color:white">${totalF}</span> frames<br>`;
+    
+    // Đã thay thế hardcode i18n (t.dynTotal, t.dynFrames)
+    let out = `${t.dynTotal} <span style="color:white">${totalF}</span> ${t.dynFrames}<br>`;
     
     if(focusState === "dynamic") {
         let isShortage = totalF < style * poses;
@@ -1106,17 +1122,16 @@ function updateAnime() {
             renderGraph("animeGraph", keys, [], sf, ef, requiredWidth);
         }
     } else {
-        // [FIX P-15] Dùng i18n thay vì hardcode
         out += `<div class="box-result">
             <b style="color:#ffcc66;">${t.dynStaticTitle}</b><br>
-            ${t.dynStaticDesc} (${currentLang==='vi'?'đặt tại':'placed at'} frame ${sf}) ${t.dynStaticHold} ${totalF} frames.
+            ${t.dynStaticDesc} (${currentLang==='vi'?'đặt tại':'placed at'} frame ${sf}) ${t.dynStaticHold} ${totalF} ${t.dynFrames}.
         </div>`;
         document.getElementById("animeOutput").innerHTML = out;
     }
 }
 
 // ================================================================
-// POSE TAB — với tất cả bug fixes
+// POSE TAB
 // ================================================================
 function updateJerkHint() {
     let jerkType = document.getElementById("jerkToggle").value;
@@ -1131,7 +1146,6 @@ function updateJerkHint() {
 
 function togglePoseSettings() {
     let mode = document.getElementById("poseCalcMode").value;
-    // [FIX P-14 partial] rowPoseSeconds visibility
     document.getElementById("rowPoseSeconds").classList.toggle("hidden", mode!=="seconds");
     let sub = document.getElementById("subPoseToggle").value;
     document.getElementById("rowSubPoseLogic").classList.toggle("hidden", sub!=="yes");
@@ -1149,18 +1163,15 @@ function togglePoseSettings() {
     } else {
         inputBlock.classList.remove("hidden");
         let jInput = document.getElementById("jerkValue");
-        // [FIX P-7] Reset jerk value properly when switching units
         if(jerkType==="sec") {
             jInput.step = "0.1";
-            // Reset nếu giá trị không hợp lý cho đơn vị giây (>5s là quá lớn thường)
             let currentVal = parseFloat(jInput.value);
             if(isNaN(currentVal) || currentVal > 5 || currentVal < 0) jInput.value = 0.2;
         } else {
             jInput.step = "1";
             let currentVal = parseFloat(jInput.value);
-            // Reset nếu giá trị là số thập phân rõ ràng (dư từ chế độ sec)
             if(isNaN(currentVal) || currentVal < 1 || (currentVal % 1 !== 0 && currentVal < 1)) jInput.value = 4;
-            else jInput.value = Math.round(currentVal); // làm tròn thành số nguyên
+            else jInput.value = Math.round(currentVal);
         }
         updateJerkHint();
     }
@@ -1184,18 +1195,13 @@ function togglePoseActions() {
 function updatePoseEst() {
     let mode = document.getElementById("poseCalcMode").value;
     
-    // [FIX P-4 + NOTE-P-1] Guard poseSeconds âm và cập nhật UI
+    // Lấy nguyên giá trị user gõ và không ghi đè vào Value để tránh làm kẹt thao tác xóa (Backspace)
     let secRaw = parseFloat(document.getElementById("poseSeconds").value);
-    let sec;
-    if(isNaN(secRaw) || secRaw <= 0) {
-        sec = 1;
-        document.getElementById("poseSeconds").value = 1; // [FIX NOTE-P-1] cập nhật ngược UI
-    } else if(secRaw < 0.042) {
-        sec = 0.042; // tối thiểu 1 frame tại 24fps
-        document.getElementById("poseSeconds").value = 0.042;
-    } else {
-        sec = secRaw;
-    }
+    
+    // Nếu rỗng (NaN) thì lấy fallback = 1 để chạy tính toán ngầm
+    let sec = isNaN(secRaw) ? 1 : secRaw;
+    // Chặn an toàn tối thiểu không cho sec rơi về 0, bảo vệ thuật toán chia khung hình
+    if (sec <= 0) sec = 0.042; 
     
     let fps = parseFloat(document.getElementById("fpsPose").value) || 24;
     let style = parseInt(document.getElementById("animStylePose").value) || 2;
@@ -1209,13 +1215,9 @@ function updatePoseEst() {
     let t = i18n[currentLang];
     
     let totalSec = mode==="seconds" ? sec : (Math.random() * 3.5 + 1.0);
-    
-    // [FIX UNKNOWN-1] Guard totalFrames = 0
     let totalFrames = Math.max(1, Math.round(totalSec * fps));
-    
     let isTooLong = totalSec > 25;
     
-    // [FIX UNKNOWN-15/16] Hiển thị warning thay vì xóa trắng khi custom invalid
     let isCustomValid = !(curve==='custom' && (mode!=='seconds' || sec < 3));
     if(!isCustomValid) {
         document.getElementById("poseOutput").innerHTML = `<div class="warning" style="text-align:left;">${t.warnCustomPose}</div>`;
@@ -1231,14 +1233,10 @@ function updatePoseEst() {
     let totalDrawings = totalFrames / style;
     let mainPoseCount = Math.max(2, Math.round((totalDrawings * 0.2) * baseDensity));
     
-    // [FIX P-2] Giới hạn random mode: chỉ cộng thêm tối đa 1 pose, không random totalSec độc lập
     if(mode==="random" && Math.random()>0.5 && curve!=='custom') mainPoseCount += 1;
-    
-    // [FIX UNKNOWN-5] Hard cap mainPoseCount để tránh bùng nổ
     let maxReasonablePoses = Math.min(24, Math.max(2, Math.floor(totalDrawings / 2)));
     mainPoseCount = Math.min(mainPoseCount, maxReasonablePoses);
 
-    // [FIX P-3] isShortage dùng mainPoseCount thực tế
     let isShortage = totalFrames < style * mainPoseCount;
 
     if(curve==='custom') updateCustomLUT('pose');
@@ -1251,12 +1249,10 @@ function updatePoseEst() {
         keys.push(Math.max(1, Math.min(totalFrames, rawSnap)));
     }
 
-    // [FIX BUG #1 Pose] missingPoses counter
     let rawKeyCount = keys.length;
     keys = [...new Set(keys)].sort((a,b)=>a-b);
     let missingPoses = rawKeyCount - keys.length;
 
-    // [FIX BUG #2 Pose] isClamped dùng secondLast logic
     if(keys.length > 0) {
         let lastKey = keys[keys.length-1];
         if(keys.length > 1) {
@@ -1281,7 +1277,6 @@ function updatePoseEst() {
             let validSlots = [];
             for(let s=k1+style; s<k2; s+=style) validSlots.push(s);
             if(validSlots.length === 0) {
-                // [FIX P-10 + UNKNOWN-6] Cảnh báo thay vì im lặng
                 subWarnings.push(`[${k1}↔${k2}]`);
             } else {
                 let subs = []; let stepRatio = validSlots.length / subCount;
@@ -1291,11 +1286,9 @@ function updatePoseEst() {
                         subs.push(validSlots[idx]); subKeysList.push(validSlots[idx]);
                     }
                 }
-                // [FIX UNKNOWN-6] Thông báo nếu ít sub hơn yêu cầu
                 if(subs.length < subCount && subs.length > 0) {
                     boxHtml += `• ${t.dynSubBetween} [${k1}] → [${k2}]: ${subs.join(", ")} <span style="color:#ffcc66;font-size:11px;">(${subs.length}/${subCount})</span><br>`;
                 } else if(subs.length > 0) {
-                    // [FIX P-15] Dùng i18n key dynSubBetween
                     boxHtml += `• ${t.dynSubBetween} [${k1}] → [${k2}]: ${subs.join(", ")}<br>`;
                 }
             }
@@ -1317,7 +1310,6 @@ function updatePoseEst() {
         let unitText = jerkType==="sec" ? t.dynSec : t.dynFrames;
         actualJerkVal = jerkType==="sec" ? actualJerkVal.toFixed(2) : Math.round(actualJerkVal);
         boxHtml += `${t.dynHoldMsg1} <b>${actualJerkVal}</b> ${unitText} ${t.dynHoldMsg2}`;
-        // [FIX P-15] dynHoldCapNote từ i18n
         if(isCappedHold) boxHtml += `<br><span style="color:#ffcc66;font-size:12px;">${t.dynHoldCapNote}</span>`;
     }
 
@@ -1375,7 +1367,6 @@ function changeLang(lang) {
     let sF = document.getElementById("startFrame"); if(sF) sF.placeholder = t.phStartFrame;
     let eF = document.getElementById("endFrame"); if(eF) eF.placeholder = t.phEndFrame;
     
-    // [FIX P-14] changeLang phải gọi togglePoseSettings để đồng bộ visibility rows
     togglePoseSettings();
     toggleAnimePoseInput();
     
