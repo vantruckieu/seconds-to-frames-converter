@@ -105,37 +105,33 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
 .graph-wrapper::-webkit-scrollbar-thumb:hover { background: #00ccff; }
 .graph-canvas { display: block; background: transparent; border: none; box-shadow: none; margin: 0 auto; }
 
-/* Custom Curve Editor - Cải tiến giao diện */
-.custom-editor { 
-    margin-top: 15px; 
-    padding: 15px; 
-    background: rgba(10, 20, 34, 0.6); 
-    border: 1px solid #00ccff; 
-    border-radius: 12px; 
-    position: relative;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-}
+/* Custom Curve Editor */
+.custom-editor { margin-top: 15px; padding: 15px 20px; background: rgba(10, 20, 34, 0.8); border: 1px solid #00ccff; border-radius: 12px; position: relative; }
 .custom-editor.disabled { opacity: 0.4; pointer-events: none; border-color: #1e3a5f; }
-.editor-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+.editor-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
+.editor-controls span { font-size: 13px; color: #00ccff; font-weight: 600;}
 .editor-controls-left { display: flex; align-items: center; gap: 15px; }
-.editor-controls-left > span { font-size: 14px; color: #00ccff; font-weight: 600; margin-right: 5px;}
-.editor-btn-group { display: flex; gap: 10px; align-items: center; }
-.editor-btn { background: #0c1626; border: 1px solid #1b3555; color: #9ed8ff; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s;}
-.editor-btn:hover { background: #11233d; color: #00ccff; border-color:#00ccff; box-shadow: 0 0 8px rgba(0,200,255,0.3); }
-.btn-reset { color: #ffcc66; border-color: rgba(255, 204, 102, 0.5); }
-.btn-reset:hover { background: rgba(255, 204, 102, 0.1); border-color: #ffcc66; color: #ffcc66; box-shadow: 0 0 8px rgba(255,204,102,0.3);}
-.checkbox-lbl { font-size: 13px; color: #e6f3ff; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;}
+.editor-btn-group { display: flex; gap: 8px; align-items: center; }
+.editor-btn { background: #0c1626; border: 1px solid #1b3555; color: #9ed8ff; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 12px; transition: 0.2s;}
+.editor-btn:hover { background: #11233d; color: #00ccff; border-color:#00ccff; }
+.btn-reset { color: #ffcc66; border-color: rgba(255, 204, 102, 0.4); }
+.btn-reset:hover { background: rgba(255, 204, 102, 0.1); border-color: #ffcc66; color: #ffcc66; }
+
+/* Fix Checkbox Alignment */
+.checkbox-lbl { font-size: 13px; color: #9ed8ff; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; margin: 0;}
 .checkbox-lbl input[type="checkbox"] { 
     appearance: none; -webkit-appearance: none;
     width: 16px; height: 16px; background: #0a1422; border: 1px solid #1e3a5f; border-radius: 4px; 
-    cursor: pointer; position: relative; margin: 0; transition: 0.2s;
+    cursor: pointer; position: relative; margin: 0; outline: none; flex-shrink: 0; transition: 0.2s;
 }
 .checkbox-lbl input[type="checkbox"]:checked { background: #00ccff; border-color: #00ccff; }
 .checkbox-lbl input[type="checkbox"]:checked::after {
-    content: '✔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    color: #050b18; font-size: 11px; font-weight: bold;
+    content: ''; position: absolute; top: 2px; left: 5px;
+    width: 3px; height: 7px; border: solid #050b18; border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }
-.editor-canvas-wrap { width: 100%; height: 180px; background: #050b18; border-radius: 8px; border: 1px dashed #1e3a5f; cursor: crosshair; touch-action: none; position: relative; overflow: hidden;}
+
+.editor-canvas-wrap { width: 100%; height: 160px; background: #050b18; border-radius: 8px; border: 1px dashed #1e3a5f; cursor: crosshair; touch-action: none; position: relative;}
 
 /* Outside Legend */
 .graph-legend-box { display: flex; justify-content: center; gap: 20px; padding: 12px 0 0 0; font-size: 13px; color: #9ed8ff; }
@@ -151,10 +147,6 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
     body { padding: 20px 10px 50px 10px; }
     .container { padding: 25px 20px; border-radius: 15px; }
     h1 { font-size: 24px; }
-    .editor-controls { flex-direction: column; align-items: stretch; }
-    .editor-controls-left { justify-content: space-between; margin-bottom: 5px; }
-    .editor-btn-group { justify-content: space-between; }
-    .editor-btn { flex: 1; text-align: center; }
 }
 </style>
 </head>
@@ -241,7 +233,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
             <div id="customEditorWrap_anime" class="custom-editor hidden">
                 <div class="editor-controls">
                     <div class="editor-controls-left">
-                        <span id="lblEditorA">Bộ dựng Đồ thị tự do</span>
+                        <span id="lblEditorA">Bộ dựng Đồ thị</span>
                         <label class="checkbox-lbl"><input type="checkbox" id="smoothCurve_anime" checked> <span id="lblSmoothA">Đường mượt</span></label>
                         <label class="checkbox-lbl"><input type="checkbox" id="lockEnd_anime" checked> <span id="lblLockA">Khóa mút</span></label>
                     </div>
@@ -409,7 +401,7 @@ const i18n = {
         tipCalcLogic: "• Nghiêm ngặt: Cố định toán học.\n• Ngẫu nhiên: Thêm sai lệch tự nhiên.", tipPoseCalcMode: "Tự bịa số giây hay ấn định trước.", tipPoseSeconds: "Độ dài cảnh (giây).",
         tipFPS_pose: "Khung hình tiêu chuẩn của dự án.", tipAnimStylePose: "Số frame để giữ 1 bản vẽ.", tipFocusTypePose: "Loại đối tượng chính.",
         tipFocusActionPose: "Hành động để thuật toán đo độ khó.", tipCorePacingPose: "Nhịp hành động tổng thể.",
-        tipCurveTypePose: "Quy luật Easing.\n• Tùy chỉnh: Tự vẽ (Yêu cầu >3s và Theo số giây).",
+        tipCurveTypePose: "Quy luật Easing.\n• Tùy chỉnh: Tự vẽ (Yêu cầu >3s và Theo giây).",
         tipSubPose: "Tự động chèn In-betweens.", tipSubPoseLogic: "Số lượng bản vẽ phụ chèn giữa.", tipJerkiness: "Kỹ thuật Hold ở điểm chạm.",
         tipTotalFrames: "Tổng frame xuất.", tipRenderPerFrame: "Thời gian máy render 1 frame.",
 
@@ -467,7 +459,7 @@ const i18n = {
         tipCalcLogic: "Strict math or Random deviation.", tipPoseCalcMode: "Random or Custom seconds.", tipPoseSeconds: "Desired duration.",
         tipFPS_pose: "Standard framerate.", tipAnimStylePose: "Keyframe density.", tipFocusTypePose: "Character or Object.",
         tipFocusActionPose: "Specific action.", tipCorePacingPose: "Overall speed.",
-        tipCurveTypePose: "Acceleration curve.\n• Custom: Draw your own (Requires >3s & By Scene Seconds).",
+        tipCurveTypePose: "Acceleration curve.\n• Custom: Draw your own (Requires >3s & Fixed Seconds).",
         tipSubPose: "Generate In-between poses.", tipSubPoseLogic: "In-between padding rule.", tipJerkiness: "Hold frames at impact.",
         tipTotalFrames: "Total frames to render.", tipRenderPerFrame: "Actual time to render a single frame.",
 
@@ -508,16 +500,17 @@ const i18n = {
 };
 
 // SPLINE & CUSTOM CURVE LOGIC
+// Thay đổi default data thành tuyến tính hoàn hảo (y=x) để render ra đường thẳng ------
 let customData = {
-    anime: { points: [{x:0, y:0}, {x:0.33, y:0.8}, {x:0.66, y:0.2}, {x:1, y:1}], activeNode: null },
-    pose: { points: [{x:0, y:0}, {x:0.5, y:0.8}, {x:1, y:1}], activeNode: null }
+    anime: { points: [{x:0, y:0}, {x:0.33, y:0.33}, {x:0.66, y:0.66}, {x:1, y:1}], activeNode: null },
+    pose: { points: [{x:0, y:0}, {x:0.5, y:0.5}, {x:1, y:1}], activeNode: null }
 };
 
 function resetCustomPoints(tab) {
     if (tab === 'anime') {
-        customData.anime.points = [{x:0, y:0}, {x:0.33, y:0.8}, {x:0.66, y:0.2}, {x:1, y:1}];
+        customData.anime.points = [{x:0, y:0}, {x:0.33, y:0.33}, {x:0.66, y:0.66}, {x:1, y:1}];
     } else {
-        customData.pose.points = [{x:0, y:0}, {x:0.5, y:0.8}, {x:1, y:1}];
+        customData.pose.points = [{x:0, y:0}, {x:0.5, y:0.5}, {x:1, y:1}];
     }
     drawCustomEditor(tab);
     if(tab === 'anime') updateAnime(); else updatePoseEst();
@@ -740,10 +733,9 @@ function renderStaticCurve(canvasId, curveType, tab) {
     ctx.clearRect(0, 0, w, h);
     
     let dx = 0.005; // Increase precision for derivative calculation
-    let maxSpeed = 0;
     let rawSpeeds = [];
 
-    // Calculate raw derivative (speed) at each point
+    // Tính đạo hàm thô (Tốc độ) tại từng điểm để đồ thị Tổng quan Gia tốc mịn hơn
     for(let i=0; i<=100; i++) { 
         let x = i/100; 
         let nextX = Math.min(1, x + dx);
@@ -751,21 +743,18 @@ function renderStaticCurve(canvasId, curveType, tab) {
         let y2 = getPacingCurve(nextX, curveType, tab); 
         let speed = (y2 - y1) / (nextX - x); 
         rawSpeeds.push(speed);
-        if (speed > maxSpeed) maxSpeed = speed;
     }
     
-    // Draw baseline (constant speed = 1)
+    // Đường tâm đứt đoạn (Tốc độ tuyến tính = 1)
     ctx.beginPath(); ctx.moveTo(padX, midY); ctx.lineTo(w - padX, midY);
     ctx.strokeStyle = "rgba(255, 204, 102, 0.4)"; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
     
-    // Draw speed curve
+    // Đường đồ thị tốc độ thực tế
     ctx.beginPath();
     for(let i=0; i<=100; i++) {
         let x = i/100; 
         let speed = rawSpeeds[i]; 
-        // Normalize speed rendering to fit within usableH
         let yOffset = (speed - 1) * (usableH / 3); 
-        // Slightly reduced clamping to let extreme peaks show a bit more
         let yPos = Math.max(padY - 5, Math.min(h - padY + 5, midY - yOffset));
         if(i===0) ctx.moveTo(padX + x * usableW, yPos); else ctx.lineTo(padX + x * usableW, yPos);
     }
