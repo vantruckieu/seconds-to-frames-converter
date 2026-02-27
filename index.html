@@ -42,7 +42,7 @@ h1 { margin: 0 0 10px 0; font-size: 28px; text-align: center; color: #00ccff; te
 .tabs button.active { background: linear-gradient(90deg,#0066ff,#00ccff); color: white; border-color: #00ccff; box-shadow: 0 0 20px rgba(0,200,255,0.6); }
 
 .tab-desc { font-size: 13px; color: #9ed8ff; background: rgba(0, 150, 255, 0.08); border-left: 3px solid #00ccff; padding: 12px 15px; margin-bottom: 22px; border-radius: 0 8px 8px 0; line-height: 1.5; }
-.row { margin-bottom: 20px; }
+.row { margin-bottom: 20px; transition: all 0.3s ease; }
 label { display: flex; align-items: center; margin-bottom: 8px; font-size: 14px; opacity: 0.85; color: #9ed8ff; }
 
 input[type="number"] {
@@ -179,10 +179,20 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
 
     <div id="animeMode" class="hidden">
         <div class="tab-desc" id="descAnime">Phân bổ khoảng cách các Keyframe theo quy tắc Animation (On 1s, 2s, 3s) và nội suy nhịp độ cảnh.</div>
+        
+        <div class="row">
+            <label><span id="lblFocus">Tâm điểm & Trạng thái</span><span class="tooltip" id="tipFocus" data-tip="?">?</span></label>
+            <div class="input-group">
+                <select id="focusTarget" onchange="updateAnime()"><option id="optFocScene" value="scene">Cảnh</option><option id="optFocChar" value="char">Nhân vật/Vật thể</option></select>
+                <select id="focusState" onchange="toggleAnimePoseInput(); updateAnime()"><option id="optStateStatic" value="static">Tĩnh</option><option id="optStateDynamic" value="dynamic" selected>Động</option></select>
+            </div>
+        </div>
+
         <div class="row">
             <label><span id="lblAnimStyle">Kiểu diễn hoạt</span><span class="tooltip" id="tipAnimStyle" data-tip="?">?</span></label>
             <select id="animStyle" onchange="updateAnime()"><option id="optOn1s" value="1">On 1s (Mượt / Hành động)</option><option id="optOn2s" value="2" selected>On 2s (Chuẩn Anime)</option><option id="optOn3s" value="3">On 3s (Tĩnh / Chậm)</option></select>
         </div>
+        
         <div class="row">
             <label><span id="lblFPS_anime">FPS gốc</span><span class="tooltip" id="tipFPS_anime" data-tip="?">?</span></label>
             <input type="number" id="fpsAnime" value="24" min="1" oninput="updateAnime()">
@@ -193,13 +203,15 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
                 <button onclick="setField('fpsAnime', 60); updateAnime()">60</button>
             </div>
         </div>
-        <div class="row">
+
+        <div class="row" id="rowCorePacingA">
             <label><span id="lblCorePacingAnime">Nhịp tâm điểm</span><span class="tooltip" id="tipCorePacingAnime" data-tip="?">?</span></label>
             <select id="corePacingAnime" onchange="updateAnime()">
                 <option id="optCpSuperSlowA" value="superslow">Super Slow</option><option id="optCpSlowmoA" value="slowmo">Slow Motion</option><option id="optCpSlowA" value="slow">Chậm</option><option id="optCpNormalA" value="normal" selected>Bình thường</option><option id="optCpFastA" value="fast">Nhanh</option><option id="optCpSuperFastA" value="superfast">Cực nhanh</option><option id="optCpTimeSplashA" value="timesplash">Time Splash</option>
             </select>
         </div>
-        <div class="row">
+
+        <div class="row" id="rowCurveTypeA">
             <label><span id="lblCurveTypeAnime">Loại đồ thị (Phân bổ)</span><span class="tooltip" id="tipCurveTypeAnime" data-tip="?">?</span></label>
             <select id="curveTypeAnime" onchange="toggleAnimeCustom(); updateAnime()">
                 <option id="optCvNoneA" value="linear">Không (Đều)</option><option id="optCvEaseOutA" value="ease_out">Đồ thị xuống (Chậm dần)</option><option id="optCvEaseInA" value="ease_in">Đồ thị lên (Nhanh dần)</option><option id="optCvClimaxA" value="climax">Điểm cao trào (Nhanh giữa)</option><option id="optCvLowPointA" value="low_point">Điểm trầm (Chậm giữa)</option><option id="optCvWaveA" value="wave">Sóng (Nhanh chậm xen kẽ)</option><option id="optCvCustomA" value="custom">Tùy chỉnh (Custom)</option>
@@ -222,17 +234,17 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
             </div>
             <div id="warnCustom_anime" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;">⚠️ Tùy chỉnh không khả dụng: Cần chọn Logic Nghiêm ngặt và cảnh dài từ 3 giây.</div>
         </div>
-        <div class="row">
-            <label><span id="lblFocus">Tâm điểm & Trạng thái</span><span class="tooltip" id="tipFocus" data-tip="?">?</span></label>
-            <div class="input-group">
-                <select id="focusTarget" onchange="updateAnime()"><option id="optFocScene" value="scene">Cảnh</option><option id="optFocChar" value="char">Nhân vật/Vật thể</option></select>
-                <select id="focusState" onchange="toggleAnimePoseInput(); updateAnime()"><option id="optStateStatic" value="static">Tĩnh</option><option id="optStateDynamic" value="dynamic" selected>Động</option></select>
-            </div>
-        </div>
+        
         <div class="row" id="poseRow">
             <label><span id="lblPose">Số Pose (Keyframes chính)</span><span class="tooltip" id="tipPose" data-tip="?">?</span></label>
             <input type="number" id="poseCount" value="5" min="1" oninput="updateAnime()">
         </div>
+
+        <div class="row" id="rowLogicA">
+            <label><span id="lblCalcLogic">Logic tính toán</span><span class="tooltip" id="tipCalcLogic" data-tip="?">?</span></label>
+            <select id="calcLogic" onchange="toggleAnimeCustom(); updateAnime()"><option id="optLogicStrict" value="strict">Toán học nghiêm ngặt</option><option id="optLogicRandom" value="random">Xác suất ngẫu nhiên</option></select>
+        </div>
+
         <div class="row">
             <label><span id="lblFrameRange">Frame Bắt đầu - Kết thúc</span><span class="tooltip" id="tipFrameRange" data-tip="?">?</span></label>
             <div class="input-group">
@@ -240,10 +252,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
                 <input type="number" id="endFrame" data-i18n-ph="phEndFrame" placeholder="Kết thúc (vd: 100)" oninput="updateAnime(); toggleAnimeCustom()">
             </div>
         </div>
-        <div class="row">
-            <label><span id="lblCalcLogic">Logic tính toán</span><span class="tooltip" id="tipCalcLogic" data-tip="?">?</span></label>
-            <select id="calcLogic" onchange="toggleAnimeCustom(); updateAnime()"><option id="optLogicStrict" value="strict">Toán học nghiêm ngặt</option><option id="optLogicRandom" value="random">Xác suất ngẫu nhiên</option></select>
-        </div>
+        
         <div class="result" id="animeOutput">—</div>
         <div class="warning" id="warnMathModelAnime">⚠ Lưu ý: Mô hình đồ thị và toán học chỉ mang tính chất gợi ý tham khảo.</div>
     </div>
@@ -254,7 +263,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
             <label><span id="lblPoseCalcMode">Cách tính toán</span><span class="tooltip" id="tipPoseCalcMode" data-tip="?">?</span></label>
             <select id="poseCalcMode" onchange="togglePoseSettings(); togglePoseCustom(); updatePoseEst()"><option id="optPcalcRandom" value="random">Xác suất ngẫu nhiên</option><option id="optPcalcSeconds" value="seconds" selected>Theo số giây cảnh</option></select>
         </div>
-        <div class="row" id="rowPoseSeconds">
+        <div class="row hidden" id="rowPoseSeconds">
             <label><span id="lblPoseSeconds">Nhập số giây cảnh</span><span class="tooltip" id="tipPoseSeconds" data-tip="?">?</span></label>
             <input type="number" id="poseSeconds" value="4" min="0.1" step="0.1" oninput="togglePoseCustom(); updatePoseEst()">
         </div>
@@ -316,6 +325,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
             <label><span id="lblSubPoseLogic">Quy tắc Pose phụ trợ</span><span class="tooltip" id="tipSubPoseLogic" data-tip="?">?</span></label>
             <select id="subPoseLogic" onchange="updatePoseEst()"><option id="optSpRandom" value="random">Xác suất ngẫu nhiên</option><option value="1">1 Pose phụ</option><option value="2">2 Pose phụ</option><option value="3">3 Pose phụ</option><option value="4">4 Pose phụ</option></select>
         </div>
+        
         <div class="row" id="rowJerkiness">
             <label><span id="lblJerkiness">Độ giật - khựng (Stutter/Hold)</span><span class="tooltip" id="tipJerkiness" data-tip="?">?</span></label>
             <select id="jerkToggle" onchange="togglePoseSettings(); updatePoseEst()"><option id="optJerkNo" value="no">Không</option><option id="optJerkSec" value="sec">Theo Giây</option><option id="optJerkFrame" value="frame">Theo Frame</option></select>
@@ -395,7 +405,7 @@ const i18n = {
         lblPoseCalcMode: "Cách tính toán", optPcalcRandom: "Xác suất ngẫu nhiên", optPcalcSeconds: "Theo số giây cảnh",
         lblPoseSeconds: "Nhập số giây cảnh", lblFPS_pose: "FPS gốc", lblAnimStylePose: "Loại diễn hoạt",
         lblFocusTypePose: "Loại tâm điểm", optFocCharP: "Nhân vật", optFocObjP: "Vật thể",
-        lblFocusActionPose: "Hành động cụ thể", actTalk: "Nói chuyện", actWalk: "Đi bộ", actRun: "Chạy", actFight: "Đánh nhau", actOtherC: "Khác", actFly: "Bay", actFall: "Rơi", actBreak: "Vỡ/Gãy", actBounce: "Nảy", actScale: "Scale", actOtherO: "Khác",
+        lblFocusActionPose: "Hành động cụ thể", actTalk: "Nói chuyện", actWalk: "Đi bộ", actRun: "Chạy", actFight: "Đánh nhau", actOtherC: "Hành động khác", actFly: "Bay", actFall: "Rơi", actBreak: "Vỡ/Gãy", actBounce: "Nảy", actScale: "Scale", actOtherO: "Hành động khác",
         lblCorePacingPose: "Nhịp tâm điểm", optCpSuperSlowP: "Super Slow", optCpSlowmoP: "Slow Motion", optCpSlowP: "Chậm", optCpNormalP: "Bình thường", optCpFastP: "Nhanh", optCpSuperFastP: "Cực nhanh", optCpTimeSplashP: "Time Splash",
         lblCurveTypePose: "Loại đồ thị", optCvNoneP: "Không", optCvEaseOutP: "Đồ thị xuống", optCvEaseInP: "Đồ thị lên", optCvClimaxP: "Điểm cao trào", optCvLowPointP: "Điểm trầm", optCvWaveP: "Sóng", optCvCustomP: "Tùy chỉnh (Custom)",
         lblSubPose: "Pose phụ (In-betweens)", optNo: "Không", optYes: "Có",
@@ -427,6 +437,7 @@ const i18n = {
         descAnime: "Distribute Keyframes using standard Animation rules (On 1s, 2s, 3s) and calculate scene pacing.",
         descPose: "Automatically estimate main Poses and In-betweens depending on specific action types and duration.",
         descRender: "Estimate the total Render time needed for your project based on a single frame's processing time.",
+        
         tipMode: "Select conversion type.", tipFPS_conv: "FPS determines the speed.", tipInput: "Enter the value to compute.",
         tipAnimStyle: "Defines keys per second.", tipFPS_anime: "Standard framerate.", tipCorePacingAnime: "Overall scene speed.",
         tipCurveTypeAnime: "Acceleration curve.\n• Custom: Draw your own (Requires >3s & Strict Logic).",
@@ -451,7 +462,7 @@ const i18n = {
         lblPoseCalcMode: "Calc Mode", optPcalcRandom: "Random Prob", optPcalcSeconds: "By Scene Seconds",
         lblPoseSeconds: "Enter Seconds", lblFPS_pose: "Base FPS", lblAnimStylePose: "Anim Style",
         lblFocusTypePose: "Focus Type", optFocCharP: "Character", optFocObjP: "Object",
-        lblFocusActionPose: "Specific Action", actTalk: "Talking", actWalk: "Walking", actRun: "Running", actFight: "Fighting", actOtherC: "Other", actFly: "Flying", actFall: "Falling", actBreak: "Breaking", actBounce: "Bouncing", actScale: "Scaling", actOtherO: "Other",
+        lblFocusActionPose: "Specific Action", actTalk: "Talking", actWalk: "Walking", actRun: "Running", actFight: "Fighting", actOtherC: "Other Action", actFly: "Flying", actFall: "Falling", actBreak: "Breaking", actBounce: "Bouncing", actScale: "Scaling", actOtherO: "Other Action",
         lblCorePacingPose: "Core Pacing", optCpSuperSlowP: "Super Slow", optCpSlowmoP: "Slow Motion", optCpSlowP: "Slow", optCpNormalP: "Normal", optCpFastP: "Fast", optCpSuperFastP: "Super Fast", optCpTimeSplashP: "Time Splash",
         lblCurveTypePose: "Curve Type", optCvNoneP: "None", optCvEaseOutP: "Ease Out", optCvEaseInP: "Ease In", optCvClimaxP: "Climax", optCvLowPointP: "Low Point", optCvWaveP: "Wave", optCvCustomP: "Custom",
         lblSubPose: "Add In-betweens", optNo: "No", optYes: "Yes", lblSubPoseLogic: "In-between Logic", optSpRandom: "Random Prob",
@@ -460,7 +471,7 @@ const i18n = {
         lblTotalFrames: "Total Frames", lblRenderPerFrame: "Time per frame",
         warningTextRender: "⚠ Reference only.", lblLanguage: "Language:",
         
-        dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses", dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact/climax.", dynHintFrames: "Suggested range: ",
+        dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses", dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact.", dynHintFrames: "Suggested range: ",
         dynClampWarn1: "⚠️ Note: Scene duration is too short. The last key was forced to frame ", dynClampWarn2: " (breaking the On ", dynClampWarn3: "s rhythm).<br>➔ Fix: Increase scene duration or switch to On 1s/2s.",
         dynGraphLimitWarn: "⚠️ Warning: Scene > 25s. Graphs disabled to optimize device performance.",
         
@@ -489,7 +500,6 @@ function resetCustomPoints(tab) {
     if(tab === 'anime') updateAnime(); else updatePoseEst();
 }
 
-// Linear Interpolation (Lerp)
 function lerpCustomCurve(x, points) {
     if (x <= points[0].x) return points[0].y;
     if (x >= points[points.length-1].x) return points[points.length-1].y;
@@ -502,7 +512,6 @@ function lerpCustomCurve(x, points) {
     return x;
 }
 
-// Catmull-Rom Spline Interpolation for smooth curves
 function splineCustomCurve(x, points) {
     if (x <= points[0].x) return points[0].y;
     if (x >= points[points.length-1].x) return points[points.length-1].y;
@@ -523,7 +532,7 @@ function splineCustomCurve(x, points) {
     let v1 = (p3.y - p1.y) * 0.5;
     
     let rawVal = (2 * p1.y - 2 * p2.y + v0 + v1) * t3 + (-3 * p1.y + 3 * p2.y - 2 * v0 - v1) * t2 + v0 * t + p1.y;
-    return Math.max(0, Math.min(1, rawVal)); // Clamp mathematically to prevent timeline overshoot
+    return Math.max(0, Math.min(1, rawVal)); 
 }
 
 function getPacingCurve(x, type, tab) {
@@ -558,7 +567,6 @@ function drawCustomEditor(tab) {
     let isLocked = document.getElementById("lockEnd_" + tab).checked;
     let isSmooth = document.getElementById("smoothCurve_" + tab).checked;
     
-    // Draw Curve
     ctx.beginPath();
     if (isSmooth) {
         for(let i=0; i<=100; i++) {
@@ -575,7 +583,6 @@ function drawCustomEditor(tab) {
     }
     ctx.strokeStyle = "#ffcc66"; ctx.lineWidth = 2.5; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.stroke();
     
-    // Draw Points
     pts.forEach((p, i) => {
         let px = pad + p.x * usableW; let py = h - pad - p.y * usableH;
         ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI*2);
@@ -617,7 +624,7 @@ function initCustomCanvas(tab) {
         let newX = (pos.x - pad) / usableW; let newY = (canvas.clientHeight - pad - pos.y) / usableH;
         
         if (i === 0) {
-            pts[i].x = 0; pts[i].y = Math.max(0, Math.min(1, newY)); // Clamped rigidly to prevent box exit
+            pts[i].x = 0; pts[i].y = Math.max(0, Math.min(1, newY));
         } else if (i === pts.length - 1) {
             pts[i].x = 1; pts[i].y = Math.max(0, Math.min(1, newY));
         } else {
@@ -673,8 +680,6 @@ function togglePoseCustom() {
     } else { wrap.classList.add("hidden"); warn.classList.add("hidden"); }
 }
 
-// ---------------------------
-
 function setupHighResCanvas(canvasId, width, height) {
     let canvas = document.getElementById(canvasId); if(!canvas) return null;
     let ctx = canvas.getContext("2d"); let dpr = window.devicePixelRatio || 1;
@@ -690,7 +695,7 @@ function drawPill(ctx, text, x, y, bgColor, color) {
 }
 
 function renderStaticCurve(canvasId, curveType, tab) {
-    let res = setupHighResCanvas(canvasId, 530, 110); if(!res) return; // Chiều cao nâng lên 110px
+    let res = setupHighResCanvas(canvasId, 530, 110); if(!res) return;
     let { ctx, w, h } = res; let padX = 30, padY = 15; let usableW = w - padX * 2; let usableH = h - padY * 2; let midY = h / 2;
     ctx.clearRect(0, 0, w, h);
     
@@ -783,7 +788,15 @@ function updateConvert(){
     }
 }
 
-function toggleAnimePoseInput() { document.getElementById("poseRow").classList.toggle("hidden", document.getElementById("focusState").value === "static"); }
+// Hàm Nâng cấp: Ẩn hiện các mục thừa khi chọn Tĩnh
+function toggleAnimePoseInput() { 
+    let isStatic = document.getElementById("focusState").value === "static";
+    // Ẩn/hiện các hàng không cần thiết
+    document.getElementById("poseRow").classList.toggle("hidden", isStatic);
+    document.getElementById("rowCorePacingA").classList.toggle("hidden", isStatic);
+    document.getElementById("rowCurveTypeA").classList.toggle("hidden", isStatic);
+    document.getElementById("rowLogicA").classList.toggle("hidden", isStatic);
+}
 
 function updateAnime() {
     let style = parseInt(document.getElementById("animStyle").value); let fps = parseFloat(document.getElementById("fpsAnime").value) || 24;
@@ -795,15 +808,19 @@ function updateAnime() {
     let totalF = ef - sf + 1; let t = i18n[currentLang];
     let out = `Tổng: <span style="color:white">${totalF}</span> frames<br>`;
     
-    // Core Shortage Logic - Không chặn tính toán, chỉ hiển thị thông báo
-    let isShortage = false; let shortageWarnHtml = "";
+    let isShortage = false; 
     if (totalF < style * 2 && document.getElementById("focusState").value === "dynamic") {
         isShortage = true;
     }
 
     let isTooLong = (totalF / fps) > 25;
     let isCustomValid = !(curve === 'custom' && (logic !== 'strict' || (totalF/fps) < 3));
-    if(!isCustomValid) { document.getElementById("animeOutput").innerHTML = out; return; }
+    
+    // Nếu là chế độ động và custom không hợp lệ thì mới chặn
+    if(document.getElementById("focusState").value === "dynamic" && !isCustomValid) { 
+        document.getElementById("animeOutput").innerHTML = out; 
+        return; 
+    }
 
     let keys = []; let isClamped = false; let clampedTo = 0;
 
@@ -843,7 +860,13 @@ function updateAnime() {
             <div class="graph-wrapper"><canvas id="animeGraph" class="graph-canvas"></canvas></div>
             <div class="graph-legend-box"><span style="color:#ffcc66">●</span><span data-i18n="legendMainKey">${t.legendMainKey}</span></div>`;
         }
-    } else { out += `<div class="box-result">1 Pose giữ toàn bộ ${totalF} frames.</div>`; }
+    } else { 
+        // Trạng thái Tĩnh
+        out += `<div class="box-result">
+            <b style="color:#ffcc66;">Trạng thái Tĩnh (Static)</b><br>
+            Cần vẽ <b>1 Pose duy nhất</b> (đặt tại frame ${sf}) và giữ xuyên suốt ${totalF} frames.
+        </div>`; 
+    }
     
     document.getElementById("animeOutput").innerHTML = out;
     
@@ -900,7 +923,6 @@ function updatePoseEst() {
     let totalFrames = Math.round(totalSec * fps);
     let t = i18n[currentLang];
     
-    // Core Shortage Logic
     let isShortage = false;
     if(totalFrames < style * 2) { isShortage = true; }
 
@@ -1033,9 +1055,8 @@ function initCustomSelects() {
 function updateAllCustomSelects() { document.querySelectorAll("select").forEach(s => { if(s.updateCustomUI) s.updateCustomUI(); }); }
 
 window.addEventListener("DOMContentLoaded", () => { 
-    initCustomSelects(); changeLang('vi'); togglePoseActions(); togglePoseSettings();
+    initCustomSelects(); changeLang('vi'); togglePoseActions(); togglePoseSettings(); toggleAnimePoseInput();
 });
 </script>
 </body>
 </html>
-
