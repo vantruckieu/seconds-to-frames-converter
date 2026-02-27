@@ -232,7 +232,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
                 </div>
                 <div class="editor-canvas-wrap"><canvas id="customCanvas_anime"></canvas></div>
             </div>
-            <div id="warnCustom_anime" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;">⚠️ Tùy chỉnh không khả dụng: Cần chọn Logic Nghiêm ngặt và cảnh dài từ 3 giây.</div>
+            <div id="warnCustomAnime" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;"></div>
         </div>
         
         <div class="row" id="poseRow">
@@ -315,7 +315,7 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
                 </div>
                 <div class="editor-canvas-wrap"><canvas id="customCanvas_pose"></canvas></div>
             </div>
-            <div id="warnCustom_pose" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;">⚠️ Tùy chỉnh không khả dụng: Cần chọn chế độ Theo Giây và thời lượng từ 3 giây.</div>
+            <div id="warnCustomPose" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;"></div>
         </div>
         <div class="row">
             <label><span id="lblSubPose">Thêm Pose phụ trợ (In-betweens)</span><span class="tooltip" id="tipSubPose" data-tip="?">?</span></label>
@@ -405,7 +405,7 @@ const i18n = {
         lblPoseCalcMode: "Cách tính toán", optPcalcRandom: "Xác suất ngẫu nhiên", optPcalcSeconds: "Theo số giây cảnh",
         lblPoseSeconds: "Nhập số giây cảnh", lblFPS_pose: "FPS gốc", lblAnimStylePose: "Loại diễn hoạt",
         lblFocusTypePose: "Loại tâm điểm", optFocCharP: "Nhân vật", optFocObjP: "Vật thể",
-        lblFocusActionPose: "Hành động cụ thể", actTalk: "Nói chuyện", actWalk: "Đi bộ", actRun: "Chạy", actFight: "Đánh nhau", actOtherC: "Hành động khác", actFly: "Bay", actFall: "Rơi", actBreak: "Vỡ/Gãy", actBounce: "Nảy", actScale: "Scale", actOtherO: "Hành động khác",
+        lblFocusActionPose: "Hành động cụ thể", actTalk: "Nói chuyện", actWalk: "Đi bộ", actRun: "Chạy", actFight: "Đánh nhau", actOtherC: "Khác", actFly: "Bay", actFall: "Rơi", actBreak: "Vỡ/Gãy", actBounce: "Nảy", actScale: "Scale", actOtherO: "Khác",
         lblCorePacingPose: "Nhịp tâm điểm", optCpSuperSlowP: "Super Slow", optCpSlowmoP: "Slow Motion", optCpSlowP: "Chậm", optCpNormalP: "Bình thường", optCpFastP: "Nhanh", optCpSuperFastP: "Cực nhanh", optCpTimeSplashP: "Time Splash",
         lblCurveTypePose: "Loại đồ thị", optCvNoneP: "Không", optCvEaseOutP: "Đồ thị xuống", optCvEaseInP: "Đồ thị lên", optCvClimaxP: "Điểm cao trào", optCvLowPointP: "Điểm trầm", optCvWaveP: "Sóng", optCvCustomP: "Tùy chỉnh (Custom)",
         lblSubPose: "Pose phụ (In-betweens)", optNo: "Không", optYes: "Có",
@@ -427,8 +427,9 @@ const i18n = {
         phStartFrame: "Bắt đầu (vd: 1)", phEndFrame: "Kết thúc (vd: 100)",
         legendMainKey: "Key chính", legendSubKey: "Key phụ",
         lblEditorA: "Bộ dựng Đồ thị tự do", lblEditorP: "Bộ dựng Đồ thị tự do", lblLockA: "Khóa mút", lblLockP: "Khóa mút", lblSmoothA: "Đường mượt", lblSmoothP: "Đường mượt", btnResetA: "Khôi phục", btnResetP: "Khôi phục",
-        warnCustomAnime: "⚠️ Chức năng Tùy chỉnh cần bật Logic Nghiêm ngặt và độ dài cảnh từ 3 giây trở lên.",
-        warnCustomPose: "⚠️ Chức năng Tùy chỉnh yêu cầu chọn chế độ Theo số giây cảnh và thời lượng từ 3 giây trở lên."
+        
+        warnCustomAnime: "⚠️ Tùy chỉnh không khả dụng: \"Logic tính toán\" cần chọn chế độ Toán học nghiêm ngặt và thời lượng từ 3 giây.",
+        warnCustomPose: "⚠️ Tùy chỉnh không khả dụng: \"Cách tính toán\" cần chọn chế độ Theo Số Giây Cảnh và thời lượng từ 3 giây."
     },
     en: {
         introText: "Versatile tool for Animation Timing, Frame calculations, and Render estimation.",
@@ -479,8 +480,9 @@ const i18n = {
         lblDataGraph: "Timeline (Keyframes)", tipDataGraph: "Actual frame placement on the timeline (Scrollable horizontally).",
         phStartFrame: "Start (e.g., 1)", phEndFrame: "End (e.g., 100)", legendMainKey: "Main Key", legendSubKey: "Sub Key",
         lblEditorA: "Free Curve Editor", lblEditorP: "Free Curve Editor", lblLockA: "Lock Ends", lblLockP: "Lock Ends", lblSmoothA: "Smooth", lblSmoothP: "Smooth", btnResetA: "Reset", btnResetP: "Reset",
-        warnCustomAnime: "⚠️ Custom not available: Requires Strict Logic and > 3 seconds duration.",
-        warnCustomPose: "⚠️ Custom not available: Requires 'By Scene Seconds' mode and > 3 seconds duration."
+        
+        warnCustomAnime: "⚠️ Custom not available: \"Logic\" must be set to Strict Math and duration >= 3 seconds.",
+        warnCustomPose: "⚠️ Custom not available: \"Calc Mode\" must be set to By Scene Seconds and duration >= 3 seconds."
     }
 };
 
@@ -661,7 +663,7 @@ function modifyCustomPoints(tab, delta) {
 function toggleAnimeCustom() {
     let curve = document.getElementById("curveTypeAnime").value; let logic = document.getElementById("calcLogic").value;
     let fps = parseFloat(document.getElementById("fpsAnime").value) || 24; let sf = parseInt(document.getElementById("startFrame").value) || 1; let ef = parseInt(document.getElementById("endFrame").value) || 100;
-    let timeSec = (ef - sf + 1) / fps; let wrap = document.getElementById("customEditorWrap_anime"); let warn = document.getElementById("warnCustom_anime");
+    let timeSec = (ef - sf + 1) / fps; let wrap = document.getElementById("customEditorWrap_anime"); let warn = document.getElementById("warnCustomAnime");
     if (curve === "custom") {
         wrap.classList.remove("hidden");
         if (logic !== "strict" || timeSec < 3) { wrap.classList.add("disabled"); warn.classList.remove("hidden");
@@ -672,7 +674,7 @@ function toggleAnimeCustom() {
 function togglePoseCustom() {
     let curve = document.getElementById("curveTypePose").value; let mode = document.getElementById("poseCalcMode").value;
     let sec = parseFloat(document.getElementById("poseSeconds").value) || 0;
-    let wrap = document.getElementById("customEditorWrap_pose"); let warn = document.getElementById("warnCustom_pose");
+    let wrap = document.getElementById("customEditorWrap_pose"); let warn = document.getElementById("warnCustomPose");
     if (curve === "custom") {
         wrap.classList.remove("hidden");
         if (mode !== "seconds" || sec < 3) { wrap.classList.add("disabled"); warn.classList.remove("hidden");
@@ -788,10 +790,8 @@ function updateConvert(){
     }
 }
 
-// Hàm Nâng cấp: Ẩn hiện các mục thừa khi chọn Tĩnh
 function toggleAnimePoseInput() { 
     let isStatic = document.getElementById("focusState").value === "static";
-    // Ẩn/hiện các hàng không cần thiết
     document.getElementById("poseRow").classList.toggle("hidden", isStatic);
     document.getElementById("rowCorePacingA").classList.toggle("hidden", isStatic);
     document.getElementById("rowCurveTypeA").classList.toggle("hidden", isStatic);
@@ -816,7 +816,6 @@ function updateAnime() {
     let isTooLong = (totalF / fps) > 25;
     let isCustomValid = !(curve === 'custom' && (logic !== 'strict' || (totalF/fps) < 3));
     
-    // Nếu là chế độ động và custom không hợp lệ thì mới chặn
     if(document.getElementById("focusState").value === "dynamic" && !isCustomValid) { 
         document.getElementById("animeOutput").innerHTML = out; 
         return; 
@@ -861,7 +860,6 @@ function updateAnime() {
             <div class="graph-legend-box"><span style="color:#ffcc66">●</span><span data-i18n="legendMainKey">${t.legendMainKey}</span></div>`;
         }
     } else { 
-        // Trạng thái Tĩnh
         out += `<div class="box-result">
             <b style="color:#ffcc66;">Trạng thái Tĩnh (Static)</b><br>
             Cần vẽ <b>1 Pose duy nhất</b> (đặt tại frame ${sf}) và giữ xuyên suốt ${totalF} frames.
