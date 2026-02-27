@@ -82,6 +82,7 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
 .result { margin-top: 25px; font-size: 24px; font-weight: bold; color: #00ccff; text-align: center; text-shadow: 0 0 15px rgba(0,200,255,0.6); }
 .sub-result { display: block; font-size: 14px; font-weight: normal; color: #9ed8ff; margin-top: 8px; opacity: 0.9; line-height: 1.5; }
 .box-result { font-size: 14px; color: #cceeff; background: rgba(0, 102, 255, 0.1); border: 1px dashed #0066ff; padding: 15px; border-radius: 10px; margin-top: 15px; text-align: left; line-height: 1.6;}
+.box-safe { border-color: #00ccff !important; background: rgba(0, 204, 255, 0.1) !important; color: #cceeff !important;}
 
 .tooltip {
     display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; background: rgba(0, 204, 255, 0.1); border: 1px solid #00ccff; border-radius: 50%; color: #00ccff; font-size: 12px; font-weight: bold; cursor: help; position: relative; margin-left: 8px; transition: 0.3s;
@@ -106,90 +107,40 @@ input[type="number"]:focus { outline: none; border-color: #00ccff; box-shadow: 0
 .graph-canvas { display: block; background: transparent; border: none; box-shadow: none; margin: 0 auto; }
 
 /* Custom Curve Editor */
-.custom-editor {
-    margin-top: 12px;
-    background: rgba(10, 20, 34, 0.6);
-    border-radius: 12px;
-    border: 1px solid #1e3a5f;
-    overflow: hidden;
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
-}
+.custom-editor { margin-top: 12px; background: rgba(10, 20, 34, 0.6); border-radius: 12px; border: 1px solid #1e3a5f; overflow: hidden; box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5); }
 .custom-editor.disabled { opacity: 0.4; pointer-events: none; }
 .custom-editor.hidden { display: none !important; }
+.custom-editor-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #1e3a5f; background: rgba(0, 102, 255, 0.05); flex-wrap: wrap; gap: 8px; }
+.custom-editor-title { font-size: 13px; font-weight: 600; color: #9ed8ff; display: flex; align-items: center; gap: 10px; }
+.custom-editor-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-/* Header bar inside editor */
-.custom-editor-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid #1e3a5f;
-    background: rgba(0, 102, 255, 0.05);
-    flex-wrap: wrap;
-    gap: 8px;
-}
-.custom-editor-title {
-    font-size: 13px;
-    font-weight: 600;
-    color: #9ed8ff;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.custom-editor-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
+/* Custom Preview Box */
+.custom-preview-box { margin-top: 10px; padding: 0 15px 15px 15px; }
 
 /* Checkbox Alignment */
 .checkbox-lbl { font-size: 12px; color: #9ed8ff; display: flex; align-items: center; gap: 5px; cursor: pointer; user-select: none; margin: 0;}
-.checkbox-lbl input[type="checkbox"] { 
-    appearance: none; -webkit-appearance: none;
-    width: 14px; height: 14px; background: #0a1422; border: 1px solid #1e3a5f; border-radius: 3px; 
-    cursor: pointer; position: relative; margin: 0; outline: none; flex-shrink: 0; transition: 0.2s;
-}
+.checkbox-lbl input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; background: #0a1422; border: 1px solid #1e3a5f; border-radius: 3px; cursor: pointer; position: relative; margin: 0; outline: none; flex-shrink: 0; transition: 0.2s; }
 .checkbox-lbl input[type="checkbox"]:checked { background: #00ccff; border-color: #00ccff; }
-.checkbox-lbl input[type="checkbox"]:checked::after {
-    content: ''; position: absolute; top: 1px; left: 4px;
-    width: 3px; height: 6px; border: solid #050b18; border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
+.checkbox-lbl input[type="checkbox"]:checked::after { content: ''; position: absolute; top: 1px; left: 4px; width: 3px; height: 6px; border: solid #050b18; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
 .editor-btn { background: #0c1626; border: 1px solid #1b3555; color: #9ed8ff; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-size: 11px; transition: 0.2s; white-space: nowrap;}
 .editor-btn:hover { background: #11233d; color: #00ccff; border-color:#00ccff; }
 .btn-reset { color: #ffcc66; border-color: rgba(255, 204, 102, 0.4); }
 .btn-reset:hover { background: rgba(255, 204, 102, 0.1); border-color: #ffcc66; color: #ffcc66; }
 
-/* Canvas area */
-.custom-editor-canvas-wrap {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 10px 0 0 0;
-}
+.custom-editor-canvas-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 10px 0 0 0; }
 .custom-editor-canvas-wrap::-webkit-scrollbar { height: 8px; }
 .custom-editor-canvas-wrap::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
 .custom-editor-canvas-wrap::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 10px; }
 .custom-editor-canvas-wrap::-webkit-scrollbar-thumb:hover { background: #00ccff; }
+.editor-canvas-inner { cursor: crosshair; touch-action: none; display: block; background: transparent; margin: 0 auto; }
 
-.editor-canvas-inner {
-    cursor: crosshair;
-    touch-action: none;
-    display: block;
-    background: transparent;
-    margin: 0 auto;
-}
-
-/* Outside Legend */
 .graph-legend-box { display: flex; justify-content: center; gap: 20px; padding: 12px 0 0 0; font-size: 13px; color: #9ed8ff; }
 .graph-legend-box span { display: flex; align-items: center; gap: 6px; }
 
 footer { margin-top: 40px; font-size: 14px; color: #66ccff; opacity: 0.8; display: flex; align-items: center; justify-content: center; gap: 10px; }
 footer .custom-select-wrapper { width: auto; min-width: 110px; }
 footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radius: 6px; min-height: unset; }
-
 .note-text { font-size: 13px; color: #66ccff; margin-top: 6px; display: block; opacity: 0.8; }
 
 @media (max-width: 600px) {
@@ -295,8 +246,17 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
                 <div class="custom-editor-canvas-wrap">
                     <canvas id="customCanvas_anime" class="editor-canvas-inner"></canvas>
                 </div>
+                <div class="custom-preview-box">
+                    <div class="graph-title" style="margin-top:10px;margin-bottom:8px;"><span data-i18n="lblCustomPreview">Bản sao: Tổng quan (Gia tốc)</span></div>
+                    <div class="static-graph-wrapper" style="border:1px dashed rgba(0,204,255,0.3); background: rgba(0,0,0,0.25);"><canvas id="previewStatic_anime" class="graph-canvas"></canvas></div>
+                </div>
             </div>
             <div id="warnCustomAnime" class="warning hidden" style="color:#ffcc66; border-color:#ffcc66;"></div>
+        </div>
+
+        <div class="row" id="rowForceA">
+            <label><span id="lblForceClampA">Ép Key cuối</span><span class="tooltip" id="tipForceClampA" data-tip="?">?</span></label>
+            <select id="forceClampA" onchange="updateAnime()"><option id="optFCN_A" value="no">Không</option><option id="optFCY_A" value="yes">Có</option></select>
         </div>
         
         <div class="row" id="poseRow">
@@ -380,9 +340,19 @@ footer .custom-select-trigger { padding: 8px 12px; font-size: 14px; border-radiu
                 <div class="custom-editor-canvas-wrap">
                     <canvas id="customCanvas_pose" class="editor-canvas-inner"></canvas>
                 </div>
+                <div class="custom-preview-box">
+                    <div class="graph-title" style="margin-top:10px;margin-bottom:8px;"><span data-i18n="lblCustomPreview">Bản sao: Tổng quan (Gia tốc)</span></div>
+                    <div class="static-graph-wrapper" style="border:1px dashed rgba(0,204,255,0.3); background: rgba(0,0,0,0.25);"><canvas id="previewStatic_pose" class="graph-canvas"></canvas></div>
+                </div>
             </div>
             <div id="warnCustomPose" class="warning hidden" style="color:#ff6b6b; border-color:#ff6b6b;"></div>
         </div>
+        
+        <div class="row" id="rowForceP">
+            <label><span id="lblForceClampP">Ép Key cuối</span><span class="tooltip" id="tipForceClampP" data-tip="?">?</span></label>
+            <select id="forceClampP" onchange="updatePoseEst()"><option id="optFCN_P" value="no">Không</option><option id="optFCY_P" value="yes">Có</option></select>
+        </div>
+
         <div class="row">
             <label><span id="lblSubPose">Thêm Pose phụ trợ (In-betweens)</span><span class="tooltip" id="tipSubPose" data-tip="?">?</span></label>
             <select id="subPoseToggle" onchange="togglePoseSettings(); updatePoseEst()"><option id="optNo" value="no">Không</option><option id="optYes" value="yes">Có</option></select>
@@ -457,6 +427,8 @@ const i18n = {
         tipCurveTypePose: "Quy luật Easing.\n• Tùy chỉnh: Đồ thị tốc độ tùy chỉnh (Yêu cầu >3s và Theo giây).",
         tipSubPose: "Tự động chèn In-betweens.", tipSubPoseLogic: "Số lượng bản vẽ phụ chèn giữa.", tipJerkiness: "Kỹ thuật Hold ở điểm chạm.",
         tipTotalFrames: "Tổng frame xuất.", tipRenderPerFrame: "Thời gian máy render 1 frame.",
+        tipForceClampA: "Cho phép dồn keyframe cuối vào khung hình kết thúc ngay cả khi lệch nhịp. Chỉ nên dùng khi cảnh đủ dài (>= 1 giây).",
+        tipForceClampP: "Cho phép dồn keyframe cuối vào khung hình kết thúc ngay cả khi lệch nhịp. Chỉ nên dùng khi cảnh đủ dài (>= 1 giây).",
 
         lblMode: "Loại tính", optF2T: "Frame → Time", optT2F: "Time → Frame",
         lblFPS_conv: "FPS", lblInput: "Số khung hình/thời gian", optSec: "Giây", optMin: "Phút", optHour: "Giờ",
@@ -481,13 +453,23 @@ const i18n = {
         lblTotalFrames: "Tổng frame", lblRenderPerFrame: "Thời gian render 1 frame (giây)",
         warningTextRender: "⚠ Thực tế cảnh nặng sẽ thay đổi thời gian.", lblLanguage: "Ngôn ngữ:",
         
+        lblForceClampA: "Ép Key cuối", lblForceClampP: "Ép Key cuối",
+        optFCN_A: "Không", optFCY_A: "Có", optFCN_P: "Không", optFCY_P: "Có",
+        lblCustomPreview: "Bản sao: Tổng quan (Gia tốc)",
+        
         dynFrames: "frames", dynSec: "giây", dynKeysSugg: "Gợi ý Keyframe", dynEstPoses: "Pose ước tính",
-        dynTotal: "Tổng:", // Thêm từ i18n
+        dynTotal: "Tổng:",
         dynSubPose: "Pose phụ", dynHold: "Giật/Khựng (Hold)", dynHoldMsg1: "Khuyên dùng giữ thêm", dynHoldMsg2: "tại điểm chạm.",
         dynHintFrames: "Gợi ý hợp lý: ",
         dynHoldCapNote: "(Đã giảm xuống tối đa 40% cảnh để giữ nhịp)",
         
-        dynClampWarn1: "⚠️ Lưu ý: Thời gian cảnh quá ngắn hoặc nhịp điệu không khớp hoàn toàn. Keyframe cuối bị ép vào frame ", dynClampWarn2: " (phá vỡ chuẩn nhịp On ", dynClampWarn3: "s).<br>➔ Gợi ý: Kéo dài cảnh, hoặc đổi sang nhịp On 1s/2s để đủ không gian phân bổ.",
+        dynForceSafe1: "Lưu ý: Keyframe cuối bị ép vào frame", 
+        dynForceSafe2: "theo tùy chọn của bạn. Điều này hoàn toàn ổn với thời gian bạn chọn.",
+        
+        dynClampWarn1: "⚠️ Lưu ý: Thời gian cảnh quá ngắn hoặc nhịp điệu không khớp hoàn toàn. Keyframe cuối bị ép vào frame ", dynClampWarn2: " (phá vỡ chuẩn nhịp On ", dynClampWarn3: "s).",
+        dynSuggestFrame1: "Gợi ý: Đặt End Frame thành", dynSuggestFrame2: "hoặc", dynSuggestFrame3: "để không bị lệch nhịp.",
+        dynSuggestSec1: "Gợi ý: Đặt thời gian thành", dynSuggestSec2: "hoặc",
+        
         dynGraphLimitWarn: "⚠️ Cảnh báo: Vượt quá 25 giây. Đã ẩn biểu đồ đồ thị để tối ưu hóa hiệu suất thiết bị.",
         dynMissingPose: "⚠️ Lưu ý: Bị trùng lặp frame do khoảng cách quá sát, số keyframe bị mất:",
         dynSubBetween: "Lót giữa",
@@ -523,6 +505,8 @@ const i18n = {
         tipCurveTypePose: "Acceleration curve.\n• Custom: Custom Speed Curve (Requires >3s & Fixed Seconds).",
         tipSubPose: "Generate In-between poses.", tipSubPoseLogic: "In-between padding rule.", tipJerkiness: "Hold frames at impact.",
         tipTotalFrames: "Total frames to render.", tipRenderPerFrame: "Actual time to render a single frame.",
+        tipForceClampA: "Force the last keyframe to snap to the end frame even if it breaks rhythm. Recommended only for long scenes (>= 1 sec).",
+        tipForceClampP: "Force the last keyframe to snap to the end frame even if it breaks rhythm. Recommended only for long scenes (>= 1 sec).",
 
         lblMode: "Mode", optF2T: "Frame → Time", optT2F: "Time → Frame",
         lblFPS_conv: "FPS", lblInput: "Input Value", optSec: "Seconds", optMin: "Minutes", optHour: "Hours",
@@ -546,11 +530,22 @@ const i18n = {
         lblTotalFrames: "Total Frames", lblRenderPerFrame: "Time per frame",
         warningTextRender: "⚠ Reference only.", lblLanguage: "Language:",
         
+        lblForceClampA: "Force Clamp", lblForceClampP: "Force Clamp",
+        optFCN_A: "No", optFCY_A: "Yes", optFCN_P: "No", optFCY_P: "Yes",
+        lblCustomPreview: "Preview: Overview (Acceleration)",
+        
         dynFrames: "Frames", dynSec: "sec", dynKeysSugg: "Suggested Keys", dynEstPoses: "Est. Main Poses",
-        dynTotal: "Total:", // Thêm từ i18n
+        dynTotal: "Total:",
         dynSubPose: "Sub Poses", dynHold: "Hold Effect", dynHoldMsg1: "Suggested holding", dynHoldMsg2: "at impact.", dynHintFrames: "Suggested range: ",
         dynHoldCapNote: "(Capped at 40% of scene to preserve rhythm)",
-        dynClampWarn1: "⚠️ Note: Scene duration is too short or pacing is mismatched. The last key was forced to frame ", dynClampWarn2: " (breaking the On ", dynClampWarn3: "s rhythm).<br>➔ Fix: Increase scene duration or switch to On 1s/2s.",
+        
+        dynForceSafe1: "Note: The last keyframe was forced to frame",
+        dynForceSafe2: "by your choice. This is perfectly fine given your selected duration.",
+        
+        dynClampWarn1: "⚠️ Note: Scene duration is too short or pacing is mismatched. The last key was forced to frame ", dynClampWarn2: " (breaking the On ", dynClampWarn3: "s rhythm).",
+        dynSuggestFrame1: "Suggestion: Set End Frame to", dynSuggestFrame2: "or", dynSuggestFrame3: "to prevent rhythm break.",
+        dynSuggestSec1: "Suggestion: Set duration to", dynSuggestSec2: "or",
+        
         dynGraphLimitWarn: "⚠️ Warning: Scene > 25s. Graphs disabled to optimize device performance.",
         dynMissingPose: "⚠️ Note: Duplicate frames due to tight spacing — poses lost:",
         dynSubBetween: "Between",
@@ -637,7 +632,7 @@ function getPacingCurve(x, type, tab) {
     if(type === 'ease_in')   return x * x * x;
     if(type === 'ease_out')  return 1 - Math.pow(1-x, 3);
     if(type === 'climax')    return x < 0.5 ? 4*x*x*x : 1 - Math.pow(-2*x+2, 3)/2;
-    if(type === 'low_point') return x + 0.15 * Math.sin(x * Math.PI * 2); // chậm giữa, nhanh 2 đầu
+    if(type === 'low_point') return x - 0.15 * Math.sin(x * Math.PI * 2); 
     if(type === 'wave')      return Math.max(0, Math.min(1, x + 0.1 * Math.sin(x * Math.PI * 4)));
     return x;
 }
@@ -665,7 +660,6 @@ function drawCustomEditor(tab) {
     let usableH = h - padY * 2;
     let midY = h / 2;
     
-    // Grid lines (matching timeline style)
     ctx.strokeStyle = "rgba(255,255,255,0.06)";
     ctx.lineWidth = 1;
     for(let xi = 0; xi <= 4; xi++) {
@@ -673,7 +667,6 @@ function drawCustomEditor(tab) {
         ctx.beginPath(); ctx.moveTo(gx, padY); ctx.lineTo(gx, h - padY); ctx.stroke();
     }
     
-    // Speed reference labels
     ctx.fillStyle = "rgba(255,255,255,0.35)";
     ctx.font = "10px 'Be Vietnam Pro', sans-serif";
     ctx.textAlign = "left"; ctx.textBaseline = "middle";
@@ -681,17 +674,14 @@ function drawCustomEditor(tab) {
     ctx.fillText("1x",  padX + 3, midY - 8);
     ctx.fillText("0.1x",padX + 3, h - padY - 8);
     
-    // Mid reference line (1x speed) — dashed like static graph
     ctx.beginPath(); ctx.moveTo(padX, midY); ctx.lineTo(w - padX, midY);
     ctx.strokeStyle = "rgba(255, 204, 102, 0.35)";
     ctx.setLineDash([4, 4]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
     
-    // Top/bottom reference lines
     ctx.strokeStyle = "rgba(255,255,255,0.08)"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(padX, padY); ctx.lineTo(w - padX, padY); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(padX, h - padY); ctx.lineTo(w - padX, h - padY); ctx.stroke();
     
-    // Bottom axis line — matching timeline baseline
     ctx.beginPath(); ctx.moveTo(padX - 10, h - padY); ctx.lineTo(w - padX + 10, h - padY);
     ctx.strokeStyle = "#1e3a5f"; ctx.lineWidth = 2.5; ctx.stroke();
     
@@ -699,7 +689,6 @@ function drawCustomEditor(tab) {
     let isLocked = document.getElementById("lockEnd_" + tab).checked;
     let isSmooth = document.getElementById("smoothCurve_" + tab).checked;
     
-    // Speed curve fill area
     ctx.beginPath();
     if(isSmooth) {
         ctx.moveTo(padX, h - padY);
@@ -720,7 +709,6 @@ function drawCustomEditor(tab) {
     ctx.closePath();
     ctx.fillStyle = "rgba(0, 204, 255, 0.06)"; ctx.fill();
     
-    // Speed curve line — same color/weight as timeline line
     ctx.beginPath();
     if(isSmooth) {
         let first = true;
@@ -742,33 +730,30 @@ function drawCustomEditor(tab) {
     ctx.strokeStyle = "#00ccff"; ctx.lineWidth = 2.5;
     ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke();
     
-    // Control points — styled like timeline key dots
     pts.forEach((p, i) => {
         let px = padX + p.x * usableW;
         let py = h - padY - p.y * usableH;
         let isEndNode = (i === 0 || i === pts.length - 1);
         
-        // Vertical drop line to baseline
         ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, h - padY);
         ctx.strokeStyle = "rgba(0, 204, 255, 0.2)"; ctx.lineWidth = 1.5; ctx.stroke();
         
         if(isEndNode && isLocked) {
-            // Locked end: small dim dot
             ctx.beginPath(); ctx.arc(px, py, 3, 0, Math.PI*2);
             ctx.fillStyle = "rgba(0, 204, 255, 0.4)"; ctx.fill();
-            // Baseline tick
             ctx.beginPath(); ctx.arc(px, h - padY, 4, 0, Math.PI*2);
             ctx.fillStyle = "rgba(0, 204, 255, 0.3)"; ctx.fill();
         } else {
-            // Curve node: white dot like timeline main key
             ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI*2);
             ctx.fillStyle = "#fff"; ctx.fill();
             ctx.strokeStyle = "rgba(0, 204, 255, 0.6)"; ctx.lineWidth = 1.5; ctx.stroke();
-            // Baseline dot — yellow like timeline
             ctx.beginPath(); ctx.arc(px, h - padY, 5, 0, Math.PI*2);
             ctx.fillStyle = "#ffcc66"; ctx.fill();
         }
     });
+
+    // Render bản sao Gia tốc (Preview Live)
+    renderStaticCurve("previewStatic_" + tab, 'custom', tab);
 }
 
 function initCustomCanvas(tab) {
@@ -777,7 +762,6 @@ function initCustomCanvas(tab) {
     canvas.dataset.initialized = "true";
     let isDragging = false;
     
-    // Make canvas fixed size, container scrollable (matching graph-wrapper)
     canvas.width = EDITOR_W * (window.devicePixelRatio || 1);
     canvas.height = EDITOR_H * (window.devicePixelRatio || 1);
     canvas.style.width = EDITOR_W + "px";
@@ -1042,6 +1026,7 @@ function toggleAnimePoseInput() {
     document.getElementById("rowCorePacingA").classList.toggle("hidden", isStatic);
     document.getElementById("rowCurveTypeA").classList.toggle("hidden", isStatic);
     document.getElementById("rowLogicA").classList.toggle("hidden", isStatic);
+    document.getElementById("rowForceA").classList.toggle("hidden", isStatic);
 }
 
 function updateAnime() {
@@ -1051,23 +1036,20 @@ function updateAnime() {
     let curve = document.getElementById("curveTypeAnime").value;
     let poses = parseInt(document.getElementById("poseCount").value) || 1;
     let logic = document.getElementById("calcLogic").value;
+    let isForceClamp = document.getElementById("forceClampA").value === "yes";
     
-    // Đã gỡ bỏ tính năng tự động ghi đè số trên UI (UI Write-back)
     let sfRaw = parseInt(document.getElementById("startFrame").value); 
     let efRaw = parseInt(document.getElementById("endFrame").value);
     
-    // Gán default phục vụ tính toán nếu bị rỗng (NaN)
     let sfVal = isNaN(sfRaw) ? 1 : sfRaw; 
     let efVal = isNaN(efRaw) ? 100 : efRaw; 
     
-    // Tránh bị lỗi do start > end nhưng ko ép sửa ô input đang gõ
     let sf = Math.min(sfVal, efVal);
     let ef = Math.max(sfVal, efVal);
     
     let totalF = ef - sf + 1; let t = i18n[currentLang];
     let isTooLong = (totalF/fps) > 25;
     
-    // Đã thay thế hardcode i18n (t.dynTotal, t.dynFrames)
     let out = `${t.dynTotal} <span style="color:white">${totalF}</span> ${t.dynFrames}<br>`;
     
     if(focusState === "dynamic") {
@@ -1102,9 +1084,24 @@ function updateAnime() {
                 if(lastKey===ef && (ef-secondLast)%style!==0) { isClamped=true; clampedTo=lastKey; }
             }
         }
+        
         out += `<div class="box-result"><b>${t.dynKeysSugg}:</b><br>${keys.join(" ➔ ")}</div>`;
         if(missingPoses>0) out += `<div class="warning" style="text-align:left;margin-top:15px;color:#ffcc66;border-color:#ffcc66;">${t.dynMissingPose} <b>${missingPoses}</b>.</div>`;
-        if(isClamped||isShortage) out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+        
+        if(isClamped||isShortage) {
+            let isSafeToForce = totalF >= fps; 
+            if (isForceClamp && isSafeToForce && !isShortage) {
+                out += `<div class="box-result box-safe" style="margin-top:15px;">⚠️ ${t.dynForceSafe1} <b>${clampedTo}</b> ${t.dynForceSafe2}</div>`;
+            } else {
+                let rem = (ef - sf) % style;
+                let idealDown = ef - rem;
+                let idealUp = ef + (style - rem);
+                let suggestion = `${t.dynSuggestFrame1} <b>${idealDown}</b> ${t.dynSuggestFrame2} <b>${idealUp}</b> ${t.dynSuggestFrame3}`;
+                
+                out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}<br>➔ ${suggestion}</div>`;
+            }
+        }
+        
         if(isTooLong) {
             out += `<div class="warning" style="text-align:left;margin-top:15px;color:#ff6b6b;border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
         } else {
@@ -1163,15 +1160,12 @@ function togglePoseSettings() {
     } else {
         inputBlock.classList.remove("hidden");
         let jInput = document.getElementById("jerkValue");
+        
+        // Cập nhật lại Step mà không ép ghi đè UI nếu đang trống
         if(jerkType==="sec") {
             jInput.step = "0.1";
-            let currentVal = parseFloat(jInput.value);
-            if(isNaN(currentVal) || currentVal > 5 || currentVal < 0) jInput.value = 0.2;
         } else {
             jInput.step = "1";
-            let currentVal = parseFloat(jInput.value);
-            if(isNaN(currentVal) || currentVal < 1 || (currentVal % 1 !== 0 && currentVal < 1)) jInput.value = 4;
-            else jInput.value = Math.round(currentVal);
         }
         updateJerkHint();
     }
@@ -1194,13 +1188,10 @@ function togglePoseActions() {
 
 function updatePoseEst() {
     let mode = document.getElementById("poseCalcMode").value;
-    
-    // Lấy nguyên giá trị user gõ và không ghi đè vào Value để tránh làm kẹt thao tác xóa (Backspace)
     let secRaw = parseFloat(document.getElementById("poseSeconds").value);
     
-    // Nếu rỗng (NaN) thì lấy fallback = 1 để chạy tính toán ngầm
+    // Fallback tính toán nội bộ, không ghi đè lên Value của HTML
     let sec = isNaN(secRaw) ? 1 : secRaw;
-    // Chặn an toàn tối thiểu không cho sec rơi về 0, bảo vệ thuật toán chia khung hình
     if (sec <= 0) sec = 0.042; 
     
     let fps = parseFloat(document.getElementById("fpsPose").value) || 24;
@@ -1211,7 +1202,9 @@ function updatePoseEst() {
     let useSub = document.getElementById("subPoseToggle").value==="yes";
     let subRule = document.getElementById("subPoseLogic").value;
     let jerkType = document.getElementById("jerkToggle").value;
-    let jerkVal = parseFloat(document.getElementById("jerkValue").value) || 0;
+    let jerkRaw = parseFloat(document.getElementById("jerkValue").value);
+    let jerkVal = isNaN(jerkRaw) ? (jerkType==="sec"?0.2:4) : jerkRaw;
+    let isForceClamp = document.getElementById("forceClampP").value === "yes";
     let t = i18n[currentLang];
     
     let totalSec = mode==="seconds" ? sec : (Math.random() * 3.5 + 1.0);
@@ -1314,7 +1307,25 @@ function updatePoseEst() {
     }
 
     if(boxHtml!=="") out += `<div class="box-result">${boxHtml}</div>`;
-    if(isClamped||isShortage) out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}</div>`;
+    
+    if(isClamped||isShortage) {
+        let isSafeToForce = totalFrames >= fps;
+        if(isForceClamp && isSafeToForce && !isShortage) {
+            out += `<div class="box-result box-safe" style="margin-top:15px;">⚠️ ${t.dynForceSafe1} <b>${clampedTo}</b> ${t.dynForceSafe2}</div>`;
+        } else {
+            let rem = (totalFrames - 1) % style;
+            let idealDownF = totalFrames - rem;
+            let idealUpF = totalFrames + (style - rem);
+            let idealDownS = (idealDownF / fps).toFixed(2);
+            let idealUpS = (idealUpF / fps).toFixed(2);
+            
+            let suggestion = mode === "seconds" 
+                ? `${t.dynSuggestSec1} <b>${idealDownS}s</b> (${idealDownF}f) ${t.dynSuggestSec2} <b>${idealUpS}s</b> (${idealUpF}f) ${t.dynSuggestFrame3}`
+                : `${t.dynSuggestFrame1} <b>${idealDownF}</b> ${t.dynSuggestFrame2} <b>${idealUpF}</b> ${t.dynSuggestFrame3}`;
+                
+            out += `<div class="warning" style="text-align:left;margin-top:15px;">${t.dynClampWarn1}<b>${clampedTo||keys[keys.length-1]}</b>${t.dynClampWarn2}<b>${style}</b>${t.dynClampWarn3}<br>➔ ${suggestion}</div>`;
+        }
+    }
 
     if(isTooLong) {
         out += `<div class="warning" style="text-align:left;margin-top:15px;color:#ff6b6b;border-color:#ff6b6b;">${t.dynGraphLimitWarn}</div>`;
